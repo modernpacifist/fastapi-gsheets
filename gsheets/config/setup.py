@@ -30,3 +30,22 @@ def fastapi(section='fastapi'):
         raise Exception(f'Host or port values are not present in {CONF_FILENAME}')
 
     return config
+
+
+def google(section='google'):
+    if not os.path.isfile(CONF_FILENAME):
+        raise Exception('No config.ini file found')
+
+    if section is None:
+        raise Exception('You did not specify the section to parse')
+
+    parser = ConfigParser()
+    parser.read(CONF_FILENAME)
+
+    config = {}
+    if parser.has_section(section):
+        params = parser.items(section)
+        for p in params:
+            config[p[0]] = p[1]
+
+    return config

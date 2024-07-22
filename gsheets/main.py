@@ -2,11 +2,11 @@ import fastapi
 import uvicorn
 import asyncio
 
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 from google_utils import auth, sheets
+from config import setup
 
 
-load_dotenv()
 app = fastapi.FastAPI()
 
 
@@ -37,15 +37,17 @@ async def conferences():
     return {"put": "put"}
 
 
-async def main():
-    config = uvicorn.Config("main:app", host="0.0.0.0", port=5000, log_level="info")
+async def main(params):
+    config = uvicorn.Config("main:app", host=params['host'], port=params['port'], log_level="info")
     server = uvicorn.Server(config)
     await server.serve()
 
 
 if __name__ == "__main__":
+    fastapi_config = setup.fastapi()
+
     try:
-        asyncio.run(main())
+        asyncio.run(main(fastapi_config))
     except KeyboardInterrupt as e:
         print(f"Exited by user {e}")
         exit(0)

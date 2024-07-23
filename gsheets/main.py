@@ -44,10 +44,12 @@ async def main(params):
 
 
 if __name__ == "__main__":
-    fastapi_config = setup.fastapi()
+    auth.setup_account()
 
-    try:
-        asyncio.run(main(fastapi_config))
-    except KeyboardInterrupt as e:
-        print(f"Exited by user {e}")
-        exit(0)
+    # fastapi_config = setup.fastapi()
+
+    # try:
+    #     asyncio.run(main(fastapi_config))
+    # except KeyboardInterrupt as e:
+    #     print(f"Exited by user {e}")
+    #     exit(0)

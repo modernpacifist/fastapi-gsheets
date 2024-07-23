@@ -32,7 +32,7 @@ def fastapi(section='fastapi'):
     return config
 
 
-def google(section='google'):
+def google_sheets(section='google_sheets'):
     if not os.path.isfile(CONF_FILENAME):
         raise Exception('No config.ini file found')
 

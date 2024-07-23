@@ -3,7 +3,7 @@ import uvicorn
 import asyncio
 
 # from dotenv import load_dotenv
-from google_utils import auth, sheets
+from google_utils import sheets
 from config import setup
 
 
@@ -18,7 +18,7 @@ async def index():
 
 @app.get('/conferences')
 async def conferences():
-    r = auth.setup_account()
+    r = sheets.get_all_sheets()
     return {"status": r}
 
 
@@ -44,12 +44,10 @@ async def main(params):
 
 
 if __name__ == "__main__":
-    auth.setup_account()
+    fastapi_config = setup.fastapi()
 
-    # fastapi_config = setup.fastapi()
-
-    # try:
-    #     asyncio.run(main(fastapi_config))
-    # except KeyboardInterrupt as e:
-    #     print(f"Exited by user {e}")
-    #     exit(0)
+    try:
+        asyncio.run(main(fastapi_config))
+    except KeyboardInterrupt as e:
+        print(f"Exited by user {e}")
+        exit(0)

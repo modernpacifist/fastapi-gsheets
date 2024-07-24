@@ -10,15 +10,9 @@ from config import setup
 app = fastapi.FastAPI()
 
 
-@app.get('/')
-async def index():
-    sheets.get_id()
-    return 200
-
-
 @app.get('/conferences')
 async def conferences():
-    r = sheets.get_all_sheets()
+    r = sheets.get_all_conferences()
     if not r:
         return 404, {"error": "No sheets found"}
     return {"data": r}

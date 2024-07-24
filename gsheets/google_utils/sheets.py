@@ -15,5 +15,14 @@ def get_all_sheets():
 
 
 def add_conference():
+    body = {
+        'values': [
+            ['1', 'name', 'title']
+        ]
+    }
+    r = sacc.spreadsheets().values().append(spreadsheetId=SPREADSHEET_ID, range=RANGE, valueInputOption="RAW", body=body).execute()
+    print(r)
     return None
 
+def update_conference():
+    return None

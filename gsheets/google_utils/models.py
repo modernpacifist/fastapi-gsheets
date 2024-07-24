@@ -1,4 +1,5 @@
 from marshmallow import Schema, fields
 
 
-class 
+class Record(Schema):
+    

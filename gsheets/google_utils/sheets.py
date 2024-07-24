@@ -14,11 +14,11 @@ def get_all_conferences():
 
 
 def add_conference():
-    body = {
-        'values': [
-            ['1', 'name', 'title']
-        ]
-    }
+    # body = {
+    #     'values': [
+    #         ['1', 'name', 'title']
+    #     ]
+    # }
     r = sacc.spreadsheets().values().append(spreadsheetId=SPREADSHEET_ID, range=RANGE, valueInputOption="RAW", body=body).execute()
     return r
 

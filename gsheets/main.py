@@ -19,7 +19,9 @@ async def index():
 @app.get('/conferences')
 async def conferences():
     r = sheets.get_all_sheets()
-    return {"status": r}
+    if not r:
+        return 404, {"error": "No sheets found"}
+    return {"data": r}
 
 
 @app.get('/conferences/{conference_id}')

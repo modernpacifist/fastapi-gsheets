@@ -6,7 +6,8 @@ sacc = auth.setup_account()
 conf = google_sheets()
 
 SPREADSHEET_ID = conf.get('id')
-RANGE = f"{conf.get('list_id')}!{conf.get('range')}"
+# RANGE = f"{conf.get('list_id')}!{conf.get('range')}"
+RANGE = f"{conf.get('list_id')}!B2:P999"
 
 
 def get_all_conferences():
@@ -15,17 +16,11 @@ def get_all_conferences():
 
 def add_conference():
     body = {
-        'valueInputOption': 'RAW',
-        'data': [
-            {
-                'range': RANGE, 'values': [
-                    [ 'sample', 'title' ],
-                ]
-            }
+        'values': [
+            [ 'sample', 'title' ],
         ]
     }
-    # r = sacc.spreadsheets().values().append(spreadsheetId=SPREADSHEET_ID, body=body).execute()
-    r = sacc.spreadsheets().values().batchUpdate(spreadsheetId=SPREADSHEET_ID, body=body).execute()
+    r = sacc.spreadsheets().values().append(spreadsheetId=SPREADSHEET_ID, range=RANGE, valueInputOption="RAW", body=body).execute()
     return r
 
 

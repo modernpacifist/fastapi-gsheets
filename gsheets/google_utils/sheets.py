@@ -15,11 +15,17 @@ def get_all_conferences():
 
 def add_conference():
     body = {
-        'values': [
-            ['name', 'title']
+        'valueInputOption': 'RAW',
+        'data': [
+            {
+                'range': RANGE, 'values': [
+                    [ 'sample', 'title' ],
+                ]
+            }
         ]
     }
-    r = sacc.spreadsheets().values().append(spreadsheetId=SPREADSHEET_ID, range=RANGE, valueInputOption="RAW", body=body).execute()
+    # r = sacc.spreadsheets().values().append(spreadsheetId=SPREADSHEET_ID, body=body).execute()
+    r = sacc.spreadsheets().values().batchUpdate(spreadsheetId=SPREADSHEET_ID, body=body).execute()
     return r
 
 

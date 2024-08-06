@@ -3,7 +3,7 @@ import uvicorn
 import asyncio
 
 # from dotenv import load_dotenv
-from google_utils import sheets
+from google_utils import sheets, models
 from config import setup
 
 

@@ -18,3 +18,33 @@ class Record(Schema):
     conference_end_date = fields.Date(required=True, format="%d.%m.%Y")
     conference_url = fields.URL()
     organizator_email = fields.Str(required=True)
+
+
+class GetConcreteConference(Schema):
+    id = fields.Int(required=True)
+    name_rus = fields.Str(required=True)
+    name_rus_short = fields.Str(required=True)
+    name_eng = fields.Str()
+    name_end_short = fields.Str()
+    registration_start_date = fields.Date(required=True, format="%d.%m.%Y")
+    registration_end_date = fields.Date(required=True, format="%d.%m.%Y")
+    submission_start_date = fields.Date(required=True, format="%d.%m.%Y")
+    submission_end_date = fields.Date(required=True, format="%d.%m.%Y")
+    conf_start_date = fields.Date(required=True, format="%d.%m.%Y")
+    conf_end_date = fields.Date(required=True, format="%d.%m.%Y")
+    organized_by = fields.Str(required=True)
+    url = fields.URL()
+    email = fields.Email(required=True)
+    google_spreadsheet = fields.Str(required=True)
+
+
+class GetConferenceShort(Schema):
+    id = fields.Int(required=True)
+    name_rus_short = fields.Str(required=True)
+    name_end_short = fields.Str()
+    conf_start_date = fields.Date(required=True, format="%d.%m.%Y")
+    conf_end_date = fields.Date(required=True, format="%d.%m.%Y")
+
+
+class AddNewConference(Schema):
+    id = fields.Int(required=True)

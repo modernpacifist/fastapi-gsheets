@@ -22,20 +22,21 @@ class Record(Schema):
 
 class GetConcreteConference(Schema):
     id = fields.Int(required=True)
+    google_spreadsheet = fields.Str(required=True)
+    google_drive_id = fields.Str()
     name_rus = fields.Str(required=True)
     name_rus_short = fields.Str(required=True)
     name_eng = fields.Str()
-    name_end_short = fields.Str()
+    name_eng_short = fields.Str()
+    organized_by = fields.Str(required=True)
     registration_start_date = fields.Date(required=True, format="%d.%m.%Y")
     registration_end_date = fields.Date(required=True, format="%d.%m.%Y")
     submission_start_date = fields.Date(required=True, format="%d.%m.%Y")
     submission_end_date = fields.Date(required=True, format="%d.%m.%Y")
     conf_start_date = fields.Date(required=True, format="%d.%m.%Y")
     conf_end_date = fields.Date(required=True, format="%d.%m.%Y")
-    organized_by = fields.Str(required=True)
     url = fields.URL()
     email = fields.Email(required=True)
-    google_spreadsheet = fields.Str(required=True)
 
 
 class GetConferenceShort(Schema):

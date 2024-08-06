@@ -3,8 +3,8 @@ from marshmallow import Schema, fields
 
 class Record(Schema):
     id = fields.Int(required=True)
-    id_str = fields.Str(required=True)
-    google_drive_directory = fields.Str(required=True)
+    users_table_id = fields.Str(required=True)
+    google_drive_directory_id = fields.Str(required=True)
     conference_title_full_ru = fields.Str(required=True)
     conference_title_short_ru = fields.Str(required=True)
     conference_title_full_en = fields.Str()

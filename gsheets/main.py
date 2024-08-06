@@ -26,7 +26,7 @@ async def conferences():
 @app.post('/conferences')
 async def conferences():
     r = sheets.add_conference()
-    return {"post": "post"}
+    return {"post": r}
 
 
 @app.put('/conferences/{conference_id}')

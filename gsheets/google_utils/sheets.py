@@ -12,14 +12,12 @@ LIST = sheets_conf.get('list')
 
 def _get_last_empty_range():
     r = SACC.spreadsheets().values().get(spreadsheetId=SPREADSHEET_ID, range=f'{LIST}!A2:A').execute()
-    if not r:
-        return None
-
-    if not 'values' in r:
+    values = r.get('values', [])
+    if not values:
         return 2
 
     try:
-        return int(r['values'][-1][0]) + 2
+        return int(values[-1][0]) + 2
 
     except Exception as e:
         print(e)
@@ -28,10 +26,11 @@ def _get_last_empty_range():
 
 def get_all_conferences():
     r = SACC.spreadsheets().values().batchGet(spreadsheetId=SPREADSHEET_ID, ranges=f'{LIST}!A2:P').execute()
-    if not 'values' in r:
+    values = r.get('')
+    if not r:
         return None
 
-    return r['values']
+    return r
 
 
 def add_conference():
@@ -47,7 +46,12 @@ def add_conference():
     }
 
     r = SACC.spreadsheets().values().append(spreadsheetId=SPREADSHEET_ID, range=f'{LIST}!B{lr}:P', valueInputOption="RAW", body=body).execute()
-    return r
+    res = r.get('updates', [])
+    if not res:
+        print('hehe')
+        return None
+
+    return res
 
 
 def update_conference():

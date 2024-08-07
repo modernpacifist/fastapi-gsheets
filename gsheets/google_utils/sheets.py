@@ -7,7 +7,7 @@ sheets_conf = google_sheets()
 
 SPREADSHEET_ID = sheets_conf.get('id')
 LIST = sheets_conf.get('list')
-RANGE = sheets_conf.get('range')
+# RANGE = sheets_conf.get('range')
 
 
 def _get_last_empty_range():
@@ -16,10 +16,10 @@ def _get_last_empty_range():
         return None
 
     if not 'values' in r:
-        return None
+        return 2
 
     try:
-        return int(r['values'][-1][0]) + 1
+        return int(r['values'][-1][0]) + 2
 
     except Exception as e:
         print(e)
@@ -27,17 +27,19 @@ def _get_last_empty_range():
 
 
 def get_all_conferences():
-    # return SACC.spreadsheets().values().batchGet(spreadsheetId=SPREADSHEET_ID, ranges=RANGE).execute()
-    return _get_last_empty_range()
+    r = SACC.spreadsheets().values().batchGet(spreadsheetId=SPREADSHEET_ID, ranges=f'{LIST}!A2:P').execute()
+    if not 'values' in r:
+        return None
+
+    return r['values']
 
 
 def add_conference():
     lr = _get_last_empty_range()
     if not lr:
+        print('lr is null')
         return None
 
-    print(lr)
-    
     body = {
         'values': [
             ['sample', 'title']

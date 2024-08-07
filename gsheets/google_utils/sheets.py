@@ -26,11 +26,32 @@ def _get_last_empty_range():
 
 def get_all_conferences():
     r = SACC.spreadsheets().values().batchGet(spreadsheetId=SPREADSHEET_ID, ranges=f'{LIST}!A2:P').execute()
-    values = r.get('')
     if not r:
         return None
 
-    return r
+    if not 'valueRanges' in r:
+        return None
+
+    values = r.get('valueRanges')[0].get('values', [])
+    if not values:
+        return None
+
+    return values
+
+
+def get_conference_by_id():
+    r = SACC.spreadsheets().values().batchGet(spreadsheetId=SPREADSHEET_ID, ranges=f'{LIST}!A2:P').execute()
+    if not r:
+        return None
+
+    if not 'valueRanges' in r:
+        return None
+
+    values = r.get('valueRanges')[0].get('values', [])
+    if not values:
+        return None
+
+    return values
 
 
 def add_conference():

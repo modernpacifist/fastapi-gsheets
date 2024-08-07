@@ -2,7 +2,7 @@ import uvicorn
 import asyncio
 
 # from dotenv import load_dotenv
-from fastapi import FastAPI, Response, status
+from fastapi import FastAPI, Response, status, HTTPException
 from google_utils import sheets, models
 from config import setup
 
@@ -14,7 +14,7 @@ app = FastAPI()
 async def conferences():
     r = sheets.get_all_conferences()
     if not r:
-        return 404, {"error": "No conferences found"}
+        raise HTTPException(status_code=404, detail="No conferences found")
 
     return {"data": r}
 

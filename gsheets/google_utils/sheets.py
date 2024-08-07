@@ -4,7 +4,6 @@ from config.setup import google_sheets
 
 SACC = auth.setup_account()
 sheets_conf = google_sheets()
-print(sheets_conf)
 
 SPREADSHEET_ID = sheets_conf.get('id')
 RANGE = f"{sheets_conf.get('list_id')}!{sheets_conf.get('range')}"
@@ -20,7 +19,8 @@ def add_conference():
             ['sample', 'title'],
         ]
     }
-    r = SACC.spreadsheets().values().append(spreadsheetId=SPREADSHEET_ID, range=RANGE, insertDataOption="INSERT_ROWS", valueInputOption="RAW", body=body).execute()
+    # r = SACC.spreadsheets().values().append(spreadsheetId=SPREADSHEET_ID, range="main!B:P", insertDataOption="INSERT_ROWS", valueInputOption="RAW", body=body).execute()
+    r = SACC.spreadsheets(protected_ranges=['A:A']).values().append(spreadsheetId=SPREADSHEET_ID, range="main!B:P", insertDataOption="INSERT_ROWS", valueInputOption="RAW", body=body).execute()
     return r
 
 

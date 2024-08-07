@@ -9,8 +9,13 @@ SPREADSHEET_ID = sheets_conf.get('id')
 RANGE = sheets_conf.get('range')
 
 
+def get_last_row():
+    return SACC.spreadsheets().values().get(spreadsheetId=SPREADSHEET_ID, range='A2:A').execute()
+
+
 def get_all_conferences():
-    return SACC.spreadsheets().values().batchGet(spreadsheetId=SPREADSHEET_ID, ranges=RANGE).execute()
+    # return SACC.spreadsheets().values().batchGet(spreadsheetId=SPREADSHEET_ID, ranges=RANGE).execute()
+    return get_last_row()
 
 
 def add_conference():

@@ -14,7 +14,11 @@ def _get_last_empty_range():
     r = SACC.spreadsheets().values().get(spreadsheetId=SPREADSHEET_ID, range=f'{LIST}!A2:A').execute()
     if not r:
         return None
-    return r
+    
+    if not 'values' in r:
+        return None
+
+    return r['values'][-1][0]
 
 
 def get_all_conferences():

@@ -17,10 +17,9 @@ def add_conference():
     body = {
         'values': [
             ['sample', 'title'],
+            ['sample1', 'heee']
         ]
     }
-    # r = SACC.spreadsheets().values().append(spreadsheetId=SPREADSHEET_ID, range="main!B:P", insertDataOption="INSERT_ROWS", valueInputOption="RAW", body=body).execute()
-    # r = SACC.spreadsheets().values().append(spreadsheetId=SPREADSHEET_ID, range=RANGE, insertDataOption="INSERT_ROWS", valueInputOption="RAW", body=body).execute()
     r = SACC.spreadsheets().values().append(spreadsheetId=SPREADSHEET_ID, range=RANGE, valueInputOption="RAW", body=body).execute()
     return r
 

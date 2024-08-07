@@ -6,7 +6,7 @@ SACC = auth.setup_account()
 sheets_conf = google_sheets()
 
 SPREADSHEET_ID = sheets_conf.get('id')
-RANGE = f"{sheets_conf.get('list_id')}!{sheets_conf.get('range')}"
+RANGE = sheets_conf.get('range')
 
 
 def get_all_conferences():
@@ -20,7 +20,8 @@ def add_conference():
         ]
     }
     # r = SACC.spreadsheets().values().append(spreadsheetId=SPREADSHEET_ID, range="main!B:P", insertDataOption="INSERT_ROWS", valueInputOption="RAW", body=body).execute()
-    r = SACC.spreadsheets(protected_ranges=['A:A']).values().append(spreadsheetId=SPREADSHEET_ID, range="main!B:P", insertDataOption="INSERT_ROWS", valueInputOption="RAW", body=body).execute()
+    # r = SACC.spreadsheets().values().append(spreadsheetId=SPREADSHEET_ID, range=RANGE, insertDataOption="INSERT_ROWS", valueInputOption="RAW", body=body).execute()
+    r = SACC.spreadsheets().values().append(spreadsheetId=SPREADSHEET_ID, range=RANGE, valueInputOption="RAW", body=body).execute()
     return r
 
 

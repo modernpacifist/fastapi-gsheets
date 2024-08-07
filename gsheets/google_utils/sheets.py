@@ -3,11 +3,11 @@ from config.setup import google_sheets
 
 
 SACC = auth.setup_account()
-conf = google_sheets()
+sheets_conf = google_sheets()
+print(sheets_conf)
 
-SPREADSHEET_ID = conf.get('id')
-RANGE = f"{conf.get('list_id')}!{conf.get('range')}"
-# RANGE = f"{conf.get('list_id')}!B2:P999"
+SPREADSHEET_ID = sheets_conf.get('id')
+RANGE = f"{sheets_conf.get('list_id')}!{sheets_conf.get('range')}"
 
 
 def get_all_conferences():

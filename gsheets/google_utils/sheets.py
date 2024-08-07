@@ -14,11 +14,16 @@ def _get_last_empty_range():
     r = SACC.spreadsheets().values().get(spreadsheetId=SPREADSHEET_ID, range=f'{LIST}!A2:A').execute()
     if not r:
         return None
-    
+
     if not 'values' in r:
         return None
 
-    return r['values'][-1][0]
+    try:
+        return int(r['values'][-1][0]) + 1
+
+    except Exception as e:
+        print(e)
+        return None
 
 
 def get_all_conferences():
@@ -30,17 +35,16 @@ def add_conference():
     lr = _get_last_empty_range()
     if not lr:
         return None
-    
-    print(lr)
-    return None
 
+    print(lr)
+    
     body = {
         'values': [
             ['sample', 'title']
         ]
     }
 
-    r = SACC.spreadsheets().values().append(spreadsheetId=SPREADSHEET_ID, range=f'{LIST}!{RANGE}', valueInputOption="RAW", body=body).execute()
+    r = SACC.spreadsheets().values().append(spreadsheetId=SPREADSHEET_ID, range=f'{LIST}!B{lr}:P', valueInputOption="RAW", body=body).execute()
     return r
 
 

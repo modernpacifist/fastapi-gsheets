@@ -14,7 +14,7 @@ app = FastAPI()
 async def conferences():
     r = sheets_ops.get_all_conferences()
     if not r:
-        raise HTTPException(status_code=204, detail='No conferences found')
+        raise HTTPException(status_code=404, detail='No conferences found')
 
     return {"data": r}
 

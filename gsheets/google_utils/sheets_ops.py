@@ -57,7 +57,7 @@ def get_conference_by_id():
 def add_conference():
     lr = _get_last_empty_range()
     if not lr:
-        print('lr is null')
+        print('sheets.add_conference: Could not retrieve last empty row from spreadsheet')
         return None
 
     body = {
@@ -69,7 +69,7 @@ def add_conference():
     r = SACC.spreadsheets().values().append(spreadsheetId=SPREADSHEET_ID, range=f'{LIST}!B{lr}:P', valueInputOption="RAW", body=body).execute()
     res = r.get('updates', [])
     if not res:
-        print('hehe')
+        print('sheets.add_conference: Could not add conference to spreadsheet')
         return None
 
     return res

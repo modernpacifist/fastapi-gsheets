@@ -3,32 +3,33 @@ import asyncio
 
 # from dotenv import load_dotenv
 from fastapi import FastAPI, Response, status, HTTPException
-from google_utils import sheets, models
+from google_utils import sheets_ops, models
 from config import setup
 
 
 app = FastAPI()
 
 
-@app.get('/conferences')
+@app.get('/conferences', status_code=status.HTTP_200_OK)
 async def conferences():
-    r = sheets.get_all_conferences()
+    r = sheets_ops.get_all_conferences()
     if not r:
-        raise HTTPException(status_code=404, detail="No conferences found")
+        raise HTTPException(status_code=204, detail='No conferences found')
 
     return {"data": r}
 
 
-@app.get('/conferences/{conference_id}')
+@app.get('/conferences/{conference_id}', status_code=status.HTTP_200_OK)
 async def conferences():
     return {"info": "info"}
 
 
 @app.post('/conferences', status_code=status.HTTP_201_CREATED)
 async def conferences():
-    r = sheets.add_conference()
+    r = sheets_ops.add_conference()
     if not r:
-        return {'Error': 'Could not add new conference'}
+        raise HTTPException(status_code=500, detail='Could not add new conference')
+        # return {'Error': 'Could not add new conference'}
 
     return {'data': r}
 

@@ -21,7 +21,10 @@ async def conferences(filter: str = None):
 
 @app.get('/conferences/{conference_id}', status_code=status.HTTP_200_OK)
 async def conferences(conference_id: int = None):
-    return {"info": conference_id}
+    if not conference_id:
+        return {'info': 'You must provide a conference id'}
+
+    return {'info': conference_id}
 
 
 @app.post('/conferences', status_code=status.HTTP_201_CREATED)

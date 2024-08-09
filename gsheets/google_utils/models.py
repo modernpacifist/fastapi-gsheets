@@ -46,7 +46,7 @@ class PostConference(BaseModel):
     name_rus_short: str
     name_eng: Optional[str] = ""
     name_eng_short: Optional[str] = ""
-    registration_start_date: datetime = Field(format="%d.%m.%Y")
+    registration_start_date: str
     registration_end_date: str
     submission_start_date: str
     submission_end_date: str
@@ -68,16 +68,17 @@ class PostConference(BaseModel):
             datetime.strptime(v, '%d.%m.%Y')
         except ValueError:
             raise ValueError('Invalid date format. Please use DD.MM.YYYY')
+        return v
 
-    @field_serializer(
-            'registration_start_date',
-            'registration_end_date',
-            'submission_start_date',
-            'submission_end_date',
-            'conf_start_date',
-            'conf_end_date')
-    def serialize_date(cls, v):
-        return datetime.strptime(v, '%d.%m.%Y')
+    # @field_serializer(
+    #         'registration_start_date',
+    #         'registration_end_date',
+    #         'submission_start_date',
+    #         'submission_end_date',
+    #         'conf_start_date',
+    #         'conf_end_date')
+    # def serialize_date(v: str):
+    #     return datetime.strptime(v, '%d.%m.%Y')
 
 
 class GetConferenceShort(Schema):

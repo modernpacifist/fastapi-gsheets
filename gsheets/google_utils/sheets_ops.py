@@ -79,24 +79,24 @@ def get_conference_by_id(conference_id):
     dict_data = dict(zip_longest(field_names, conference_data, fillvalue=""))
 
     try:
-        return models.GetConcreteConference().load(dict_data, unknown="exclude")
+        return models.GetConference().load(dict_data, unknown="exclude")
 
     except Exception as e:
-        print(e)
+        print(f'sheets_ops.get_conference_by_id: {e}')
         return None
 
 
-def add_conference():
+def add_conference(model):
     lr = _get_last_empty_range()
     if not lr:
         print('sheets_ops.add_conference: Could not retrieve last empty row from spreadsheet')
         return None
 
-    body = {
-        'values': [
-            ['sample', 'title']
-        ]
-    }
+    # body = {
+    #     'values': [
+    #         ['sample', 'title']
+    #     ]
+    # }
 
     r = SACC.spreadsheets().values().append(spreadsheetId=SPREADSHEET_ID, range=f'{LIST}!B{lr}:P', valueInputOption='RAW', body=body).execute()
     res = r.get('updates', [])

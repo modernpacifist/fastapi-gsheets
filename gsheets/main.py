@@ -22,10 +22,10 @@ async def conferences(filter: str = None):
 @app.get('/conferences/{conference_id}')
 async def conferences(conference_id: str = None):
     if not conference_id:
-        raise HTTPException(status_code=400, detail='You must provide conference id to update it')
+        raise HTTPException(status_code=400, detail='You must provide conference id')
 
     if not conference_id.isdigit():
-        raise HTTPException(status_code=422, detail='Id of the conference must be a number')
+        raise HTTPException(status_code=422, detail='Conference id of must be a integer')
 
     conference = sheets_ops.get_conference_by_id(conference_id)
     if not conference:
@@ -35,7 +35,7 @@ async def conferences(conference_id: str = None):
 
 
 @app.post('/conferences', status_code=status.HTTP_201_CREATED)
-async def conferences():
+async def conferences(model: models.PostConference):
     r = sheets_ops.add_conference()
     if not r:
         raise HTTPException(status_code=500, detail='Could not add new conference')

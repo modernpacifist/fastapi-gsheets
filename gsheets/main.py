@@ -27,11 +27,11 @@ async def conferences(conference_id: str = None):
     if not conference_id.isdigit():
         raise HTTPException(status_code=422, detail='Id of the conference must be a number')
 
-    r = sheets_ops.get_conference_by_id(conference_id)
-    if not r:
+    conference = sheets_ops.get_conference_by_id(conference_id)
+    if not conference:
         raise HTTPException(status_code=404, detail=f'Could not find conference with id {conference_id}')
 
-    return {'info': conference_id}
+    return conference
 
 
 @app.post('/conferences', status_code=status.HTTP_201_CREATED)

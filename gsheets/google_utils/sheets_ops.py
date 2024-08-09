@@ -1,6 +1,7 @@
 from google_utils import models
 from google_utils import auth
 from config.setup import google_sheets
+from itertools import 
 
 
 SACC = auth.setup_account()
@@ -26,7 +27,11 @@ def _get_last_empty_range():
 
 
 # subroutine to parse data from the spreadsheet
-def _get_values_from_response():
+def _extract_values_from_response():
+    raise NotImplementedError("Damn")
+
+
+def _extract_fieldnames_from_response():
     raise NotImplementedError("Damn")
 
 
@@ -46,7 +51,7 @@ def get_all_conferences():
 
 
 def get_conference_by_id(conference_id):
-    r = SACC.spreadsheets().values().batchGet(spreadsheetId=SPREADSHEET_ID, ranges=f'{LIST}!A2:P').execute()
+    r = SACC.spreadsheets().values().batchGet(spreadsheetId=SPREADSHEET_ID, ranges=f'{LIST}!A1:P').execute()
     if not r:
         print('sheets_ops.get_conference_by_id: Could not retrieve info from the spreadsheet')
         return None
@@ -54,12 +59,12 @@ def get_conference_by_id(conference_id):
     if not 'valueRanges' in r:
         return None
 
-    print(r)
-
     values = r.get('valueRanges')[0].get('values', [])
     if not values:
         print('sheets_ops.get_conference_by_id: Values field is null in spreadsheet')
         return None
+
+    field_names = values[0]
 
     conference_data = None
     for conference in values:
@@ -70,10 +75,15 @@ def get_conference_by_id(conference_id):
     if not conference_data:
         print('sheets_ops.get_conference_by_id: Could not find record with correct id in the spreadsheet')
         return None
-        
-    # print(conference_data)
 
-    return conference_data
+    # if len(field_names) != len(conference_data):
+    #     print('sheets_ops.get_conference_by_id: Could not zip info')
+    #     return None
+    
+    data = dict(zip(field_names, conference_data))
+    print(data)
+
+    return data
 
 
 def add_conference():

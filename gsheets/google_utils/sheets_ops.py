@@ -1,7 +1,7 @@
 from google_utils import models
 from google_utils import auth
 from config.setup import google_sheets
-from itertools import 
+from itertools import zip_longest
 
 
 SACC = auth.setup_account()
@@ -76,14 +76,9 @@ def get_conference_by_id(conference_id):
         print('sheets_ops.get_conference_by_id: Could not find record with correct id in the spreadsheet')
         return None
 
-    # if len(field_names) != len(conference_data):
-    #     print('sheets_ops.get_conference_by_id: Could not zip info')
-    #     return None
-    
-    data = dict(zip(field_names, conference_data))
-    print(data)
+    dict_data = dict(zip_longest(field_names, conference_data, fillvalue=""))
 
-    return data
+    return dict_data
 
 
 def add_conference():

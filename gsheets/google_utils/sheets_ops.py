@@ -52,13 +52,14 @@ def get_conference_by_id(conference_id):
     if not values:
         return None
 
-    # print(values)
     for record in values:
-        if record[0] == conference_id:
-            print(record)
-            return values
-            # continue
+        if record[0] != conference_id:
+            continue
+        # model = models.
         
+        print(record)
+        return values
+            # continue
 
     return values
 

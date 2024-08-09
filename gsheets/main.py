@@ -24,7 +24,8 @@ async def conferences(conference_id: str = None):
     if not conference_id:
         return HTTPException(status=400, detail='You must provide conference id to update it')
 
-    if conference_id.isdi
+    if not conference_id.isdigit():
+        return HTTPException(status=422, detail='Id of the conference must be a number')
 
     r = sheets_ops.get_conference_by_id(conference_id)
     if not r:

@@ -2,7 +2,7 @@ import uvicorn
 import asyncio
 
 # from dotenv import load_dotenv
-from fastapi import FastAPI, Response, status, HTTPException, Body
+from fastapi import FastAPI, status, HTTPException, Body
 from google_utils import sheets_ops, models
 from config import setup
 
@@ -35,7 +35,7 @@ async def conferences(conference_id: str = None):
 
 
 @app.post('/conferences', status_code=status.HTTP_201_CREATED)
-async def conferences(conference: models.PostConference = Body(...)):
+async def conferences(conference: models.PostConference):
     r = sheets_ops.add_conference()
     if not r:
         raise HTTPException(status_code=500, detail='Could not add new conference')

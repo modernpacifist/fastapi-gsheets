@@ -25,6 +25,11 @@ def _get_last_empty_range():
         return None
 
 
+# subroutine to parse data from the spreadsheet
+def _get_values_from_response():
+    raise NotImplementedError("Damn")
+
+
 def get_all_conferences():
     r = SACC.spreadsheets().values().batchGet(spreadsheetId=SPREADSHEET_ID, ranges=f'{LIST}!A2:P').execute()
     if not r:
@@ -43,14 +48,17 @@ def get_all_conferences():
 def get_conference_by_id(conference_id):
     r = SACC.spreadsheets().values().batchGet(spreadsheetId=SPREADSHEET_ID, ranges=f'{LIST}!A2:P').execute()
     if not r:
+        print('sheets_ops.get_conference_by_id: Could not retrieve info from the spreadsheet')
         return None
 
     if not 'valueRanges' in r:
         return None
 
+    print(r)
+
     values = r.get('valueRanges')[0].get('values', [])
     if not values:
-        print('sheets_ops.get_conference_by_id: Could not retrieve info from the spreadsheet')
+        print('sheets_ops.get_conference_by_id: Values field is null in spreadsheet')
         return None
 
     conference_data = None
@@ -63,7 +71,7 @@ def get_conference_by_id(conference_id):
         print('sheets_ops.get_conference_by_id: Could not find record with correct id in the spreadsheet')
         return None
         
-    print(conference_data)
+    # print(conference_data)
 
     return conference_data
 

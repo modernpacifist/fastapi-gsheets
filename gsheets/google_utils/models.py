@@ -49,3 +49,7 @@ class GetConferenceShort(Schema):
 
 class AddNewConference(Schema):
     id = fields.Int(required=True)
+
+
+def schema_factory(schema, values):
+    return schema

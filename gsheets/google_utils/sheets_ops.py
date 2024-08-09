@@ -92,15 +92,11 @@ def add_conference(model):
         print('sheets_ops.add_conference: Could not retrieve last empty row from spreadsheet')
         return None
 
-    # body = {
-    #     'values': [
-    #         ['sample', 'title']
-    #     ]
-    # }
-
-    print(model)
-
-    return model
+    body = {
+        'values': [
+            list(model.dict().values())
+        ]
+    }
 
     r = SACC.spreadsheets().values().append(spreadsheetId=SPREADSHEET_ID, range=f'{LIST}!B{lr}:P', valueInputOption='RAW', body=body).execute()
     res = r.get('updates', [])

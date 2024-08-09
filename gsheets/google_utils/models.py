@@ -53,7 +53,7 @@ class PostConference(BaseModel):
     conf_start_date: str
     conf_end_date: str
     organized_by: str
-    url: Optional[HttpUrl] = ""
+    url: Optional[str] = ""
     email: EmailStr
 
     @field_validator(
@@ -67,18 +67,8 @@ class PostConference(BaseModel):
         try:
             datetime.strptime(v, '%d.%m.%Y')
         except ValueError:
-            raise ValueError('Invalid date format. Please use DD.MM.YYYY')
+            raise ValueError('Incorrect date')
         return v
-
-    # @field_serializer(
-    #         'registration_start_date',
-    #         'registration_end_date',
-    #         'submission_start_date',
-    #         'submission_end_date',
-    #         'conf_start_date',
-    #         'conf_end_date')
-    # def serialize_date(v: str):
-    #     return datetime.strptime(v, '%d.%m.%Y')
 
 
 class GetConferenceShort(Schema):

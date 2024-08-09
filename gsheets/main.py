@@ -19,17 +19,17 @@ async def conferences(filter: str = None):
     return {"data": r}
 
 
-@app.get('/conferences/{conference_id}', status_code=status.HTTP_200_OK)
+@app.get('/conferences/{conference_id}')
 async def conferences(conference_id: str = None):
     if not conference_id:
-        return HTTPException(status=400, detail='You must provide conference id to update it')
+        raise HTTPException(status_code=400, detail='You must provide conference id to update it')
 
     if not conference_id.isdigit():
-        return HTTPException(status=422, detail='Id of the conference must be a number')
+        raise HTTPException(status_code=422, detail='Id of the conference must be a number')
 
     r = sheets_ops.get_conference_by_id(conference_id)
     if not r:
-        return {'info': f'Could not find conference with id {conference_id}'}
+        raise HTTPException(status_code=404, detail=f'Could not find conference with id {conference_id}')
 
     return {'info': conference_id}
 
@@ -39,7 +39,6 @@ async def conferences():
     r = sheets_ops.add_conference()
     if not r:
         raise HTTPException(status_code=500, detail='Could not add new conference')
-        # return {'Error': 'Could not add new conference'}
 
     return {'data': r}
 
@@ -47,22 +46,22 @@ async def conferences():
 @app.put('/conferences/{conference_id}')
 async def conferences(conference_id: int = None):
     if not conference_id:
-        return HTTPException(status=400, detail='You must provide conference id to update it')
+        raise HTTPException(status=400, detail='You must provide conference id to update it')
 
-    return {"put": "put"}
+    return {'put': 'put'}
 
 
 async def main(params):
-    config = uvicorn.Config("main:app", host=params['host'], port=params['port'], log_level="info")
+    config = uvicorn.Config('main:app', host=params['host'], port=params['port'], log_level='info')
     server = uvicorn.Server(config)
     await server.serve()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     fastapi_config = setup.fastapi()
 
     try:
         asyncio.run(main(fastapi_config))
     except KeyboardInterrupt as e:
-        print(f"Exited by user {e}")
+        print(f'Exited by user {e}')
         exit(0)

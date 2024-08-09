@@ -50,24 +50,28 @@ def get_conference_by_id(conference_id):
 
     values = r.get('valueRanges')[0].get('values', [])
     if not values:
+        print('sheets_ops.get_conference_by_id: Could not retrieve info from the spreadsheet')
         return None
 
-    for record in values:
-        if record[0] != conference_id:
-            continue
-        # model = models.
-        
-        print(record)
-        return values
-            # continue
+    conference_data = None
+    for conference in values:
+        if conference[0] == conference_id:
+            conference_data = conference
+            break
 
-    return values
+    if not conference_data:
+        print('sheets_ops.get_conference_by_id: Could not find record with correct id in the spreadsheet')
+        return None
+        
+    print(conference_data)
+
+    return conference_data
 
 
 def add_conference():
     lr = _get_last_empty_range()
     if not lr:
-        print('sheets.add_conference: Could not retrieve last empty row from spreadsheet')
+        print('sheets_ops.add_conference: Could not retrieve last empty row from spreadsheet')
         return None
 
     body = {
@@ -76,10 +80,10 @@ def add_conference():
         ]
     }
 
-    r = SACC.spreadsheets().values().append(spreadsheetId=SPREADSHEET_ID, range=f'{LIST}!B{lr}:P', valueInputOption="RAW", body=body).execute()
+    r = SACC.spreadsheets().values().append(spreadsheetId=SPREADSHEET_ID, range=f'{LIST}!B{lr}:P', valueInputOption='RAW', body=body).execute()
     res = r.get('updates', [])
     if not res:
-        print('sheets.add_conference: Could not add conference to spreadsheet')
+        print('sheets_ops.add_conference: Could not add conference to spreadsheet')
         return None
 
     return res

@@ -1,3 +1,4 @@
+from google_utils import models
 from google_utils import auth
 from config.setup import google_sheets
 
@@ -51,7 +52,13 @@ def get_conference_by_id(conference_id):
     if not values:
         return None
 
-    print(values)
+    # print(values)
+    for record in values:
+        if record[0] == conference_id:
+            print(record)
+            return values
+            # continue
+        
 
     return values
 

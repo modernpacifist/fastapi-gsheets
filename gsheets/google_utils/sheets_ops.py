@@ -78,7 +78,11 @@ def get_conference_by_id(conference_id):
 
     dict_data = dict(zip_longest(field_names, conference_data, fillvalue=""))
 
-    return dict_data
+    model = models.GetConcreteConference.from_dict(dict_data)
+    # google_spreadsheet = fields.Str(required=True)
+    # google_drive_id = fields.Str()
+
+    return model
 
 
 def add_conference():

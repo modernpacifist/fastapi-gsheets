@@ -98,6 +98,10 @@ def add_conference(model):
     #     ]
     # }
 
+    print(model)
+
+    return model
+
     r = SACC.spreadsheets().values().append(spreadsheetId=SPREADSHEET_ID, range=f'{LIST}!B{lr}:P', valueInputOption='RAW', body=body).execute()
     res = r.get('updates', [])
     if not res:

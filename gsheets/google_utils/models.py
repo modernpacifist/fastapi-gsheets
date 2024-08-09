@@ -1,6 +1,7 @@
 from marshmallow import Schema, fields
-from pydantic import BaseModel, Field, HttpUrl
-from datetime import date
+from pydantic import BaseModel, Field, HttpUrl, EmailStr
+from datetime import datetime
+from typing import Optional
 
 
 # class Record(Schema):
@@ -55,34 +56,19 @@ class GetConference(Schema):
 
 
 class PostConference(BaseModel):
-    # id = fields.Int(required=True)
-    # name_rus = fields.Str(required=True)
-    # name_rus_short = fields.Str(required=True)
-    # name_eng = fields.Str()
-    # name_eng_short = fields.Str()
-    # registration_start_date = fields.Date(required=True, format="%d.%m.%Y")
-    # registration_end_date = fields.Date(required=True, format="%d.%m.%Y")
-    # submission_start_date = fields.Date(required=True, format="%d.%m.%Y")
-    # submission_end_date = fields.Date(required=True, format="%d.%m.%Y")
-    # conf_start_date = fields.Date(required=True, format="%d.%m.%Y")
-    # conf_end_date = fields.Date(required=True, format="%d.%m.%Y")
-    # organized_by = fields.Str(required=True)
-    # url = fields.URL()
-    # email = fields.Email(required=True)
-
-    id: int
+    google_spreadsheet: str
     name_rus: str
     name_rus_short: str
-    name_eng: str | None = None
-    name_eng_short: str | None = None
-    registration_start_date: date = Field(..., format="%d.%m.%Y")
-    registration_end_date: date = Field(..., format="%d.%m.%Y")
-    submission_start_date: date = Field(..., format="%d.%m.%Y")
-    submission_end_date: date = Field(..., format="%d.%m.%Y")
-    conf_start_date: date = Field(..., format="%d.%m.%Y")
-    conf_end_date: date = Field(..., format="%d.%m.%Y")
+    name_eng: Optional[str] = ""
+    name_eng_short: Optional[str] = ""
+    registration_start_date: datetime = Field(..., format="%d.%m.%Y")
+    registration_end_date: datetime = Field(..., format="%d.%m.%Y")
+    submission_start_date: datetime = Field(..., format="%d.%m.%Y")
+    submission_end_date: datetime = Field(..., format="%d.%m.%Y")
+    conf_start_date: datetime = Field(..., format="%d.%m.%Y")
+    conf_end_date: datetime = Field(..., format="%d.%m.%Y")
     organized_by: str
-    url: HttpUrl
+    url: Optional[HttpUrl] = ""
     email: EmailStr
 
 

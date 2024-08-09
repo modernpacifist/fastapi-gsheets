@@ -1,5 +1,5 @@
 from marshmallow import Schema, fields
-from pydantic import BaseModel, Field, HttpUrl, EmailStr
+from pydantic import BaseModel, Field, HttpUrl, EmailStr, field_validator, field_serializer
 from datetime import datetime, date
 from typing import Optional
 
@@ -46,25 +46,38 @@ class PostConference(BaseModel):
     name_rus_short: str
     name_eng: Optional[str] = ""
     name_eng_short: Optional[str] = ""
-    # registration_start_date: str = Field(pattern=r'^(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[0-2])\.\d{4}$')
-    # registration_end_date: str = Field(pattern=r'^(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[0-2])\.\d{4}$')
-    # submission_start_date: str = Field(pattern=r'^(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[0-2])\.\d{4}$')
-    # submission_end_date: str = Field(pattern=r'^(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[0-2])\.\d{4}$')
-    # conf_start_date: str = Field(pattern=r'^(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[0-2])\.\d{4}$')
-    # conf_end_date: str = Field(pattern=r'^(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[0-2])\.\d{4}$')
-    registration_start_date: datetime
-    registration_end_date: datetime
-    submission_start_date: datetime
-    submission_end_date: datetime
-    conf_start_date: datetime
-    conf_end_date: datetime
+    registration_start_date: str
+    registration_end_date: str
+    submission_start_date: str
+    submission_end_date: str
+    conf_start_date: str
+    conf_end_date: str
     organized_by: str
     url: Optional[HttpUrl] = ""
     email: EmailStr
 
-    # @field_validator('registration_start_date')
-    # def d(cls, v):
+    @field_validator(
+            'registration_start_date',
+            'registration_end_date',
+            'submission_start_date',
+            'submission_end_date',
+            'conf_start_date',
+            'conf_end_date')
+    def validate_date(cls, v):
+        try:
+            datetime.strptime(v, '%d.%m.%Y')
+        except ValueError:
+            raise ValueError('Invalid date format. Please use DD.MM.YYYY')
 
+    @field_serializer(
+            'registration_start_date',
+            'registration_end_date',
+            'submission_start_date',
+            'submission_end_date',
+            'conf_start_date',
+            'conf_end_date')
+    def serialize_date(cls, v):
+        return datetime(v)
 
 
 class GetConferenceShort(Schema):

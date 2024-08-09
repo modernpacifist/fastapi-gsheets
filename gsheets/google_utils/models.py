@@ -46,15 +46,25 @@ class PostConference(BaseModel):
     name_rus_short: str
     name_eng: Optional[str] = ""
     name_eng_short: Optional[str] = ""
-    registration_start_date: datetime = )
-    registration_end_date: str = Field(..., format="%d.%m.%Y")
-    submission_start_date: str = Field(..., format="%d.%m.%Y")
-    submission_end_date: str = Field(..., format="%d.%m.%Y")
-    conf_start_date: str = Field(..., format="%d.%m.%Y")
-    conf_end_date: str = Field(..., format="%d.%m.%Y")
+    # registration_start_date: str = Field(pattern=r'^(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[0-2])\.\d{4}$')
+    # registration_end_date: str = Field(pattern=r'^(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[0-2])\.\d{4}$')
+    # submission_start_date: str = Field(pattern=r'^(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[0-2])\.\d{4}$')
+    # submission_end_date: str = Field(pattern=r'^(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[0-2])\.\d{4}$')
+    # conf_start_date: str = Field(pattern=r'^(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[0-2])\.\d{4}$')
+    # conf_end_date: str = Field(pattern=r'^(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[0-2])\.\d{4}$')
+    registration_start_date: datetime
+    registration_end_date: datetime
+    submission_start_date: datetime
+    submission_end_date: datetime
+    conf_start_date: datetime
+    conf_end_date: datetime
     organized_by: str
     url: Optional[HttpUrl] = ""
     email: EmailStr
+
+    # @field_validator('registration_start_date')
+    # def d(cls, v):
+
 
 
 class GetConferenceShort(Schema):

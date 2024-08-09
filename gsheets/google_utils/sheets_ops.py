@@ -39,7 +39,7 @@ def get_all_conferences():
     return values
 
 
-def get_conference_by_id():
+def get_conference_by_id(conference_id):
     r = SACC.spreadsheets().values().batchGet(spreadsheetId=SPREADSHEET_ID, ranges=f'{LIST}!A2:P').execute()
     if not r:
         return None
@@ -50,6 +50,8 @@ def get_conference_by_id():
     values = r.get('valueRanges')[0].get('values', [])
     if not values:
         return None
+
+    print(values)
 
     return values
 

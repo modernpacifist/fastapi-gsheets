@@ -24,6 +24,10 @@ async def conferences(conference_id: int = None):
     if not conference_id:
         return {'info': 'You must provide a conference id'}
 
+    r = sheets_ops.get_conference_by_id(conference_id)
+    if not r:
+        return {'info': f'Could not find conference with id {conference_id}'}
+
     return {'info': conference_id}
 
 

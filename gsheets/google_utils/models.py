@@ -1,6 +1,6 @@
 from abc import abstractmethod
 from marshmallow import Schema, fields
-from pydantic import BaseModel, Field, HttpUrl, EmailStr, field_validator, field_serializer
+from pydantic import BaseModel, Field, EmailStr, field_validator, create_model
 from datetime import datetime, date
 from typing import Optional
 
@@ -24,24 +24,24 @@ from typing import Optional
 #     organizator_email = fields.Str(required=True)
 
 
-class GetConference(Schema):
-    id = fields.Int(required=True)
-    name_rus = fields.Str(required=True)
-    name_rus_short = fields.Str(required=True)
-    name_eng = fields.Str()
-    name_eng_short = fields.Str()
-    registration_start_date = fields.Date(required=True, format="%d.%m.%Y")
-    registration_end_date = fields.Date(required=True, format="%d.%m.%Y")
-    submission_start_date = fields.Date(required=True, format="%d.%m.%Y")
-    submission_end_date = fields.Date(required=True, format="%d.%m.%Y")
-    conf_start_date = fields.Date(required=True, format="%d.%m.%Y")
-    conf_end_date = fields.Date(required=True, format="%d.%m.%Y")
-    organized_by = fields.Str(required=True)
-    url = fields.URL()
-    email = fields.Email(required=True)
+# class GetConference(Schema):
+#     id = fields.Int(required=True)
+#     name_rus = fields.Str(required=True)
+#     name_rus_short = fields.Str(required=True)
+#     name_eng = fields.Str()
+#     name_eng_short = fields.Str()
+#     registration_start_date = fields.Date(required=True, format="%d.%m.%Y")
+#     registration_end_date = fields.Date(required=True, format="%d.%m.%Y")
+#     submission_start_date = fields.Date(required=True, format="%d.%m.%Y")
+#     submission_end_date = fields.Date(required=True, format="%d.%m.%Y")
+#     conf_start_date = fields.Date(required=True, format="%d.%m.%Y")
+#     conf_end_date = fields.Date(required=True, format="%d.%m.%Y")
+#     organized_by = fields.Str(required=True)
+#     url = fields.URL()
+#     email = fields.Email(required=True)
 
 
-class ConferenceInfo(BaseModel):
+class Conference(BaseModel):
     id: int
     google_spreadsheet: str
     google_drive_directory_id: str
@@ -76,9 +76,23 @@ class ConferenceInfo(BaseModel):
     def convert_for_spreadsheet(self):
         return list(self.model_dump().values())
 
+    def construct_from_dict(self, d):
+        try:
+            return create_model(self.__nam)
 
-class PostConference(ConferenceInfo):
+        except Exception as e:
+            print(e)
+            return None
+
+
+class PostConference(Conference):
     id: int = Field(default=0, exclude=True)
+
+
+class GetConference(Conference):
+    # id: int = Field(default=0, exclude=True)
+    google_spreadsheet: str = Field(default="", exclude=True)
+    google_drive_directory_id: str = Field(default="", exclude=True)
 
 
 class GetConferenceShort(Schema):

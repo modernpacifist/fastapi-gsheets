@@ -60,12 +60,8 @@ class ConferenceInfo(BaseModel):
     email: EmailStr
 
     @abstractmethod
-    def convert_to_list(self):
-        raise NotImplementedError()
-
-
-class PostConference(ConferenceInfo):
-    id: int = Field(default=0, exclude=True)
+    def convert_for_spreadsheet(self):
+        pass
 
     @field_validator(
             'registration_start_date',
@@ -81,7 +77,11 @@ class PostConference(ConferenceInfo):
             raise ValueError('Incorrect date format')
         return v
 
-    def convert_to_list(self):
+
+class PostConference(ConferenceInfo):
+    id: int = Field(default=0, exclude=True)
+
+    def convert_for_spreadsheet(self):
         return list(self.model_dump().values())
 
 

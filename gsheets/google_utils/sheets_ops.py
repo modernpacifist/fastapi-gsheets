@@ -92,9 +92,12 @@ def add_conference(model):
         print('sheets_ops.add_conference: Could not retrieve last empty row from spreadsheet')
         return None
 
+    print(model.convert_to_list())
+
     body = {
         'values': [
-            list(model.dict().values())
+            # list(model.dict().values())
+            model.convert_to_list()
         ]
     }
 

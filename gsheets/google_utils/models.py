@@ -23,6 +23,12 @@ from typing import Optional
 #     organizator_email = fields.Str(required=True)
 
 
+class Record(BaseModel):
+    @abstractmethod
+    def convert_to_list(self):
+        raise NotImplementedError()
+
+
 class GetConference(Schema):
     id = fields.Int(required=True)
     name_rus = fields.Str(required=True)
@@ -69,6 +75,9 @@ class PostConference(BaseModel):
         except ValueError:
             raise ValueError('Incorrect date format')
         return v
+
+    def convert_to_list(self):
+        return list(self.model_dump().values())
 
 
 class GetConferenceShort(Schema):

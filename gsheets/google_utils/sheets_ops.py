@@ -9,30 +9,6 @@ sheets_conf = google_sheets()
 
 SPREADSHEET_ID = sheets_conf.get('id')
 LIST = sheets_conf.get('list')
-# RANGE = sheets_conf.get('range')
-
-
-def _get_last_empty_range():
-    r = SACC.spreadsheets().values().get(spreadsheetId=SPREADSHEET_ID, range=f'{LIST}!A2:A').execute()
-    values = r.get('values', [])
-    if not values:
-        return 2
-
-    try:
-        return int(values[-1][0]) + 2
-
-    except Exception as e:
-        print(e)
-        return None
-
-
-# subroutine to parse data from the spreadsheet
-def _extract_values_from_response():
-    raise NotImplementedError("Damn")
-
-
-def _extract_fieldnames_from_response():
-    raise NotImplementedError("Damn")
 
 
 def get_all_conferences():
@@ -83,6 +59,20 @@ def get_conference_by_id(conference_id):
 
     except Exception as e:
         print(f'sheets_ops.get_conference_by_id: {e}')
+        return None
+
+
+def _get_last_empty_range():
+    r = SACC.spreadsheets().values().get(spreadsheetId=SPREADSHEET_ID, range=f'{LIST}!A2:A').execute()
+    values = r.get('values', [])
+    if not values:
+        return 2
+
+    try:
+        return int(values[-1][0]) + 2
+
+    except Exception as e:
+        print(e)
         return None
 
 

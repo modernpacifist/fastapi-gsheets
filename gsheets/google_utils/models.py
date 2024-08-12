@@ -76,21 +76,13 @@ class Conference(BaseModel):
     def convert_for_spreadsheet(self):
         return list(self.model_dump().values())
 
-    def construct_from_dict(self, d):
-        try:
-            return create_model(self.__nam)
-
-        except Exception as e:
-            print(e)
-            return None
-
 
 class PostConference(Conference):
     id: int = Field(default=0, exclude=True)
 
 
 class GetConference(Conference):
-    # id: int = Field(default=0, exclude=True)
+    id: str = Field(default=0)
     google_spreadsheet: str = Field(default="", exclude=True)
     google_drive_directory_id: str = Field(default="", exclude=True)
 

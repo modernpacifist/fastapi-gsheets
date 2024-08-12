@@ -77,12 +77,9 @@ def get_conference_by_id(conference_id):
         return None
 
     dict_data = dict(zip_longest(field_names, conference_data, fillvalue=""))
-    print(dict_data)
-    # return None
 
     try:
-        # return models.GetConference().load(dict_data, unknown="exclude")
-        return models.GetConference().load(dict_data, unknown="exclude")
+        return models.GetConference.model_construct(**dict_data)
 
     except Exception as e:
         print(f'sheets_ops.get_conference_by_id: {e}')

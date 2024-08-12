@@ -40,7 +40,7 @@ async def conferences(conference: models.PostConference):
     if not r:
         raise HTTPException(status_code=500, detail='Could not add new conference')
 
-    return {'data': conference}
+    return conference
 
 
 @app.put('/conferences/{conference_id}')

@@ -67,7 +67,7 @@ class PostConference(BaseModel):
         try:
             datetime.strptime(v, '%d.%m.%Y')
         except ValueError:
-            raise ValueError('Incorrect date')
+            raise ValueError('Incorrect date format')
         return v
 
 

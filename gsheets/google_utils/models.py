@@ -1,6 +1,4 @@
-from abc import abstractmethod
-from marshmallow import Schema, fields
-from pydantic import BaseModel, Field, EmailStr, field_validator, create_model
+from pydantic import BaseModel, Field, EmailStr, field_validator
 from datetime import datetime, date
 from typing import Optional
 
@@ -22,23 +20,6 @@ from typing import Optional
 #     conference_end_date = fields.Date(required=True, format="%d.%m.%Y")
 #     conference_url = fields.URL()
 #     organizator_email = fields.Str(required=True)
-
-
-# class GetConference(Schema):
-#     id = fields.Int(required=True)
-#     name_rus = fields.Str(required=True)
-#     name_rus_short = fields.Str(required=True)
-#     name_eng = fields.Str()
-#     name_eng_short = fields.Str()
-#     registration_start_date = fields.Date(required=True, format="%d.%m.%Y")
-#     registration_end_date = fields.Date(required=True, format="%d.%m.%Y")
-#     submission_start_date = fields.Date(required=True, format="%d.%m.%Y")
-#     submission_end_date = fields.Date(required=True, format="%d.%m.%Y")
-#     conf_start_date = fields.Date(required=True, format="%d.%m.%Y")
-#     conf_end_date = fields.Date(required=True, format="%d.%m.%Y")
-#     organized_by = fields.Str(required=True)
-#     url = fields.URL()
-#     email = fields.Email(required=True)
 
 
 class Conference(BaseModel):
@@ -87,9 +68,9 @@ class GetConference(Conference):
     google_drive_directory_id: str = Field(default="", exclude=True)
 
 
-class GetConferenceShort(Schema):
-    id = fields.Int(required=True)
-    name_rus_short = fields.Str(required=True)
-    name_end_short = fields.Str()
-    conf_start_date = fields.Date(required=True, format="%d.%m.%Y")
-    conf_end_date = fields.Date(required=True, format="%d.%m.%Y")
+# class GetConferenceShort(Schema):
+#     id = fields.Int(required=True)
+#     name_rus_short = fields.Str(required=True)
+#     name_end_short = fields.Str()
+#     conf_start_date = fields.Date(required=True, format="%d.%m.%Y")
+#     conf_end_date = fields.Date(required=True, format="%d.%m.%Y")

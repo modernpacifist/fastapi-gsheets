@@ -14,7 +14,13 @@ def active_filter(conferences):
     # converted_date = _convert_string_to_datetime(x.conf_start_date)
     # if not converted_date:
     #     return 
-    return sorted(conferences, key=lambda x: _convert_string_to_datetime(x.conf_start_date))
+    # return sorted(conferences, key=lambda x: _convert_string_to_datetime(x.conf_start_date))
+    # res = []
+    # for conf in conferences:
+    #     if conf.
+    #         res.append(conf)
+
+    return conferences
 
 
 def past_filter(conferences):

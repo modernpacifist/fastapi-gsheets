@@ -33,7 +33,8 @@ class Conference(BaseModel):
             'submission_start_date',
             'submission_end_date',
             'conf_start_date',
-            'conf_end_date')
+            'conf_end_date',
+            mode='before')
     def validate_date(cls, v):
         try:
             return datetime.strptime(v, '%d.%m.%Y')
@@ -49,7 +50,7 @@ class PostConference(Conference):
 
 
 class GetConference(Conference):
-    id: str = Field(default=0)
+    id: int = Field(default=0)
     google_spreadsheet: str = Field(default="", exclude=True)
     google_drive_directory_id: str = Field(default="", exclude=True)
 

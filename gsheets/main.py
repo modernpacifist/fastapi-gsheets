@@ -11,10 +11,25 @@ app = FastAPI()
 
 
 @app.get('/conferences', status_code=status.HTTP_200_OK)
-async def conferences(filter: str = None):
+async def conferences(filter: str = 'active'):
     conferences = sheets_ops.get_all_conferences()
     if not conferences:
         raise HTTPException(status_code=404, detail='No conferences found')
+
+    if not filter in ['all', 'active', 'past', 'future']:
+        raise HTTPException(status_code=400, detail='Wrong filter specified')
+
+    if filter == 'all':
+        return conferences
+
+    if filter == 'active':
+        return conferences
+
+    if filter == 'past':
+        print('past')
+
+    elif filter == 'future':
+        print('future')
 
     return conferences
 

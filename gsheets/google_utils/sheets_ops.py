@@ -1,5 +1,4 @@
-from google_utils import models
-from google_utils import auth
+from google_utils import models, auth
 from config.setup import google_sheets
 from itertools import zip_longest
 
@@ -9,6 +8,10 @@ sheets_conf = google_sheets()
 
 SPREADSHEET_ID = sheets_conf.get('id')
 LIST = sheets_conf.get('list')
+
+
+def _verify_field_names():
+    return None
 
 
 def get_all_conferences():

@@ -12,7 +12,7 @@ LIST = sheets_conf.get('list')
 
 
 def get_all_conferences():
-    r = SACC.spreadsheets().values().batchGet(spreadsheetId=SPREADSHEET_ID, ranges=f'{LIST}!A2:P').execute()
+    r = SACC.spreadsheets().values().batchGet(spreadsheetId=SPREADSHEET_ID, ranges=f'{LIST}!A1:P').execute()
     if not r:
         return None
 
@@ -23,11 +23,13 @@ def get_all_conferences():
     if not values:
         return None
 
+    field_names = values[0]
     res = []
-    for val in values:
-        res.append()
+    for conference_data in values[1:]:
+        dict_data = dict(zip_longest(field_names, conference_data, fillvalue=""))
+        res.append(models.GetConferenceShort.model_construct(**dict_data))
 
-    return 
+    return res
 
 
 def get_conference_by_id(conference_id):

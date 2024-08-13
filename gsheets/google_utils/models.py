@@ -50,7 +50,7 @@ class PostConference(Conference):
 
 
 class GetConference(Conference):
-    id: int = Field(default=0)
+    id: str = Field(default=0)
     google_spreadsheet: str = Field(default="", exclude=True)
     google_drive_directory_id: str = Field(default="", exclude=True)
 

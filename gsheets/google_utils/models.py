@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, EmailStr, field_validator
+from pydantic import BaseModel, Field, EmailStr, field_validator, field_serializer
 from datetime import datetime, date
 from typing import Optional
 
@@ -18,12 +18,12 @@ class Conference(BaseModel):
     # submission_end_date: str
     # conf_start_date: str
     # conf_end_date: str
-    registration_start_date: datetime
-    registration_end_date: datetime
-    submission_start_date: datetime
-    submission_end_date: datetime
-    conf_start_date: datetime
-    conf_end_date: datetime
+    registration_start_date: str
+    registration_end_date: str
+    submission_start_date: str
+    submission_end_date: str
+    conf_start_date: str
+    conf_end_date: str
     url: Optional[str] = ""
     email: EmailStr
 
@@ -37,7 +37,20 @@ class Conference(BaseModel):
             mode='before')
     def validate_date(cls, v):
         try:
-            return datetime.strptime(v, '%d.%m.%Y')
+            datetime.strptime(v, '%d.%m.%Y')
+        except ValueError:
+            raise ValueError('Incorrect date format')
+
+    @field_serializer(
+            'registration_start_date',
+            'registration_end_date',
+            'submission_start_date',
+            'submission_end_date',
+            'conf_start_date',
+            'conf_end_date')
+    def validate_date(cls, v):
+        try:
+            datetime.strptime(v, '%d.%m.%Y')
         except ValueError:
             raise ValueError('Incorrect date format')
 

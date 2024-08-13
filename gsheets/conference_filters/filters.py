@@ -1,5 +1,13 @@
+from datetime import datetime
+
+
+def _convert_string_to_datetime(date_str):
+    return datetime.strptime(date_str, '%d.%m.%Y')
+
+
 def active_filter(conferences):
-    return 'active_filter'
+    # return sorted(conferences, key=lambda x: _convert_string_to_datetime(x['conf_start_date']))
+    return sorted(conferences, key=lambda x: _convert_string_to_datetime(x.conf_start_date))
 
 
 def past_filter(conferences):

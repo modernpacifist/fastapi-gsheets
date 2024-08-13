@@ -1,16 +1,16 @@
 import uvicorn
 import asyncio
 
+from conference_filters import filters as conference_filters
 from fastapi import FastAPI, status, HTTPException, Request
 from google_utils import sheets_ops, models
 from config import setup
-from conference_filters import filters as conference_filters
-
 
 
 app = FastAPI()
 
 
+# TODO: make it work with fastapi.Query
 @app.get('/conferences', status_code=status.HTTP_200_OK)
 async def conferences(request: Request, filter: str = 'active'):
     conferences = sheets_ops.get_all_conferences()

@@ -2,11 +2,18 @@ from datetime import datetime
 
 
 def _convert_string_to_datetime(date_str):
-    return datetime.strptime(date_str, '%d.%m.%Y')
+    try:
+        return datetime.strptime(date_str, '%d.%m.%Y')
+
+    except Exception as e:
+        print(e)
+        return ""
 
 
 def active_filter(conferences):
-    # return sorted(conferences, key=lambda x: _convert_string_to_datetime(x['conf_start_date']))
+    # converted_date = _convert_string_to_datetime(x.conf_start_date)
+    # if not converted_date:
+    #     return 
     return sorted(conferences, key=lambda x: _convert_string_to_datetime(x.conf_start_date))
 
 

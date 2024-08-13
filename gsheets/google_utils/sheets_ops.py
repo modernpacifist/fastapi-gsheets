@@ -23,7 +23,11 @@ def get_all_conferences():
     if not values:
         return None
 
-    return values
+    res = []
+    for val in values:
+        res.append()
+
+    return 
 
 
 def get_conference_by_id(conference_id):

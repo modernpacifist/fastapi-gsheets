@@ -68,9 +68,9 @@ class GetConference(Conference):
     google_drive_directory_id: str = Field(default="", exclude=True)
 
 
-# class GetConferenceShort(Schema):
-#     id = fields.Int(required=True)
-#     name_rus_short = fields.Str(required=True)
-#     name_end_short = fields.Str()
-#     conf_start_date = fields.Date(required=True, format="%d.%m.%Y")
-#     conf_end_date = fields.Date(required=True, format="%d.%m.%Y")
+class GetConferenceShort(Conference):
+    # id = fields.Int(required=True)
+    # name_rus_short = fields.Str(required=True)
+    # name_end_short = fields.Str()
+    # conf_start_date = fields.Date(required=True, format="%d.%m.%Y")
+    id: str = Field(default=0, exclude=True)

@@ -12,11 +12,11 @@ app = FastAPI()
 
 @app.get('/conferences', status_code=status.HTTP_200_OK)
 async def conferences(filter: str = None):
-    r = sheets_ops.get_all_conferences()
-    if not r:
+    conferences = sheets_ops.get_all_conferences()
+    if not conferences:
         raise HTTPException(status_code=404, detail='No conferences found')
 
-    return {"data": r}
+    return conferences
 
 
 @app.get('/conferences/{conference_id}')

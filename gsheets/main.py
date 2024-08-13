@@ -1,20 +1,24 @@
 import uvicorn
 import asyncio
 
-# from dotenv import load_dotenv
-from fastapi import FastAPI, status, HTTPException, Body
+from fastapi import FastAPI, status, HTTPException, Request
 from google_utils import sheets_ops, models
 from config import setup
+from conference_filters import filters as conference_filters
+
 
 
 app = FastAPI()
 
 
 @app.get('/conferences', status_code=status.HTTP_200_OK)
-async def conferences(filter: str = 'active'):
+async def conferences(request: Request, filter: str = 'active'):
     conferences = sheets_ops.get_all_conferences()
     if not conferences:
         raise HTTPException(status_code=404, detail='No conferences found')
+
+    if len(request.query_params.getlist('filter')) > 1:
+        raise HTTPException(status_code=400, detail='Filter can be specified only once')
 
     if not filter in ['all', 'active', 'past', 'future']:
         raise HTTPException(status_code=400, detail='Wrong filter specified')
@@ -23,13 +27,13 @@ async def conferences(filter: str = 'active'):
         return conferences
 
     if filter == 'active':
-        return conferences
+        conferences = conference_filters.active_filter(conferences)
 
     if filter == 'past':
-        print('past')
+        conferences = conference_filters.past_filter(conferences)
 
-    elif filter == 'future':
-        print('future')
+    if filter == 'future':
+        conferences = conference_filters.future_filter(conferences)
 
     return conferences
 

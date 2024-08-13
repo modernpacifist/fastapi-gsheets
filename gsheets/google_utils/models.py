@@ -41,7 +41,8 @@ class Conference(BaseModel):
             'submission_start_date',
             'submission_end_date',
             'conf_start_date',
-            'conf_end_date')
+            'conf_end_date',
+            when_used='json')
     def serialize_date(v):
         return datetime.strptime(v, '%d.%m.%Y')
 

@@ -50,6 +50,8 @@ async def conferences(conference_id: str = None):
     if not conference:
         raise HTTPException(status_code=404, detail=f'Could not find conference with id {conference_id}')
 
+    print(conference)
+
     return conference
 
 

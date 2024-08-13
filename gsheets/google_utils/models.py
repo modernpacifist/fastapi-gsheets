@@ -35,16 +35,16 @@ class Conference(BaseModel):
         except ValueError:
             raise ValueError('Incorrect date format')
 
-    @field_serializer(
-            'registration_start_date',
-            'registration_end_date',
-            'submission_start_date',
-            'submission_end_date',
-            'conf_start_date',
-            'conf_end_date',
-            when_used='json')
-    def serialize_date(v):
-        return datetime.strptime(v, '%d.%m.%Y')
+    # @field_serializer(
+    #         'registration_start_date',
+    #         'registration_end_date',
+    #         'submission_start_date',
+    #         'submission_end_date',
+    #         'conf_start_date',
+    #         'conf_end_date',
+    #         when_used='json')
+    # def serialize_date(v):
+    #     return datetime.strptime(v, '%d.%m.%Y')
 
     def convert_for_spreadsheet(self):
         return list(self.model_dump().values())

@@ -50,10 +50,7 @@ async def conferences(conference_id: str = None):
     if not conference:
         raise HTTPException(status_code=404, detail=f'Could not find conference with id {conference_id}')
 
-    # print(type(conference.registration_end_date))
-    # print(conference.registration_end_date)
-
-    return conference
+    return conference.model_dump()
 
 
 @app.post('/conferences', status_code=status.HTTP_201_CREATED)

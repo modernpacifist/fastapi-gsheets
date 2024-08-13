@@ -12,12 +12,6 @@ class Conference(BaseModel):
     name_eng: Optional[str] = ""
     name_eng_short: Optional[str] = ""
     organized_by: str
-    # registration_start_date: str
-    # registration_end_date: str
-    # submission_start_date: str
-    # submission_end_date: str
-    # conf_start_date: str
-    # conf_end_date: str
     registration_start_date: str
     registration_end_date: str
     submission_start_date: str
@@ -48,11 +42,8 @@ class Conference(BaseModel):
             'submission_end_date',
             'conf_start_date',
             'conf_end_date')
-    def validate_date(cls, v):
-        try:
-            datetime.strptime(v, '%d.%m.%Y')
-        except ValueError:
-            raise ValueError('Incorrect date format')
+    def serialize_date(v):
+        return datetime.strptime(v, '%d.%m.%Y')
 
     def convert_for_spreadsheet(self):
         return list(self.model_dump().values())

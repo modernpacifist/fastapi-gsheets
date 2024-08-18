@@ -1,6 +1,5 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
-from enum import Enum
 
 
 def _convert_string_to_datetime(date_str):
@@ -13,10 +12,13 @@ def _convert_string_to_datetime(date_str):
 
 
 @dataclass
-class Filters:
-    filter_type: str
-    conferences: list
+class ConferencesFilter:
+    filter_type: str = 'active'
+    conferences: list = field(default_factory=[])
     f: callable = None
+
+    def exec(self):
+        return self.f()
 
     def _all_filter(self):
         return self.conferences
@@ -51,9 +53,6 @@ class Filters:
             if conference_reg_start > datetime.now():
                 res.append(conference)
         return res
-
-    def exec(self):
-        return self.f()
 
     def __post_init__(self):
         self.f = {

@@ -56,6 +56,9 @@ def future_filter(conferences):
 
 
 class Filters(Enum):
+    def __init__(self, filter_name):
+        self.filter_name = filter_name
+
     all: all_filter
     active: active_filter
     past: past_filter

@@ -1,5 +1,5 @@
-from pydantic import BaseModel, Field, EmailStr, field_validator, field_serializer
-from datetime import datetime, date
+from pydantic import BaseModel, Field, EmailStr, field_validator
+from datetime import datetime
 from typing import Optional
 
 
@@ -27,19 +27,16 @@ class Conference(BaseModel):
             'submission_start_date',
             'submission_end_date',
             'conf_start_date',
-            'conf_end_date',
-            mode='before')
+            'conf_end_date')
     def validate_date(cls, v):
         try:
             datetime.strptime(v, '%d.%m.%Y')
         except ValueError:
             raise ValueError('Incorrect date format')
+        return v
 
     def convert_for_spreadsheet(self):
         return list(self.model_dump().values())
-
-    def convert_date_times(self):
-        return self
 
 
 class PostConference(Conference):

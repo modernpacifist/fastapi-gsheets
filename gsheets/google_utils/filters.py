@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 
@@ -11,50 +12,53 @@ def _convert_string_to_datetime(date_str):
         return None
 
 
-def _all_filter(conferences):
-    print('all filter called')
-    return conferences
+@dataclass
+class Filters:
+    filter_type: str
+    conferences: list
+    f: callable = None
 
+    def _all_filter(self):
+        return self.conferences
 
-def _active_filter(conferences):
-    print('active filter called')
+    def _active_filter(self):
+        res = []
+        for conference in self.conferences:
+            conference_reg_start = _convert_string_to_datetime(conference.registration_start_date)
+            conference_reg_end = _convert_string_to_datetime(conference.registration_end_date)
+            if not all([conference_reg_start, conference_reg_end]):
+                continue
+            if conference_reg_start < datetime.now() and datetime.now() < conference_reg_end:
+                res.append(conference)
+        return res
 
-    res = []
-    for conference in conferences:
-        print(conference)
-        if conference.id == "1":
-            continue
-        res.append(conference)
+    def _past_filter(self):
+        res = []
+        for conference in self.conferences:
+            conference_reg_end = _convert_string_to_datetime(conference.registration_end_date)
+            if not conference_reg_end:
+                continue
+            if datetime.now() > conference_reg_end:
+                res.append(conference)
+        return res
 
-    # for i in conferences:
-    #     print(i.model_dump())
-    #     print(i)
-    #     break
-    # converted_date = _convert_string_to_datetime(x.conf_start_date)
-    # if not converted_date:
-    #     return 
-    # return sorted(conferences, key=lambda x: _convert_string_to_datetime(x.conf_start_date))
-    # res = []
-    # for conf in conferences:
-    #     if conf.
-    #         res.append(conf)
+    def _future_filter(self):
+        res = []
+        for conference in self.conferences:
+            conference_reg_start = _convert_string_to_datetime(conference.registration_start_date)
+            if not conference_reg_start:
+                continue
+            if conference_reg_start > datetime.now():
+                res.append(conference)
+        return res
 
-    return res
+    def exec(self):
+        return self.f()
 
-
-def _past_filter(conferences):
-    print('past filter called')
-    return 'past_filter'
-
-
-def _future_filter(conferences):
-    print('future filter called')
-    return 'future_filter'
-
-
-FILTERS_ENUM = {
-    'all': _all_filter,
-    'active': _active_filter,
-    'past': _past_filter,
-    'future': _future_filter,
-}
+    def __post_init__(self):
+        self.f = {
+            'all': self._all_filter,
+            'active': self._active_filter,
+            'past': self._past_filter,
+            'future': self._future_filter,
+        }.get(self.filter_type)

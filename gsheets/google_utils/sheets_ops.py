@@ -1,5 +1,5 @@
 from google_utils import models, auth
-from google_utils.filters import FILTERS_ENUM
+from google_utils.filters import Filters
 from config.setup import google_sheets
 from itertools import zip_longest
 
@@ -11,7 +11,7 @@ SPREADSHEET_ID = sheets_conf.get('id')
 LIST = sheets_conf.get('list')
 
 
-def get_all_conferences(filter='active'):
+def get_all_conferences(filter):
     r = SACC.spreadsheets().values().batchGet(spreadsheetId=SPREADSHEET_ID, ranges=f'{LIST}!A1:P').execute()
     if not r:
         return None
@@ -29,9 +29,7 @@ def get_all_conferences(filter='active'):
         dict_data = dict(zip_longest(field_names, conference_data, fillvalue=''))
         conferences.append(models.GetConferenceShort.model_construct(**dict_data))
 
-    f = FILTERS_ENUM.get(filter)
-
-    return f(conferences)
+    return Filters(filter, conferences).exec()
 
 
 def get_conference_by_id(conference_id):

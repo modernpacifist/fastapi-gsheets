@@ -32,7 +32,7 @@ class Conference(BaseModel):
         try:
             datetime.strptime(v, '%d.%m.%Y')
         except ValueError:
-            raise ValueError('Incorrect date format')
+            raise ValueError('Incorrect date format, must be %d.%m.%Y')
         return v
 
     @field_serializer(
@@ -72,3 +72,13 @@ class GetConferenceShort(Conference):
     submission_end_date: str = Field(exclude=True)
     url: str = Field(exclude=True)
     email: EmailStr = Field(exclude=True)
+
+    @field_serializer(
+        'registration_start_date',
+        'registration_end_date',
+        'submission_start_date',
+        'submission_end_date',
+        'conf_start_date',
+        'conf_end_date')
+    def convert_datetimes(v):
+        return v

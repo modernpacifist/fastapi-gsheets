@@ -1,9 +1,8 @@
 import uvicorn
 import asyncio
 
-from conference_filters import filters as conference_filters
 from fastapi import FastAPI, status, HTTPException, Request
-from google_utils import sheets_ops, models
+from google_utils import sheets_ops, models, filters
 from config import setup
 
 
@@ -27,13 +26,13 @@ async def conferences(request: Request, filter: str = 'active'):
         return conferences
 
     if filter == 'active':
-        conferences = conference_filters.active_filter(conferences)
+        conferences = filters.active_filter(conferences)
 
     if filter == 'past':
-        conferences = conference_filters.past_filter(conferences)
+        conferences = filters.past_filter(conferences)
 
     if filter == 'future':
-        conferences = conference_filters.future_filter(conferences)
+        conferences = filters.future_filter(conferences)
 
     return conferences
 

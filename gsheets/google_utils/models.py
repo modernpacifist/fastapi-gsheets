@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field, EmailStr, field_validator
+from pydantic import BaseModel, Field, EmailStr, field_validator, field_serializer
 from datetime import datetime
 from typing import Optional
 
@@ -34,6 +34,17 @@ class Conference(BaseModel):
         except ValueError:
             raise ValueError('Incorrect date format')
         return v
+
+    @field_serializer(
+        'id'
+    )
+    def convert_to_int(v):
+        try:
+            return int(v)
+        except Exception as e:
+            print(e)
+            return v
+
 
     def convert_for_spreadsheet(self):
         return list(self.model_dump().values())

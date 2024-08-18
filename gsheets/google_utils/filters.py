@@ -7,7 +7,7 @@ def _convert_string_to_datetime(date_str):
 
     except Exception as e:
         print(e)
-        return ""
+        return None
 
 
 def active_filter(conferences):

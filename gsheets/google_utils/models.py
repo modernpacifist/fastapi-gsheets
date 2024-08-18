@@ -4,13 +4,13 @@ from typing import Optional
 
 
 class Conference(BaseModel):
-    id: int
+    id: str
     google_spreadsheet: str
     google_drive_directory_id: str
     name_rus: str
     name_rus_short: str
-    name_eng: Optional[str] = ""
-    name_eng_short: Optional[str] = ""
+    name_eng: Optional[str] = ''
+    name_eng_short: Optional[str] = ''
     organized_by: str
     registration_start_date: str
     registration_end_date: str
@@ -18,7 +18,7 @@ class Conference(BaseModel):
     submission_end_date: str
     conf_start_date: str
     conf_end_date: str
-    url: Optional[str] = ""
+    url: Optional[str] = ''
     email: EmailStr
 
     @field_validator(
@@ -45,19 +45,18 @@ class Conference(BaseModel):
             print(e)
             return v
 
-
     def convert_for_spreadsheet(self):
         return list(self.model_dump().values())
 
 
 class PostConference(Conference):
-    id: int = Field(default=0, exclude=True)
+    id: str = Field(default=0, exclude=True)
 
 
 class GetConference(Conference):
     id: str = Field(default=0)
-    google_spreadsheet: str = Field(default="", exclude=True)
-    google_drive_directory_id: str = Field(default="", exclude=True)
+    google_spreadsheet: str = Field(default='', exclude=True)
+    google_drive_directory_id: str = Field(default='', exclude=True)
 
 
 class GetConferenceShort(Conference):

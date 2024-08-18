@@ -10,7 +10,15 @@ def _convert_string_to_datetime(date_str):
         return None
 
 
+def all_filter(conferences):
+    return conferences
+
+
 def active_filter(conferences):
+    for i in conferences:
+        print(i.model_dump())
+        print(i)
+        break
     # converted_date = _convert_string_to_datetime(x.conf_start_date)
     # if not converted_date:
     #     return 

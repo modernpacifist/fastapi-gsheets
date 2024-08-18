@@ -1,4 +1,4 @@
-from google_utils import models, auth
+from google_utils import models, auth, filters
 from config.setup import google_sheets
 from itertools import zip_longest
 
@@ -8,13 +8,15 @@ sheets_conf = google_sheets()
 
 SPREADSHEET_ID = sheets_conf.get('id')
 LIST = sheets_conf.get('list')
+FILTERS_ENUM = {
+    'all': filters.all_filter,
+    'active': filters.active_filter,
+    'past': filters.past_filter,
+    'future': filters.future_filter,
+}
 
 
-def _verify_field_names():
-    return None
-
-
-def get_all_conferences():
+def get_all_conferences(filter='active'):
     r = SACC.spreadsheets().values().batchGet(spreadsheetId=SPREADSHEET_ID, ranges=f'{LIST}!A1:P').execute()
     if not r:
         return None
@@ -29,8 +31,10 @@ def get_all_conferences():
     field_names = values[0]
     res = []
     for conference_data in values[1:]:
-        dict_data = dict(zip_longest(field_names, conference_data, fillvalue=""))
+        dict_data = dict(zip_longest(field_names, conference_data, fillvalue=''))
         res.append(models.GetConferenceShort.model_construct(**dict_data))
+
+    res = 
 
     return res
 
@@ -61,7 +65,7 @@ def get_conference_by_id(conference_id):
         print('sheets_ops.get_conference_by_id: Could not find record with correct id in the spreadsheet')
         return None
 
-    dict_data = dict(zip_longest(field_names, conference_data, fillvalue=""))
+    dict_data = dict(zip_longest(field_names, conference_data, fillvalue=''))
 
     try:
         return models.GetConference.model_construct(**dict_data)

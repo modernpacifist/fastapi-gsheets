@@ -25,7 +25,7 @@ def fastapi(section='fastapi'):
                 continue
             config[p[0]] = p[1]
 
-    if not all(k in config for k in ("host", "port")):
+    if not all(k in config for k in ('host', 'port')):
         raise Exception(f'Host or port values are not present in {CONF_FILENAME}')
 
     return config

@@ -2,7 +2,7 @@ import uvicorn
 import asyncio
 
 from fastapi import FastAPI, status, HTTPException, Request
-from google_utils import sheets_ops, models, filters
+from google_utils import sheets_ops, models
 from config import setup
 
 
@@ -12,7 +12,7 @@ app = FastAPI()
 # TODO: make it work with fastapi.Query
 @app.get('/conferences', status_code=status.HTTP_200_OK)
 async def conferences(request: Request, filter: str = 'active'):
-    conferences = sheets_ops.get_all_conferences()
+    conferences = sheets_ops.get_all_conferences(filter)
     if not conferences:
         raise HTTPException(status_code=404, detail='No conferences found')
 
@@ -21,18 +21,6 @@ async def conferences(request: Request, filter: str = 'active'):
 
     if not filter in ['all', 'active', 'past', 'future']:
         raise HTTPException(status_code=400, detail='Wrong filter specified')
-
-    if filter == 'all':
-        return conferences
-
-    if filter == 'active':
-        conferences = filters.active_filter(conferences)
-
-    if filter == 'past':
-        conferences = filters.past_filter(conferences)
-
-    if filter == 'future':
-        conferences = filters.future_filter(conferences)
 
     return conferences
 

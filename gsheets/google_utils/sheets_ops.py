@@ -1,5 +1,5 @@
 from google_utils import models, auth
-from google_utils.filters import Filters
+from google_utils.filters import FILTERS_ENUM
 from config.setup import google_sheets
 from itertools import zip_longest
 
@@ -24,12 +24,14 @@ def get_all_conferences(filter='active'):
         return None
 
     field_names = values[0]
-    res = []
+    conferences = []
     for conference_data in values[1:]:
         dict_data = dict(zip_longest(field_names, conference_data, fillvalue=''))
-        res.append(models.GetConferenceShort.model_construct(**dict_data))
+        conferences.append(models.GetConferenceShort.model_construct(**dict_data))
 
-    return list(map(Filters., res))
+    f = FILTERS_ENUM.get(filter)
+
+    return f(conferences)
 
 
 def get_conference_by_id(conference_id):

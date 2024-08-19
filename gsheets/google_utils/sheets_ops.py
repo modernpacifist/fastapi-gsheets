@@ -115,12 +115,41 @@ def add_conference(model):
     return res
 
 
-def update_conference():
-    r = SACC.spreadsheets().values().get(spreadsheetId=SPREADSHEET_ID, range=f'{LIST}!A2:P').execute()
+def _get_conference_row(conference_id):
+    r = SACC.spreadsheets().values().get(spreadsheetId=SPREADSHEET_ID, range=f'{LIST}!A2:A').execute()
     values = r.get('values', [])
     if not values:
         return 2
 
     print(values)
 
-    return None
+    try:
+        return int(values[-1][0]) + 2
+
+    except Exception as e:
+        print(e)
+        return None
+
+
+def update_conference(conference_id, model):
+    r = SACC.spreadsheets().values().get(spreadsheetId=SPREADSHEET_ID, range=f'{LIST}!A2:P').execute()
+    values = r.get('values', [])
+    if not values:
+        return 2
+
+    ur = _get_conference_row(conference_id)
+    if not ur:
+        print('sheets_ops.update_conference: Could not find conference in spreadsheet')
+        return None
+
+    print(ur)
+
+    # print(values)
+
+    # r = SACC.spreadsheets().values().update(spreadsheetId=SPREADSHEET_ID, range=f'{LIST}!B{update_ran}:P', valueInputOption='RAW', body=body).execute()
+    # res = r.get('updates', [])
+    # if not res:
+    #     print('sheets_ops.add_conference: Could not add conference to spreadsheet')
+    #     return None
+
+    return res

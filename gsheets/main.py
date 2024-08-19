@@ -50,9 +50,13 @@ async def conferences(conference: models.PostConference):
 
 
 @app.put('/conferences/{conference_id}')
-async def conferences(conference_id: int = None):
+async def conferences(conference: models.UpdateConference, conference_id: int = None):
     if not conference_id:
         raise HTTPException(status=400, detail='You must provide conference id to update it')
+
+    r = sheets_ops.update_conference(conference_id, conference)
+    if not r:
+        raise HTTPException(status_code=500, detail=f'Could not update conference with id {conference_id}')
 
     return {'put': 'put'}
 

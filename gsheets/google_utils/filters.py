@@ -2,15 +2,6 @@ from dataclasses import dataclass, field
 from datetime import datetime
 
 
-def _convert_string_to_datetime(date_str):
-    try:
-        return datetime.strptime(date_str, '%d.%m.%Y')
-
-    except Exception as e:
-        print(e)
-        return None
-
-
 @dataclass
 class ConferencesFilter:
     filter_type: str = 'active'
@@ -25,33 +16,23 @@ class ConferencesFilter:
 
     def _active_filter(self):
         res = []
-        for conference in self.conferences:
-            conference_reg_start = _convert_string_to_datetime(conference.registration_start_date)
-            conference_reg_end = _convert_string_to_datetime(conference.registration_end_date)
-            if not all([conference_reg_start, conference_reg_end]):
-                continue
-            if conference_reg_start < datetime.now() and datetime.now() < conference_reg_end:
-                res.append(conference)
+        for c in self.conferences:
+            if c.registration_start_date < datetime.now() and datetime.now() < c.registration_end_date:
+                res.append(c)
         return res
 
     def _past_filter(self):
         res = []
-        for conference in self.conferences:
-            conference_reg_end = _convert_string_to_datetime(conference.registration_end_date)
-            if not conference_reg_end:
-                continue
-            if datetime.now() > conference_reg_end:
-                res.append(conference)
+        for c in self.conferences:
+            if datetime.now() > c.registration_end_date:
+                res.append(c)
         return res
 
     def _future_filter(self):
         res = []
-        for conference in self.conferences:
-            conference_reg_start = _convert_string_to_datetime(conference.registration_start_date)
-            if not conference_reg_start:
-                continue
-            if conference_reg_start > datetime.now():
-                res.append(conference)
+        for c in self.conferences:
+            if c.registration_start_date > datetime.now():
+                res.append(c)
         return res
 
     def __post_init__(self):

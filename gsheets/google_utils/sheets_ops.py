@@ -2,6 +2,7 @@ from google_utils import models, auth
 from google_utils.filters import ConferencesFilter
 from config.setup import google_sheets
 from itertools import zip_longest
+from datetime import datetime
 
 
 SACC = auth.setup_account()
@@ -27,16 +28,13 @@ def get_all_conferences(filter_type):
     conferences = []
     for conference_data in values[1:]:
         dict_data = dict(zip_longest(field_names, conference_data, fillvalue=''))
-        # conferences.append(models.GetConferenceShort.model_construct(**dict_data))
-        dict_data['registration_start_date'] = datetime
-        conferences.append(models.GetConferenceShort.model_validate(dict_data))
-        print(dict_data)
-        break
 
-    print(type(conferences[0]))
-    print(conferences[0])
-    print(conferences[0].registration_start_date)
-    print(type(conferences[0].registration_start_date))
+        reg_start = dict_data['registration_start_date']
+        dict_data['registration_start_date'] = datetime.strptime(reg_start, '%d.%m.%Y')
+        reg_end = dict_data['registration_end_date']
+        dict_data['registration_end_date'] = datetime.strptime(reg_end, '%d.%m.%Y')
+
+        conferences.append(models.GetConferenceShort.model_validate(dict_data))
 
     return ConferencesFilter(filter_type, conferences).exec()
 

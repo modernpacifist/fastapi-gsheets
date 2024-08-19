@@ -18,7 +18,7 @@ def _update_d(d, *keys):
             dtime = datetime.strptime(d[key], '%d.%m.%Y')
         except Exception as e:
             print(e)
-            continue
+            dtime = datetime.strptime(d[key])
         d.update({key: dtime})
 
 

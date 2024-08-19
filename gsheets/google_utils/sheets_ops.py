@@ -17,9 +17,15 @@ def _get_field_names():
     if not r:
         return None
 
-    print(r)
+    value_ranges = r.get('valueRanges', [])
+    if not value_ranges:
+        return None
 
-    return None
+    values = value_ranges.get('values', [])
+    if not values:
+        return None
+
+    return values[0]
 
 
 def _dict_string_to_datetime(d, *keys):

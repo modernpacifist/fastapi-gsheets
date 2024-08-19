@@ -13,7 +13,7 @@ LIST = sheets_conf.get('list')
 
 
 def _get_field_names():
-    r = SACC.spreadsheets().values().batchGet(spreadsheetId=SPREADSHEET_ID, ranges=f'{LIST}!A1:P').execute()
+    r = SACC.spreadsheets().values().batchGet(spreadsheetId=SPREADSHEET_ID, ranges=f'{LIST}!A1:P1').execute()
     if not r:
         return None
 

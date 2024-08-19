@@ -12,7 +12,7 @@ SPREADSHEET_ID = sheets_conf.get('id')
 LIST = sheets_conf.get('list')
 
 
-def _update_d(d, *keys):
+def _dict_string_to_datetime(d, *keys):
     for key in keys:
         try:
             dtime = datetime.strptime(d[key], '%d.%m.%Y')
@@ -38,7 +38,7 @@ def get_all_conferences(filter_type):
     conferences = []
     for conference_data in values[1:]:
         dict_data = dict(zip_longest(field_names, conference_data, fillvalue=''))
-        _update_d(dict_data, 'registration_start_date', 'registration_end_date')
+        _dict_string_to_datetime(dict_data, 'registration_start_date', 'registration_end_date')
         conferences.append(models.GetConferenceShort.model_validate(dict_data))
 
     return ConferencesFilter(filter_type, conferences).exec()
@@ -116,4 +116,11 @@ def add_conference(model):
 
 
 def update_conference():
+    r = SACC.spreadsheets().values().get(spreadsheetId=SPREADSHEET_ID, range=f'{LIST}!A2:P').execute()
+    values = r.get('values', [])
+    if not values:
+        return 2
+
+    print(values)
+
     return None

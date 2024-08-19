@@ -115,20 +115,20 @@ def add_conference(model):
     return res
 
 
-# def _get_conference_row(conference_id):
-#     r = SACC.spreadsheets().values().get(spreadsheetId=SPREADSHEET_ID, range=f'{LIST}!A2:A').execute()
-#     values = r.get('values', [])
-#     if not values:
-#         return 2
+def _get_conference_row(conference_id):
+    r = SACC.spreadsheets().values().get(spreadsheetId=SPREADSHEET_ID, range=f'{LIST}!A2:P').execute()
+    values = r.get('values', [])
+    if not values:
+        return 2
 
-#     print(values)
+    print(values)
 
-#     try:
-#         return int(values[-1][0]) + 2
+    try:
+        return int(values[-1][0]) + 2
 
-#     except Exception as e:
-#         print(e)
-#         return None
+    except Exception as e:
+        print(e)
+        return None
 
 
 def update_conference(conference_id, model):
@@ -159,6 +159,9 @@ def update_conference(conference_id, model):
 
     dict_data = dict(zip_longest(field_names, conference_data, fillvalue=''))
     print(dict_data)
+
+    model = models.Conference.model_validate(dict_data)
+    print(model.dump)
 
     # print(values)
 

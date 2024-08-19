@@ -31,6 +31,8 @@ def get_all_conferences(filter_type):
 
     print(type(conferences[0]))
     print(conferences[0])
+    print(conferences[0].registration_start_date)
+    print(type(conferences[0].registration_start_date))
 
     return ConferencesFilter(filter_type, conferences).exec()
 

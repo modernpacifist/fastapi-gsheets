@@ -27,7 +27,11 @@ def get_all_conferences(filter_type):
     conferences = []
     for conference_data in values[1:]:
         dict_data = dict(zip_longest(field_names, conference_data, fillvalue=''))
-        conferences.append(models.GetConferenceShort.model_construct(**dict_data))
+        # conferences.append(models.GetConferenceShort.model_construct(**dict_data))
+        dict_data['registration_start_date'] = datetime
+        conferences.append(models.GetConferenceShort.model_validate(dict_data))
+        print(dict_data)
+        break
 
     print(type(conferences[0]))
     print(conferences[0])

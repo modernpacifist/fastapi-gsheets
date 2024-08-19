@@ -112,6 +112,8 @@ def add_conference(model):
         print('sheets_ops.add_conference: Could not add conference to spreadsheet')
         return None
 
+    print(res)
+
     return res
 
 

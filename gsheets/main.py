@@ -54,11 +54,11 @@ async def conferences(conference: models.UpdateConference, conference_id: str = 
     if not conference_id:
         raise HTTPException(status=400, detail='You must provide conference id to update it')
 
-    r = sheets_ops.update_conference(conference_id, conference)
-    if not r:
+    conference = sheets_ops.update_conference(conference_id, conference)
+    if not conference:
         raise HTTPException(status_code=500, detail=f'Could not update conference with id {conference_id}')
 
-    return r
+    return conference
 
 
 async def main(params):

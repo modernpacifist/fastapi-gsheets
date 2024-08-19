@@ -12,6 +12,16 @@ SPREADSHEET_ID = sheets_conf.get('id')
 LIST = sheets_conf.get('list')
 
 
+def _update_d(d, *keys):
+    for key in keys:
+        try:
+            dtime = datetime.strptime(d[key], '%d.%m.%Y')
+        except Exception as e:
+            print(e)
+            continue
+        d.update({key: dtime})
+
+
 def get_all_conferences(filter_type):
     r = SACC.spreadsheets().values().batchGet(spreadsheetId=SPREADSHEET_ID, ranges=f'{LIST}!A1:P').execute()
     if not r:
@@ -28,12 +38,7 @@ def get_all_conferences(filter_type):
     conferences = []
     for conference_data in values[1:]:
         dict_data = dict(zip_longest(field_names, conference_data, fillvalue=''))
-
-        reg_start = dict_data['registration_start_date']
-        dict_data['registration_start_date'] = datetime.strptime(reg_start, '%d.%m.%Y')
-        reg_end = dict_data['registration_end_date']
-        dict_data['registration_end_date'] = datetime.strptime(reg_end, '%d.%m.%Y')
-
+        _update_d(dict_data, 'registration_start_date', 'registration_end_date')
         conferences.append(models.GetConferenceShort.model_validate(dict_data))
 
     return ConferencesFilter(filter_type, conferences).exec()

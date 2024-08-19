@@ -100,6 +100,8 @@ def add_conference(model):
         print('sheets_ops.add_conference: Could not retrieve last empty row from spreadsheet')
         return None
 
+    print(lr)
+
     body = {
         'values': [
             model.convert_for_spreadsheet()
@@ -111,8 +113,6 @@ def add_conference(model):
     if not res:
         print('sheets_ops.add_conference: Could not add conference to spreadsheet')
         return None
-
-    print(res)
 
     return res
 

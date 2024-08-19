@@ -134,51 +134,28 @@ def _get_conference_row(conference_id):
 
 
 def update_conference(conference_id, model):
-    conference_row = _get_conference_row(conference_id)
-    if not conference_row:
+    cr = _get_conference_row(conference_id)
+    if not cr:
         return None
 
-    r = SACC.spreadsheets().values().update(spreadsheetId=SPREADSHEET_ID, range=f'{LIST}!A{conference_row}').execute()
+    body = {
+        'values': [
+            model.convert_for_spreadsheet()
+        ]
+    }
+
+    r = SACC.spreadsheets().values().update(spreadsheetId=SPREADSHEET_ID, range=f'{LIST}!B{cr}:P{cr}', valueInputOption='RAW', body=body).execute()
     if not r:
         return None
 
-    # r = SACC.spreadsheets().values().batchGet(spreadsheetId=SPREADSHEET_ID, ranges=f'{LIST}!A1:P').execute()
-    # if not r:
-    #     print('sheets_ops.update_conference: Could not retrieve info from the spreadsheet')
-    #     return None
+    if r.get('updatedRows') < 1:
+        return None
 
-    # if not 'valueRanges' in r:
-    #     return None
+    r = SACC.spreadsheets().values().get(spreadsheetId=SPREADSHEET_ID, range=f'{LIST}!A{cr}:P{cr}').execute()
+    values = r.get('values', [])
+    if not values:
+        return None
 
-    # values = r.get('valueRanges')[0].get('values', [])
-    # if not values:
-    #     print('sheets_ops.update_conference: Values field is null in spreadsheet')
-    #     return None
+    if len(values) < 1
 
-    # field_names = values[0]
-
-    # conference_data = None
-    # for conference in values[1:]:
-    #     if conference[0] == conference_id:
-    #         conference_data = conference
-    #         break
-
-    # if not conference_data:
-    #     print('sheets_ops.update_conference: Could not find record with correct id in the spreadsheet')
-    #     return None
-
-    # dict_data = dict(zip_longest(field_names, conference_data, fillvalue=''))
-    # print(dict_data)
-
-    # model = models.Conference.model_validate(dict_data)
-    # print(model)
-
-    # print(values)
-
-    # r = SACC.spreadsheets().values().update(spreadsheetId=SPREADSHEET_ID, range=f'{LIST}!B{update_ran}:P', valueInputOption='RAW', body=body).execute()
-    # res = r.get('updates', [])
-    # if not res:
-    #     print('sheets_ops.add_conference: Could not add conference to spreadsheet')
-    #     return None
-
-    return None
+    return 

@@ -153,8 +153,8 @@ def update_conference(conference_id, model):
 
     # r = SACC.spreadsheets().values().get(spreadsheetId=SPREADSHEET_ID, range=f'{LIST}!A{cr}:P{cr}').execute()
     r = SACC.spreadsheets().values().batchGet(spreadsheetId=SPREADSHEET_ID, ranges=f'{LIST}!A{cr}:P{cr}').execute()
+    print(r)
     values = r.get('values', [])
-    print(values)
     if not values:
         return None
 

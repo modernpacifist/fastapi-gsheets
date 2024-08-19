@@ -123,8 +123,13 @@ def _get_conference_row(conference_id):
 
     print(values)
 
+    ids = [i[0] for i in values]
+    print(ids)
+    if not conference_id in ids:
+        return None
+
     try:
-        return int(values[-1][0]) + 2
+        return int(conference_id) + 1
 
     except Exception as e:
         print(e)
@@ -132,36 +137,38 @@ def _get_conference_row(conference_id):
 
 
 def update_conference(conference_id, model):
-    r = SACC.spreadsheets().values().batchGet(spreadsheetId=SPREADSHEET_ID, ranges=f'{LIST}!A1:P').execute()
-    if not r:
-        print('sheets_ops.update_conference: Could not retrieve info from the spreadsheet')
-        return None
+    _get_conference_row(conference_id)
 
-    if not 'valueRanges' in r:
-        return None
+    # r = SACC.spreadsheets().values().batchGet(spreadsheetId=SPREADSHEET_ID, ranges=f'{LIST}!A1:P').execute()
+    # if not r:
+    #     print('sheets_ops.update_conference: Could not retrieve info from the spreadsheet')
+    #     return None
 
-    values = r.get('valueRanges')[0].get('values', [])
-    if not values:
-        print('sheets_ops.update_conference: Values field is null in spreadsheet')
-        return None
+    # if not 'valueRanges' in r:
+    #     return None
 
-    field_names = values[0]
+    # values = r.get('valueRanges')[0].get('values', [])
+    # if not values:
+    #     print('sheets_ops.update_conference: Values field is null in spreadsheet')
+    #     return None
 
-    conference_data = None
-    for conference in values[1:]:
-        if conference[0] == conference_id:
-            conference_data = conference
-            break
+    # field_names = values[0]
 
-    if not conference_data:
-        print('sheets_ops.update_conference: Could not find record with correct id in the spreadsheet')
-        return None
+    # conference_data = None
+    # for conference in values[1:]:
+    #     if conference[0] == conference_id:
+    #         conference_data = conference
+    #         break
 
-    dict_data = dict(zip_longest(field_names, conference_data, fillvalue=''))
-    print(dict_data)
+    # if not conference_data:
+    #     print('sheets_ops.update_conference: Could not find record with correct id in the spreadsheet')
+    #     return None
 
-    model = models.Conference.model_validate(dict_data)
-    print(model.dump)
+    # dict_data = dict(zip_longest(field_names, conference_data, fillvalue=''))
+    # print(dict_data)
+
+    # model = models.Conference.model_validate(dict_data)
+    # print(model)
 
     # print(values)
 

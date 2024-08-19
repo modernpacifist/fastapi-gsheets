@@ -83,4 +83,3 @@ class GetConferenceShort(Conference):
 
 class UpdateConference(Conference):
     id: int = Field(default=0, exclude=True)
-    pass

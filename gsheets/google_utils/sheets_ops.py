@@ -152,15 +152,30 @@ def update_conference(conference_id, model):
         return None
 
     # r = SACC.spreadsheets().values().get(spreadsheetId=SPREADSHEET_ID, range=f'{LIST}!A{cr}:P{cr}').execute()
-    r = SACC.spreadsheets().values().batchGet(spreadsheetId=SPREADSHEET_ID, ranges=f'{LIST}!A{cr}:P{cr}').execute()
-    print(r)
-    values = r.get('values', [])
-    if not values:
+    r = SACC.spreadsheets().values().batchGet(
+        spreadsheetId=SPREADSHEET_ID,
+        ranges=[f'{LIST}!A1:P1', f'{LIST}!A{cr}:P{cr}']
+    ).execute()
+
+    value_ranges = r.get('valueRanges', [])
+    if len(value_ranges) != 2:
         return None
 
-    if len(values) < 1:
+    field_names = value_ranges[0].get('values', [])
+    if not field_names:
         return None
 
+    # field_names = f_values[0]
 
+    conference_data = value_ranges[1].get('values', [])
+    if not conference_data:
+        return None
 
-    return 
+    dict_data = dict(zip_longest(field_names[0], conference_data[0], fillvalue=''))
+
+    try:
+        return models.UpdateConference.model_validate(dict_data)
+
+    except Exception as e:
+        print(e)
+        return None

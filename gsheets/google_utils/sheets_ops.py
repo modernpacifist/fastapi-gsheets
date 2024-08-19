@@ -121,10 +121,7 @@ def _get_conference_row(conference_id):
     if not values:
         return 2
 
-    print(values)
-
-    ids = [i[0] for i in values]
-    print(ids)
+    ids = [i[0] for i in values if len(i) > 1]
     if not conference_id in ids:
         return None
 
@@ -137,7 +134,13 @@ def _get_conference_row(conference_id):
 
 
 def update_conference(conference_id, model):
-    _get_conference_row(conference_id)
+    conference_row = _get_conference_row(conference_id)
+    if not conference_row:
+        return None
+
+    r = SACC.spreadsheets().values().update(spreadsheetId=SPREADSHEET_ID, range=f'{LIST}!A{conference_row}').execute()
+    if not r:
+        return None
 
     # r = SACC.spreadsheets().values().batchGet(spreadsheetId=SPREADSHEET_ID, ranges=f'{LIST}!A1:P').execute()
     # if not r:

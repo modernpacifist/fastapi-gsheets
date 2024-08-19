@@ -58,7 +58,7 @@ async def conferences(conference: models.UpdateConference, conference_id: str = 
     if not r:
         raise HTTPException(status_code=500, detail=f'Could not update conference with id {conference_id}')
 
-    return {'put': 'put'}
+    return r
 
 
 async def main(params):

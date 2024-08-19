@@ -84,25 +84,8 @@ def get_conference_by_id(conference_id):
         return None
 
 
-def _get_last_empty_range():
-    r = SACC.spreadsheets().values().get(
-        spreadsheetId=SPREADSHEET_ID,
-        range=f'{LIST}!A2:A'
-    ).execute()
-    values = r.get('values', [])
-    if not values:
-        return 2
-
-    try:
-        return int(values[-1][0]) + 2
-
-    except Exception as e:
-        print(e)
-        return None
-
-
 def add_conference(model):
-    lr = _get_last_empty_range()
+    lr = utils.get_last_empty_range(SACC, SPREADSHEET_ID, LIST)
     if not lr:
         print('sheets_ops.add_conference: Could not retrieve last empty row from spreadsheet')
         return None
@@ -128,29 +111,8 @@ def add_conference(model):
     return res
 
 
-def _get_conference_row(conference_id):
-    r = SACC.spreadsheets().values().get(
-        spreadsheetId=SPREADSHEET_ID,
-        range=f'{LIST}!A2:P'
-    ).execute()
-    values = r.get('values', [])
-    if not values:
-        return 2
-
-    ids = [i[0] for i in values if len(i) > 1]
-    if not conference_id in ids:
-        return None
-
-    try:
-        return int(conference_id) + 1
-
-    except Exception as e:
-        print(e)
-        return None
-
-
 def update_conference(conference_id, model):
-    cr = _get_conference_row(conference_id)
+    cr = utils.get_conference_row(SACC, SPREADSHEET_ID, LIST, conference_id)
     if not cr:
         return None
 

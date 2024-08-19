@@ -66,19 +66,26 @@ class GetConferenceShort(Conference):
     google_spreadsheet: str = Field(exclude=True)
     google_drive_directory_id: str = Field(exclude=True)
     organized_by: str = Field(exclude=True)
-    registration_start_date: str = Field(exclude=True)
-    registration_end_date: str = Field(exclude=True)
+    registration_start_date: str
+    registration_end_date: str
     submission_start_date: str = Field(exclude=True)
     submission_end_date: str = Field(exclude=True)
     url: str = Field(exclude=True)
     email: EmailStr = Field(exclude=True)
 
     @field_serializer(
-        'registration_start_date',
-        'registration_end_date',
+        # 'registration_start_date',
+        # 'registration_end_date',
         'submission_start_date',
         'submission_end_date',
         'conf_start_date',
         'conf_end_date')
     def convert_datetimes(v):
         return v
+
+    @field_serializer(
+        'registration_start_date',
+        'registration_end_date')
+    def convert_datetimes_registration(v):
+        print(datetime.strptime(v, '%d.%m.%Y'))
+        return datetime.strptime(v, '%d.%m.%Y')

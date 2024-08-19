@@ -29,6 +29,9 @@ def get_all_conferences(filter_type):
         dict_data = dict(zip_longest(field_names, conference_data, fillvalue=''))
         conferences.append(models.GetConferenceShort.model_construct(**dict_data))
 
+    print(type(conferences[0]))
+    print(conferences[0])
+
     return ConferencesFilter(filter_type, conferences).exec()
 
 

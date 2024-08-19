@@ -61,7 +61,7 @@ def get_conference_by_id(conference_id):
     field_names = values[0]
 
     conference_data = None
-    for conference in values:
+    for conference in values[1:]:
         if conference[0] == conference_id:
             conference_data = conference
             break
@@ -73,7 +73,7 @@ def get_conference_by_id(conference_id):
     dict_data = dict(zip_longest(field_names, conference_data, fillvalue=''))
 
     try:
-        return models.GetConference.model_construct(**dict_data)
+        return models.GetConference.model_validate(dict_data)
 
     except Exception as e:
         print(f'sheets_ops.get_conference_by_id: {e}')
@@ -115,34 +115,50 @@ def add_conference(model):
     return res
 
 
-def _get_conference_row(conference_id):
-    r = SACC.spreadsheets().values().get(spreadsheetId=SPREADSHEET_ID, range=f'{LIST}!A2:A').execute()
-    values = r.get('values', [])
-    if not values:
-        return 2
+# def _get_conference_row(conference_id):
+#     r = SACC.spreadsheets().values().get(spreadsheetId=SPREADSHEET_ID, range=f'{LIST}!A2:A').execute()
+#     values = r.get('values', [])
+#     if not values:
+#         return 2
 
-    print(values)
+#     print(values)
 
-    try:
-        return int(values[-1][0]) + 2
+#     try:
+#         return int(values[-1][0]) + 2
 
-    except Exception as e:
-        print(e)
-        return None
+#     except Exception as e:
+#         print(e)
+#         return None
 
 
 def update_conference(conference_id, model):
-    r = SACC.spreadsheets().values().get(spreadsheetId=SPREADSHEET_ID, range=f'{LIST}!A2:P').execute()
-    values = r.get('values', [])
-    if not values:
-        return 2
-
-    ur = _get_conference_row(conference_id)
-    if not ur:
-        print('sheets_ops.update_conference: Could not find conference in spreadsheet')
+    r = SACC.spreadsheets().values().batchGet(spreadsheetId=SPREADSHEET_ID, ranges=f'{LIST}!A1:P').execute()
+    if not r:
+        print('sheets_ops.update_conference: Could not retrieve info from the spreadsheet')
         return None
 
-    print(ur)
+    if not 'valueRanges' in r:
+        return None
+
+    values = r.get('valueRanges')[0].get('values', [])
+    if not values:
+        print('sheets_ops.update_conference: Values field is null in spreadsheet')
+        return None
+
+    field_names = values[0]
+
+    conference_data = None
+    for conference in values[1:]:
+        if conference[0] == conference_id:
+            conference_data = conference
+            break
+
+    if not conference_data:
+        print('sheets_ops.update_conference: Could not find record with correct id in the spreadsheet')
+        return None
+
+    dict_data = dict(zip_longest(field_names, conference_data, fillvalue=''))
+    print(dict_data)
 
     # print(values)
 
@@ -152,4 +168,4 @@ def update_conference(conference_id, model):
     #     print('sheets_ops.add_conference: Could not add conference to spreadsheet')
     #     return None
 
-    return res
+    return None

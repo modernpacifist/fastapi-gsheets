@@ -50,7 +50,7 @@ async def conferences(conference: models.PostConference):
 
 
 @app.put('/conferences/{conference_id}')
-async def conferences(conference: models.UpdateConference, conference_id: int = None):
+async def conferences(conference: models.UpdateConference, conference_id: str = None):
     if not conference_id:
         raise HTTPException(status=400, detail='You must provide conference id to update it')
 

@@ -42,11 +42,13 @@ async def conferences(conference_id: str = None):
 
 @app.post('/conferences', status_code=status.HTTP_201_CREATED)
 async def conferences(conference: models.PostConference):
-    r = sheets_ops.add_conference(conference)
-    if not r:
-        raise HTTPException(status_code=500, detail='Could not add new conference')
+    # r = sheets_ops.add_conference(conference)
+    # if not r:
+    #     raise HTTPException(status_code=500, detail='Could not add new conference')
 
-    return conference
+    # return conference
+    sheets_ops._get_field_names()
+    return 200
 
 
 @app.put('/conferences/{conference_id}')

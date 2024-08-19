@@ -12,6 +12,16 @@ SPREADSHEET_ID = sheets_conf.get('id')
 LIST = sheets_conf.get('list')
 
 
+def _get_field_names():
+    r = SACC.spreadsheets().values().batchGet(spreadsheetId=SPREADSHEET_ID, ranges=f'{LIST}!A1:P').execute()
+    if not r:
+        return None
+
+    print(r)
+
+    return None
+
+
 def _dict_string_to_datetime(d, *keys):
     for key in keys:
         try:
@@ -100,8 +110,6 @@ def add_conference(model):
         print('sheets_ops.add_conference: Could not retrieve last empty row from spreadsheet')
         return None
 
-    print(lr)
-
     body = {
         'values': [
             model.convert_for_spreadsheet()
@@ -109,6 +117,7 @@ def add_conference(model):
     }
 
     r = SACC.spreadsheets().values().append(spreadsheetId=SPREADSHEET_ID, range=f'{LIST}!B{lr}:P', valueInputOption='RAW', body=body).execute()
+    print(r)
     res = r.get('updates', [])
     if not res:
         print('sheets_ops.add_conference: Could not add conference to spreadsheet')

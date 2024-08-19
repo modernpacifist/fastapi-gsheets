@@ -101,8 +101,7 @@ def add_conference(model):
 def update_conference(conference_id, model):
     cr = utils.get_conference_row(SACC, SPREADSHEET_ID, LIST, conference_id)
     if not cr:
-        # must return 404
-        return None
+        return -1
 
     body = {
         'values': [

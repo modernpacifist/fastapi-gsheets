@@ -58,6 +58,10 @@ async def conferences(conference: models.UpdateConference, conference_id: str = 
     if not res:
         raise HTTPException(status_code=500, detail=f'Could not update conference with id {conference_id}')
 
+    if res == -1:
+        # raise
+        raise HTTPException(status_code=404, detail=f'Conference with id {conference_id} does not exist')
+
     return res
 
 

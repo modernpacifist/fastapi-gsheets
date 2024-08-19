@@ -117,7 +117,3 @@ def add_conference(model):
 
 def update_conference():
     return None
-
-
-def h():
-    return None

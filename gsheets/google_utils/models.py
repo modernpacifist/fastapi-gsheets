@@ -79,3 +79,7 @@ class GetConferenceShort(Conference):
     )
     def validate_date(cls, v):
         return v
+
+
+class UpdateConference(Conference):
+    pass

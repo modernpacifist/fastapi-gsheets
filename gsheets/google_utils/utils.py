@@ -1,3 +1,16 @@
+from datetime import datetime
+
+
+def dict_string_to_datetime(d, *keys):
+    for key in keys:
+        try:
+            dtime = datetime.strptime(d[key], '%d.%m.%Y')
+        except Exception as e:
+            print(e)
+            dtime = datetime.strptime(d[key])
+        d.update({key: dtime})
+
+
 def get_fields(sacc, spreadsheet_id, spreadsheet_list):
     try:
         r = sacc.spreadsheets().values().batchGet(

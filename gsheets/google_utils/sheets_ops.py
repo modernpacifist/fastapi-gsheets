@@ -1,4 +1,4 @@
-from google_utils import models, auth
+from google_utils import models, auth, utils
 from google_utils.filters import ConferencesFilter
 from config.setup import google_sheets
 from itertools import zip_longest
@@ -10,22 +10,7 @@ sheets_conf = google_sheets()
 
 SPREADSHEET_ID = sheets_conf.get('id')
 LIST = sheets_conf.get('list')
-
-
-def _get_field_names():
-    r = SACC.spreadsheets().values().batchGet(spreadsheetId=SPREADSHEET_ID, ranges=f'{LIST}!A1:P1').execute()
-    if not r:
-        return None
-
-    value_ranges = r.get('valueRanges', [])
-    if not value_ranges:
-        return None
-
-    values = value_ranges.get('values', [])
-    if not values:
-        return None
-
-    return values[0]
+FIELDS = utils.get_fields(SACC, SPREADSHEET_ID, LIST)
 
 
 def _dict_string_to_datetime(d, *keys):
@@ -39,7 +24,10 @@ def _dict_string_to_datetime(d, *keys):
 
 
 def get_all_conferences(filter_type):
-    r = SACC.spreadsheets().values().batchGet(spreadsheetId=SPREADSHEET_ID, ranges=f'{LIST}!A1:P').execute()
+    r = SACC.spreadsheets().values().batchGet(
+        spreadsheetId=SPREADSHEET_ID,
+        ranges=f'{LIST}!A1:P'
+    ).execute()
     if not r:
         return None
 
@@ -50,10 +38,9 @@ def get_all_conferences(filter_type):
     if not values:
         return None
 
-    field_names = values[0]
     conferences = []
     for conference_data in values[1:]:
-        dict_data = dict(zip_longest(field_names, conference_data, fillvalue=''))
+        dict_data = dict(zip_longest(FIELDS, conference_data, fillvalue=''))
         _dict_string_to_datetime(dict_data, 'registration_start_date', 'registration_end_date')
         conferences.append(models.GetConferenceShort.model_validate(dict_data))
 
@@ -61,7 +48,10 @@ def get_all_conferences(filter_type):
 
 
 def get_conference_by_id(conference_id):
-    r = SACC.spreadsheets().values().batchGet(spreadsheetId=SPREADSHEET_ID, ranges=f'{LIST}!A1:P').execute()
+    r = SACC.spreadsheets().values().batchGet(
+        spreadsheetId=SPREADSHEET_ID,
+        ranges=f'{LIST}!A1:P'
+    ).execute()
     if not r:
         print('sheets_ops.get_conference_by_id: Could not retrieve info from the spreadsheet')
         return None
@@ -74,8 +64,6 @@ def get_conference_by_id(conference_id):
         print('sheets_ops.get_conference_by_id: Values field is null in spreadsheet')
         return None
 
-    field_names = values[0]
-
     conference_data = None
     for conference in values[1:]:
         if conference[0] == conference_id:
@@ -86,7 +74,7 @@ def get_conference_by_id(conference_id):
         print('sheets_ops.get_conference_by_id: Could not find record with correct id in the spreadsheet')
         return None
 
-    dict_data = dict(zip_longest(field_names, conference_data, fillvalue=''))
+    dict_data = dict(zip_longest(FIELDS, conference_data, fillvalue=''))
 
     try:
         return models.GetConference.model_validate(dict_data)
@@ -97,7 +85,10 @@ def get_conference_by_id(conference_id):
 
 
 def _get_last_empty_range():
-    r = SACC.spreadsheets().values().get(spreadsheetId=SPREADSHEET_ID, range=f'{LIST}!A2:A').execute()
+    r = SACC.spreadsheets().values().get(
+        spreadsheetId=SPREADSHEET_ID,
+        range=f'{LIST}!A2:A'
+    ).execute()
     values = r.get('values', [])
     if not values:
         return 2
@@ -122,8 +113,13 @@ def add_conference(model):
         ]
     }
 
-    r = SACC.spreadsheets().values().append(spreadsheetId=SPREADSHEET_ID, range=f'{LIST}!B{lr}:P', valueInputOption='RAW', body=body).execute()
-    print(r)
+    r = SACC.spreadsheets().values().append(
+        spreadsheetId=SPREADSHEET_ID,
+        range=f'{LIST}!B{lr}:P',
+        valueInputOption='RAW',
+        body=body
+    ).execute()
+
     res = r.get('updates', [])
     if not res:
         print('sheets_ops.add_conference: Could not add conference to spreadsheet')
@@ -133,7 +129,10 @@ def add_conference(model):
 
 
 def _get_conference_row(conference_id):
-    r = SACC.spreadsheets().values().get(spreadsheetId=SPREADSHEET_ID, range=f'{LIST}!A2:P').execute()
+    r = SACC.spreadsheets().values().get(
+        spreadsheetId=SPREADSHEET_ID,
+        range=f'{LIST}!A2:P'
+    ).execute()
     values = r.get('values', [])
     if not values:
         return 2
@@ -161,7 +160,12 @@ def update_conference(conference_id, model):
         ]
     }
 
-    r = SACC.spreadsheets().values().update(spreadsheetId=SPREADSHEET_ID, range=f'{LIST}!B{cr}:P{cr}', valueInputOption='RAW', body=body).execute()
+    r = SACC.spreadsheets().values().update(
+        spreadsheetId=SPREADSHEET_ID,
+        range=f'{LIST}!B{cr}:P{cr}',
+        valueInputOption='RAW',
+        body=body
+    ).execute()
     if not r:
         return None
 
@@ -177,15 +181,11 @@ def update_conference(conference_id, model):
     if len(value_ranges) != 2:
         return None
 
-    field_names = value_ranges[0].get('values', [])
-    if not field_names:
-        return None
-
     conference_data = value_ranges[1].get('values', [])
     if not conference_data:
         return None
 
-    dict_data = dict(zip_longest(field_names[0], conference_data[0], fillvalue=''))
+    dict_data = dict(zip_longest(FIELDS, conference_data[0], fillvalue=''))
 
     try:
         return models.UpdateConference.model_validate(dict_data)

@@ -13,22 +13,19 @@ FIELDS = utils.get_fields(SACC, SPREADSHEET_ID, LIST)
 
 
 def get_all_conferences(filter_type):
-    r = SACC.spreadsheets().values().batchGet(
+    r = SACC.spreadsheets().values().get(
         spreadsheetId=SPREADSHEET_ID,
-        ranges=f'{LIST}!A1:P'
+        range=f'{LIST}!A2:P'
     ).execute()
     if not r:
         return None
 
-    if not 'valueRanges' in r:
-        return None
-
-    values = r.get('valueRanges')[0].get('values', [])
+    values = r.get('values', [])
     if not values:
         return None
 
     conferences = []
-    for conference_data in values[1:]:
+    for conference_data in values:
         try:
             dict_data = dict(zip_longest(FIELDS, conference_data, fillvalue=''))
             utils.dict_string_to_datetime(dict_data, 'registration_start_date', 'registration_end_date')
@@ -44,14 +41,11 @@ def get_all_conferences(filter_type):
 def get_conference_by_id(conference_id):
     r = SACC.spreadsheets().values().get(
         spreadsheetId=SPREADSHEET_ID,
-        range=f'{LIST}!A1:P'
+        range=f'{LIST}!A2:P'
     ).execute()
     if not r:
         print('sheets_ops.get_conference_by_id: Could not retrieve info from the spreadsheet')
         return None
-
-    # if not 'valueRanges' in r:
-    #     return None
 
     values = r.get('values', [])
     if not values:
@@ -59,7 +53,7 @@ def get_conference_by_id(conference_id):
         return None
 
     conference_data = None
-    for conference in values[1:]:
+    for conference in values:
         if conference[0] == conference_id:
             conference_data = conference
             break
@@ -107,6 +101,7 @@ def add_conference(model):
 def update_conference(conference_id, model):
     cr = utils.get_conference_row(SACC, SPREADSHEET_ID, LIST, conference_id)
     if not cr:
+        # must return 404
         return None
 
     body = {

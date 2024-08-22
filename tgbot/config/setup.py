@@ -1,12 +1,28 @@
 import os
 
 from configparser import ConfigParser
+from dataclasses import dataclass
 
 
 CONF_FILENAME = 'config.ini'
 
 
-def fastapi(section='fastapi'):
+class TelegramConfig:
+    token: str
+    section='telegram bot'
+
+    def __post_init__(self):
+        if not self.token:
+            raise ValueError('Bot token is missing')
+
+# ^
+# |
+# | must return this type
+# |
+# |
+# |
+
+def setup(section='telegram bot'):
     if not os.path.isfile(CONF_FILENAME):
         raise Exception('No config.ini file found')
 
@@ -20,12 +36,6 @@ def fastapi(section='fastapi'):
     if parser.has_section(section):
         params = parser.items(section)
         for p in params:
-            if p[0] == 'port':
-                config[p[0]] = int(p[1])
-                continue
             config[p[0]] = p[1]
-
-    if not all(k in config for k in ('host', 'port')):
-        raise Exception(f'Host or port values are not present in {CONF_FILENAME}')
 
     return config

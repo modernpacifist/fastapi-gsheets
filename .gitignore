@@ -163,6 +163,6 @@ cython_debug/
 #.idea/
 
 .env
-*.conf
 *.env
 *.env*
+*.ini

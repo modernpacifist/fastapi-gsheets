@@ -121,7 +121,7 @@ def update_conference(conference_id, model):
     if not r:
         return None
 
-    if r.get('updatedRows') < 1:
+    if r.get('updatedRows', 0) < 1:
         return None
 
     r = SACC.spreadsheets().values().get(

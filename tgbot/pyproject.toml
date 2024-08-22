@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "tgbot"
+version = "0.1.0"
+description = ""
+authors = ["modernpacifist <modernpacifist@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+python-telegram-bot = "^21.4"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

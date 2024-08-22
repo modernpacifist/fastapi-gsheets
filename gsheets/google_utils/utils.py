@@ -1,6 +1,10 @@
 from datetime import datetime
 
 
+def parse_values(r):
+    return None
+
+
 def dict_string_to_datetime(d, *keys):
     for key in keys:
         try:

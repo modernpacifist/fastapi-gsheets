@@ -90,12 +90,15 @@ def add_conference(model):
         body=body
     ).execute()
 
-    res = r.get('updates', [])
-    if not res:
+    updates = r.get('updates', [])
+    if not updates:
         print('sheets_ops.add_conference: Could not add conference to spreadsheet')
         return None
 
-    return res
+    if updates.get('updatedRows', 0) < 1:
+        return None
+
+    return model
 
 
 def update_conference(conference_id, model):

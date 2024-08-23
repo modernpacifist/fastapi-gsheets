@@ -1,7 +1,7 @@
 import os
 
 from configparser import ConfigParser
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 @dataclass
@@ -12,6 +12,15 @@ class TelegramConfig:
 @dataclass
 class SheetsConfig:
     uri: str
+    get_uri: str = field(init=False)
+    post_uri: str = field(init=False)
+    put_uri: str = field(init=False)
+
+    def __post_init__(self):
+        self.get_uri = f'http://{self.uri}/conferences'
+        self.get_single_uri = f'http://{self.uri}/conferences/{}'
+        self.post_uri = f'http://{self.uri}/conferences'
+        self.put_uri = f'http://{self.uri}/conferences/{0}'
 
 
 def setup(section, filename='config.ini'):

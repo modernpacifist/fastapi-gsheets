@@ -45,4 +45,3 @@ def setup(section, filename='config.ini'):
     except Exception as e:
         print(e)
         exit(1)
-

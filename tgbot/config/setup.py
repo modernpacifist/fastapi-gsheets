@@ -18,9 +18,9 @@ class SheetsConfig:
 
     def __post_init__(self):
         self.get_uri = f'http://{self.uri}/conferences'
-        self.get_single_uri = f'http://{self.uri}/conferences/{}'
+        self.get_single_uri = f'http://{self.uri}/conferences/'
         self.post_uri = f'http://{self.uri}/conferences'
-        self.put_uri = f'http://{self.uri}/conferences/{0}'
+        self.put_uri = f'http://{self.uri}/conferences/'
 
 
 def setup(section, filename='config.ini'):

@@ -2,12 +2,18 @@ from telegram.ext import (
     Application
 )
 
-from config import TelegramConfig
+from config import setup
 
 
 def main():
     try:
-        app = Application.builder().token(TleegramConfig.pseudo_init()).build()
+        tgconfig = setup()
+        print(tgconfig)
+        # app = Application.builder().token(TleegramConfig.pseudo_init()).build()
     except Exception as e:
         print(e)
         exit(1)
+
+
+if __name__ == '__main__':
+    main()

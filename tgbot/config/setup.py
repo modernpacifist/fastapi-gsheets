@@ -1,15 +1,16 @@
 import os
 
 from configparser import ConfigParser
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 
 
-CONF_FILENAME = 'config.ini'
+# CONF_FILENAME = 'config.ini'
 
 
+@dataclass
 class TelegramConfig:
     token: str
-    section='telegram bot'
+    # section='telegram bot'
 
     def __post_init__(self):
         if not self.token:
@@ -22,20 +23,23 @@ class TelegramConfig:
 # |
 # |
 
-def setup(section='telegram bot'):
-    if not os.path.isfile(CONF_FILENAME):
+def setup(filename='config.ini', section='telegram bot'):
+    if not os.path.isfile(filename):
         raise Exception('No config.ini file found')
 
     if section is None:
         raise Exception('You did not specify the section to parse')
 
     parser = ConfigParser()
-    parser.read(CONF_FILENAME)
+    parser.read(filename)
 
     config = {}
-    if parser.has_section(section):
-        params = parser.items(section)
-        for p in params:
-            config[p[0]] = p[1]
+    if not parser.has_section(section):
+        raise Exception(f'File {filename} does not have ')
+
+    params = parser.items(section)
+    print(params)
+        # for p in params:
+        #     config[p[0]] = p[1]
 
     return config

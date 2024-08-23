@@ -7,8 +7,8 @@ from config import setup
 
 def main():
     try:
-        tgconfig = setup()
-        print(tgconfig)
+        tgconfig = setup.setup()
+        tgconfig.token
         # app = Application.builder().token(TleegramConfig.pseudo_init()).build()
     except Exception as e:
         print(e)

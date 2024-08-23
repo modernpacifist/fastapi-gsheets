@@ -3,12 +3,12 @@ from telegram.ext import (
     CommandHandler   
 )
 
-from config.setup import TelegramConfig, SheetsConfig
+from config.setup import setup
 
 
 # TGCONFIG = TelegramConfig.setup()
-TGCONFIG = TelegramConfig()
-# SHEETS_ENDPOINT = setup.setup(section='backend')
+TGCONFIG = setup('telegram bot')
+SHEETS_ENDPOINT = setup('sheets')
 
 
 async def start(update, context):
@@ -26,7 +26,15 @@ def main():
 
     app.add_handler(CommandHandler('start', start))
 
-    app.run_polling()
+    try:
+        app.run_polling()
+        print('application started')
+    except KeyboardInterrupt:
+        print('Exited by user')
+        exit(0)
+    except Exception as e:
+        print(e)
+        exit(1)
 
 
 if __name__ == '__main__':

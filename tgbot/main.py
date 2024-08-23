@@ -21,13 +21,22 @@ async def start(update, context):
 
 async def get_conferences(update, context):
     # add filter to argument /get <filter>
+    args = context.args
+    if len(args) > 1:
+        await update.message.reply_text('You can\'t specify more than one filter')
+        return
+
+    filter = 'active'
+    if len(args) == 1:
+        filter = args[0]
 
     try:
-        resp = rq.get(SHEETS_ENDPOINT.get_uri, params='past', timeout=5)
+        params = {'filter': filter}
+        resp = rq.get(SHEETS_ENDPOINT.get_uri, params=params, timeout=5)
         if resp.status_code != 200:
             raise Exception('Could not fetch data')
 
-        pretty_json = json.dumps(resp.json(), indent=4)
+        pretty_json = json.dumps(resp.json(), ensure_ascii=False, indent=4)
         await update.message.reply_text(pretty_json)
 
     except Exception as e:

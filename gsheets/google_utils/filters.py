@@ -41,4 +41,4 @@ class ConferencesFilter:
             'active': self._active_filter,
             'past': self._past_filter,
             'future': self._future_filter,
-        }.get(self.filter_type)
+        }.get(self.filter_type, self._active_filter)

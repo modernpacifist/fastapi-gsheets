@@ -3,17 +3,23 @@ from telegram.ext import (
     CommandHandler   
 )
 
-from config import setup
+from config.setup import TelegramConfig, SheetsConfig
 
 
-def start():
+# TGCONFIG = TelegramConfig.setup()
+TGCONFIG = TelegramConfig()
+# SHEETS_ENDPOINT = setup.setup(section='backend')
 
+
+async def start(update, context):
+    uid = update.message.chat.id
+    uname = update.message.chat.first_name
+    print(uid, uname)
 
 
 def main():
     try:
-        tgconfig = setup.setup()
-        app = Application.builder().token(tgconfig.token).build()
+        app = Application.builder().token(TGCONFIG.token).build()
     except Exception as e:
         print(e)
         exit(1)

@@ -1,3 +1,5 @@
+import requests as rq
+
 from telegram.ext import (
     Application,
     CommandHandler   
@@ -17,9 +19,19 @@ async def start(update, context):
 
 
 async def get_conferences(update, context):
-    uid = update.message.chat.id
+    # add filter to argument /get <filter>
 
-    requests = 
+    try:
+        resp = rq.get(f'http://{SHEETS_ENDPOINT.uri}/conferences', timeout=5)
+        if resp.status_code != 200:
+            raise Exception('Could not fetch data')
+
+        # print(resp.json())
+        await update.message.reply_text(resp.json())
+
+    except Exception as e:
+        print(e)
+        await update.message.reply_text('Could not fetch data')
 
 
 async def add_conference(update, context):
@@ -34,6 +46,7 @@ def main():
         exit(1)
 
     app.add_handler(CommandHandler('start', start))
+    app.add_handler(CommandHandler('get', get_conferences))
     app.add_handler(CommandHandler('add', add_conference))
 
     try:

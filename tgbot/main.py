@@ -1,3 +1,4 @@
+import json
 import requests as rq
 
 from telegram.ext import (
@@ -26,8 +27,8 @@ async def get_conferences(update, context):
         if resp.status_code != 200:
             raise Exception('Could not fetch data')
 
-        # print(resp.json())
-        await update.message.reply_text(resp.json())
+        pretty_json = json.dumps(resp.json(), indent=4)
+        await update.message.reply_text(pretty_json)
 
     except Exception as e:
         print(e)

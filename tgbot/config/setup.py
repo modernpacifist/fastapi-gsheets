@@ -1,10 +1,7 @@
 import os
 
 from configparser import ConfigParser
-from dataclasses import dataclass, asdict
-
-
-# CONF_FILENAME = 'config.ini'
+from dataclasses import dataclass
 
 
 @dataclass
@@ -31,4 +28,10 @@ def setup(filename='config.ini', section='telegram bot'):
 
     params = parser.items(section)
 
-    return TelegramConfig(*params)
+    try: 
+        return TelegramConfig(**{i: k for i, k in params})
+
+    except Exception as e:
+        print(e)
+        exit(1)
+

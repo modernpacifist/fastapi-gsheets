@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 [tool.poetry]
 name = "tgbot"
 version = "0.1.0"
@@ -15,20 +14,3 @@ requests = "^2.32.3"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-=======
-[tool.poetry]
-name = "tgbot"
-version = "0.1.0"
-description = ""
-authors = ["modernpacifist <modernpacifist@gmail.com>"]
-readme = "README.md"
-
-[tool.poetry.dependencies]
-python = "^3.10"
-python-telegram-bot = "^21.4"
-
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
->>>>>>> 02465437a0c5eb2a5394b99f39c710c4da8a3415

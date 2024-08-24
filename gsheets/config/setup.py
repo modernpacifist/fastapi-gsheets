@@ -56,6 +56,10 @@ class FastApiConfig:
     host: str
     port: str
 
+    def __post_init__(self):
+        if self.port.isdigit():
+            self.port = int(self.port)
+
 
 @dataclass
 class GoogleSheetsConfig:

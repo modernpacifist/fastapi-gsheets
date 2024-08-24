@@ -66,15 +66,12 @@ async def conferences(conference: models.UpdateConference, conference_id: str = 
 
 
 async def main(conf):
-    # config = uvicorn.Config('main:app', host=params['host'], port=params['port'], log_level='info')
-    config = uvicorn.Config('main:app', host=conf.host, port=conf.port, log_level='info')
+    config = uvicorn.Config('main:APP', host=conf.host, port=conf.port, log_level='info')
     server = uvicorn.Server(config)
     await server.serve()
 
 
 if __name__ == '__main__':
-    # fastapi_config = setup.fastapi()
-
     try:
         asyncio.run(main(CONFIG))
     except KeyboardInterrupt as e:

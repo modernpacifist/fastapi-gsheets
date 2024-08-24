@@ -3,14 +3,15 @@ import asyncio
 
 from fastapi import FastAPI, status, HTTPException, Request
 from google_utils import sheets_ops, models
-from config import setup
+from config.setup import setup
 
 
-app = FastAPI()
+APP = FastAPI()
+CONFIG = setup('fastapi')
 
 
 # TODO: make it work with fastapi.Query
-@app.get('/conferences', status_code=status.HTTP_200_OK)
+@APP.get('/conferences', status_code=status.HTTP_200_OK)
 async def conferences(request: Request, filter: str = 'active'):
     res = sheets_ops.get_all_conferences(filter)
     if not res:
@@ -25,7 +26,7 @@ async def conferences(request: Request, filter: str = 'active'):
     return res
 
 
-@app.get('/conferences/{conference_id}')
+@APP.get('/conferences/{conference_id}')
 async def conferences(conference_id: str = None):
     if not conference_id:
         raise HTTPException(status_code=400, detail='You must provide conference id')
@@ -40,7 +41,7 @@ async def conferences(conference_id: str = None):
     return res
 
 
-@app.post('/conferences', status_code=status.HTTP_201_CREATED)
+@APP.post('/conferences', status_code=status.HTTP_201_CREATED)
 async def conferences(conference: models.PostConference):
     res = sheets_ops.add_conference(conference)
     if not res:
@@ -49,7 +50,7 @@ async def conferences(conference: models.PostConference):
     return res
 
 
-@app.put('/conferences/{conference_id}')
+@APP.put('/conferences/{conference_id}')
 async def conferences(conference: models.UpdateConference, conference_id: str = None):
     if not conference_id:
         raise HTTPException(status=400, detail='You must provide conference id to update it')
@@ -64,17 +65,18 @@ async def conferences(conference: models.UpdateConference, conference_id: str = 
     return res
 
 
-async def main(params):
-    config = uvicorn.Config('main:app', host=params['host'], port=params['port'], log_level='info')
+async def main(conf):
+    # config = uvicorn.Config('main:app', host=params['host'], port=params['port'], log_level='info')
+    config = uvicorn.Config('main:app', host=conf.host, port=conf.port, log_level='info')
     server = uvicorn.Server(config)
     await server.serve()
 
 
 if __name__ == '__main__':
-    fastapi_config = setup.fastapi()
+    # fastapi_config = setup.fastapi()
 
     try:
-        asyncio.run(main(fastapi_config))
+        asyncio.run(main(CONFIG))
     except KeyboardInterrupt as e:
         print(f'Exited by user {e}')
         exit(0)

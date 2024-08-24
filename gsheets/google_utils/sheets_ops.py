@@ -1,14 +1,15 @@
 from google_utils import models, auth, utils
 from google_utils.filters import ConferencesFilter
-from config.setup import google_sheets
 from itertools import zip_longest
+# from config.setup import google_sheets
+from config.setup import setup
 
 
 SACC = auth.setup_account()
-sheets_conf = google_sheets()
 
-SPREADSHEET_ID = sheets_conf.get('id')
-LIST = sheets_conf.get('list')
+SHEETS_CONF = setup('google sheets')
+SPREADSHEET_ID = SHEETS_CONF.id
+LIST = SHEETS_CONF.list
 FIELDS = utils.get_fields(SACC, SPREADSHEET_ID, LIST)
 
 

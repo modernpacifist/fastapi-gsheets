@@ -48,6 +48,15 @@ async def add_conference(update, context):
     uid = update.message.chat.id
 
 
+async def help(update, context):
+    help_message = """
+/get <filter> - 
+/add
+/update
+    """
+    await update.message.reply_text(help_message)
+
+
 def main():
     try:
         app = Application.builder().token(TGCONFIG.token).build()
@@ -58,6 +67,7 @@ def main():
     app.add_handler(CommandHandler('start', start))
     app.add_handler(CommandHandler('get', get_conferences))
     app.add_handler(CommandHandler('add', add_conference))
+    app.add_handler(CommandHandler('help', help))
 
     try:
         app.run_polling()

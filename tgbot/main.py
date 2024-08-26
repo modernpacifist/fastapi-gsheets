@@ -5,7 +5,8 @@ import datetime
 
 from telegram.ext import (
     Application,
-    CommandHandler   
+    CommandHandler,
+    CallbackContext
 )
 
 from config.setup import setup
@@ -50,7 +51,7 @@ async def add_conference(update, context):
     uid = update.message.chat.id
 
 
-async def notificate_users(update, context):
+async def notificate_users(context: CallbackContext):
     return None
 
 
@@ -78,8 +79,8 @@ def main():
     app.job_queue.run_daily(callback=notificate_users,
         time=datetime.time(
             hour=10,
-            minute=00,
-            second=00,
+            minute=2,
+            second=0,
             tzinfo=pytz.timezone('Europe/Moscow')
         ),
         days=(0, 1, 2, 3, 4, 5, 6)

@@ -1,3 +1,5 @@
+import os
+import sys
 import json
 import requests as rq
 import pytz
@@ -9,14 +11,8 @@ from telegram.ext import (
     CallbackContext
 )
 
-# import ..config.setup
-# from ..tgbot.config2 import setup
-# from config2.setup2 import setup
-import sys, os
-print(sys.path)
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'config'))
-print(sys.path)
-exit()
+prev_path = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
+sys.path.append(os.path.join(os.path.dirname(__file__), prev_path))
 
 from config.setup import setup
 

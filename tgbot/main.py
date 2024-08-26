@@ -11,11 +11,11 @@ from telegram.ext import (
 
 # from config.setup import setup
 # import ..config.setup
-from .. import config
+from ..config import setup
 
 
-TGCONFIG = config.setup('telegram bot')
-BACKEND_ENDPOINT = config.setup('backend')
+TGCONFIG = setup('telegram bot')
+BACKEND_ENDPOINT = setup('backend')
 
 
 async def start(update, context):

@@ -1,12 +1,10 @@
-from google_utils import models, auth, utils
-from google_utils.filters import ConferencesFilter
 from itertools import zip_longest
-from config.setup import setup
+
+from . import config, models, auth, utils, filters
 
 
 SACC = auth.setup_account()
-
-SHEETS_CONF = setup('google sheets')
+SHEETS_CONF = config.setup('google sheets')
 SPREADSHEET_ID = SHEETS_CONF.id
 LIST = SHEETS_CONF.list
 FIELDS = utils.get_fields(SACC, SPREADSHEET_ID, LIST)
@@ -35,7 +33,7 @@ def get_all_conferences(filter_type):
             print(e)
             continue
 
-    return ConferencesFilter(filter_type, conferences).exec()
+    return filters.ConferencesFilter(filter_type, conferences).exec()
 
 
 def get_conference_by_id(conference_id):

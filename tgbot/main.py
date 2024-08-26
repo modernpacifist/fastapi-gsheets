@@ -51,6 +51,10 @@ async def add_conference(update, context):
     uid = update.message.chat.id
 
 
+async def get_conference_(update, context):
+    uid = update.message.chat.id
+
+
 async def notificate_users(context: CallbackContext):
     return None
 

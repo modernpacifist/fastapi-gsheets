@@ -2,8 +2,8 @@ import uvicorn
 import asyncio
 
 from fastapi import FastAPI, status, HTTPException, Request
-from google_utils import models, sheets_requests
-from config.setup import setup
+from sheets import models, sheets_requests
+from sheets.config import setup
 
 
 APP = FastAPI()

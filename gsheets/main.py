@@ -1,16 +1,19 @@
+import os
+import sys
 import uvicorn
 import asyncio
 
 from fastapi import FastAPI, status, HTTPException, Request
 from sheets import models, sheets_requests
-from sheets.config import setup
 
+prev_path = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
+sys.path.append(os.path.join(os.path.dirname(__file__), prev_path))
+from config.setup import setup
 
 APP = FastAPI()
 CONFIG = setup('fastapi')
 
 
-# TODO: refactor google_utils to sheets_utils
 # TODO: make it work with fastapi.Query
 @APP.get('/conferences', status_code=status.HTTP_200_OK)
 async def conferences(request: Request, filter: str = 'active'):

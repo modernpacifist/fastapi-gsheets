@@ -1,10 +1,19 @@
+import os
+import sys
+from pathlib import Path
 from itertools import zip_longest
 
-from . import config, models, auth, utils, filters
+from . import models, auth, utils, filters
+
+
+prev_path = Path(__file__).parents[2]
+sys.path.append(os.path.join(os.path.dirname(__file__), prev_path))
+
+from config.setup import setup
 
 
 SACC = auth.setup_account()
-SHEETS_CONF = config.setup('google sheets')
+SHEETS_CONF = setup('google sheets')
 SPREADSHEET_ID = SHEETS_CONF.id
 LIST = SHEETS_CONF.list
 FIELDS = utils.get_fields(SACC, SPREADSHEET_ID, LIST)

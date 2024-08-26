@@ -10,6 +10,7 @@ APP = FastAPI()
 CONFIG = setup('fastapi')
 
 
+# TODO: refactor google_utils to sheets_utils
 # TODO: make it work with fastapi.Query
 @APP.get('/conferences', status_code=status.HTTP_200_OK)
 async def conferences(request: Request, filter: str = 'active'):

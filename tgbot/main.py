@@ -11,7 +11,7 @@ from telegram.ext import (
 
 # from config.setup import setup
 # import ..config.setup
-from tgbot.config import setup
+from ..tgbot.config2 import setup
 
 
 TGCONFIG = setup.setup('telegram bot')

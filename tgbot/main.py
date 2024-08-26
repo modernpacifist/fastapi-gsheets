@@ -9,13 +9,20 @@ from telegram.ext import (
     CallbackContext
 )
 
-# from config.setup import setup
 # import ..config.setup
-from ..tgbot.config2 import setup
+# from ..tgbot.config2 import setup
+# from config2.setup2 import setup
+import sys, os
+print(sys.path)
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'config'))
+print(sys.path)
+exit()
+
+from config.setup import setup
 
 
-TGCONFIG = setup.setup('telegram bot')
-BACKEND_ENDPOINT = setup.setup('backend')
+TGCONFIG = setup('telegram bot')
+BACKEND_ENDPOINT = setup('backend')
 
 
 async def start(update, context):

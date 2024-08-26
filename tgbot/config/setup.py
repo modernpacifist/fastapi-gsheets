@@ -28,6 +28,9 @@ def setup(section, filename='config.ini'):
     parser = ConfigParser()
     parser.read(filename)
 
+    if not section:
+        raise Exception('Section you specified is invalid')
+
     if not parser.has_section(section):
         raise Exception(f'File {filename} does not have section {section}')
 
@@ -39,9 +42,6 @@ def setup(section, filename='config.ini'):
 
     if not os.path.isfile(filename):
         raise Exception('No config.ini file found')
-
-    if section is None:
-        raise Exception('You did not specify the section to parse')
 
     params = parser.items(section)
 

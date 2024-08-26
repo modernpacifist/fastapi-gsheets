@@ -10,7 +10,7 @@ class TelegramConfig:
 
 
 @dataclass
-class SheetsConfig:
+class BackendConfig:
     uri: str
     get_uri: str = field(init=False)
     post_uri: str = field(init=False)
@@ -21,6 +21,12 @@ class SheetsConfig:
         self.get_single_uri = f'http://{self.uri}/conferences/'
         self.post_uri = f'http://{self.uri}/conferences'
         self.put_uri = f'http://{self.uri}/conferences/'
+
+
+@dataclass
+class GoogleSheetsConfig:
+    id: str
+    list: str
 
 
 def setup(section, filename='config.ini'):
@@ -38,7 +44,10 @@ def setup(section, filename='config.ini'):
         return_object = TelegramConfig
 
     if section == 'backend':
-        return_object = SheetsConfig
+        return_object = BackendConfig
+
+    if section == 'google sheets':
+        return_object = GoogleSheetsConfig
 
     if not os.path.isfile(filename):
         raise Exception('No config.ini file found')

@@ -10,6 +10,7 @@ python = "^3.10"
 python-telegram-bot = {extras = ["job-queue"], version = "^21.4"}
 requests = "^2.32.3"
 pytz = "^2024.1"
+python-docx = "^1.1.2"
 
 
 [build-system]

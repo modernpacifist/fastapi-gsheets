@@ -13,7 +13,7 @@ from config.setup import setup
 
 
 TGCONFIG = setup('telegram bot')
-SHEETS_ENDPOINT = setup('sheets')
+BACKEND_ENDPOINT = setup('backend1')
 
 
 async def start(update, context):
@@ -35,7 +35,7 @@ async def get_conferences(update, context):
 
     try:
         params = {'filter': filter}
-        resp = rq.get(SHEETS_ENDPOINT.get_uri, params=params, timeout=5)
+        resp = rq.get(BACKEND_ENDPOINT.get_uri, params=params, timeout=5)
         if resp.status_code != 200:
             raise Exception('Could not fetch data')
 

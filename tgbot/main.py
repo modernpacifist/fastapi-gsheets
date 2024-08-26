@@ -2,7 +2,6 @@ import json
 import requests as rq
 import pytz
 import datetime
-import asyncio
 
 from telegram.ext import (
     Application,
@@ -65,7 +64,7 @@ async def help(update, context):
     await update.message.reply_text(help_message)
 
 
-async def main():
+def main():
     try:
         app = Application.builder().token(TGCONFIG.token).build()
     except Exception as e:
@@ -87,13 +86,9 @@ async def main():
         days=(0, 1, 2, 3, 4, 5, 6)
     )
 
-    await app.run_polling()
+    app.run_polling()
 
 
 if __name__ == '__main__':
-    # print('Application started')
-    try:
-        asyncio.run(main())
-    except KeyboardInterrupt as e:
-        print(F'Exited by user {e}')
-        exit(0)
+    print('Application started')
+    main()

@@ -77,6 +77,10 @@ async def download_conference_applications(update, context):
     uid = update.message.chat.id
 
 
+async def download_conference_papers(update, context):
+    uid = update.message.chat.id
+
+
 async def download_conference_report(update, context):
     uid = update.message.chat.id
 

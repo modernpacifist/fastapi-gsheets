@@ -3,7 +3,7 @@ import requests as rq
 import pytz
 import datetime
 
-from users_db import ops
+from db import operations
 
 from telegram.ext import (
     Application,
@@ -19,16 +19,16 @@ BACKEND_ENDPOINT = setup('backend')
 DATABASE = setup('database')
 
 
+# @operations.authentication_decorator
 async def start(update, context):
     uid = update.message.chat.id
     uname = update.message.chat.first_name
-    print(uid, uname)
 
-    ops.verify_user(uid)
+    if operations.verify_user(uid):
+        await update.message.reply_text('You are already registered')
+        return
 
-    ops.add_user(uid, uname)
-    # sheets.requests.add_user(uid, uname)
-    
+    operations.add_user(uid, uname)
 
 
 async def get_conferences(update, context):

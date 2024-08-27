@@ -1,26 +1,10 @@
 import os
+import httplib2
 
+from googleapiclient.discovery import build
+from oauth2client.service_account import ServiceAccountCredentials
 from configparser import ConfigParser
 from dataclasses import dataclass, field
-
-
-@dataclass
-class TelegramConfig:
-    token: str
-
-
-@dataclass
-class BackendConfig:
-    uri: str
-    get_uri: str = field(init=False)
-    post_uri: str = field(init=False)
-    put_uri: str = field(init=False)
-
-    def __post_init__(self):
-        self.get_uri = f'http://{self.uri}/conferences'
-        self.get_single_uri = f'http://{self.uri}/conferences/'
-        self.post_uri = f'http://{self.uri}/conferences'
-        self.put_uri = f'http://{self.uri}/conferences/'
 
 
 @dataclass
@@ -50,12 +34,6 @@ def setup(section, filename='config.ini'):
     if not parser.has_section(section):
         raise Exception(f'File {filename} does not have section {section}')
 
-    if section == 'telegram bot':
-        return_object = TelegramConfig
-
-    if section == 'backend':
-        return_object = BackendConfig
-
     if section == 'google sheets':
         return_object = GoogleSheetsConfig
 
@@ -72,4 +50,17 @@ def setup(section, filename='config.ini'):
 
     except Exception as e:
         print(e)
+        exit(1)
+
+
+def setup_account():
+    creds_json  = os.path.dirname(__file__) + '/credentials.json'
+    scopes = ['https://www.googleapis.com/auth/spreadsheets']
+
+    try:
+        creds_service = ServiceAccountCredentials.from_json_keyfile_name(creds_json, scopes).authorize(httplib2.Http())
+        return build('sheets', 'v4', http=creds_service)
+
+    except Exception as e:
+        print(f'Problem with setting up google service account: {e}')
         exit(1)

@@ -1,4 +1,7 @@
 # gsheets
+## setup
+Put credentials.json in `config` dir
+
 ## set in sheets:
 ```
 =if(B2="","",A1+1)

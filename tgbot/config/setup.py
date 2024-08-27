@@ -29,16 +29,6 @@ class GoogleSheetsConfig:
     list: str
 
 
-@dataclass
-class FastApiConfig:
-    host: str
-    port: int
-
-    def __post_init__(self):
-        if self.port.isdigit():
-            self.port = int(self.port)
-
-
 def setup(section, filename='config.ini'):
     return_object = None
     parser = ConfigParser()
@@ -58,9 +48,6 @@ def setup(section, filename='config.ini'):
 
     if section == 'google sheets':
         return_object = GoogleSheetsConfig
-
-    if section == 'fastapi':
-        return_object = FastApiConfig
 
     if not os.path.isfile(filename):
         raise Exception('No config.ini file found')

@@ -1,18 +1,11 @@
-import os
-import sys
-from pathlib import Path
 from itertools import zip_longest
 
-from . import models, auth, utils, filters
+from . import models, utils, filters
+
+from config.setup import setup, setup_account
 
 
-prev_path = Path(__file__).parents[2]
-sys.path.append(os.path.join(os.path.dirname(__file__), prev_path))
-
-from config.setup import setup
-
-
-SACC = auth.setup_account()
+SACC = setup_account()
 SHEETS_CONF = setup('google sheets')
 SPREADSHEET_ID = SHEETS_CONF.id
 LIST = SHEETS_CONF.list
@@ -66,7 +59,6 @@ def get_conference_by_id(conference_id):
             break
 
     if not conference_data:
-        print('sheets_ops.get_conference_by_id: Could not find record with correct id in the spreadsheet')
         return None
 
     try:

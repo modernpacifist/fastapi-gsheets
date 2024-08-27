@@ -66,7 +66,7 @@ async def get_conference_(update, context):
 
 
 async def notificate_users(context: CallbackContext):
-    return None
+    print(operations.get_all_users())
 
 
 async def help(update, context):
@@ -90,14 +90,19 @@ def main():
     app.add_handler(CommandHandler('add', add_conference))
     app.add_handler(CommandHandler('help', help))
 
-    app.job_queue.run_daily(callback=notificate_users,
-        time=datetime.time(
-            hour=10,
-            minute=2,
-            second=0,
-            tzinfo=pytz.timezone('Europe/Moscow')
-        ),
-        days=(0, 1, 2, 3, 4, 5, 6)
+    # app.job_queue.run_daily(
+    #     callback=notificate_users,
+    #     time=datetime.time(
+    #         hour=10,
+    #         minute=2,
+    #         second=0,
+    #         tzinfo=pytz.timezone('Europe/Moscow')
+    #     ),
+    #     days=(0, 1, 2, 3, 4, 5, 6)
+    # )
+    app.job_queue.run_repeating(
+        callback=notificate_users,
+        interval=2,
     )
 
     app.run_polling()

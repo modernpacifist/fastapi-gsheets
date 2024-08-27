@@ -25,9 +25,7 @@ class BackendConfig:
 
 @dataclass
 class Database:
-    uri: str
-    user: str
-    pwd: str
+    filename: str
 
 
 def setup(section, filename='config.ini'):
@@ -47,11 +45,14 @@ def setup(section, filename='config.ini'):
     if section == 'backend':
         return_object = BackendConfig
 
-    # if section == 'google sheets':
-    #     return_object = GoogleSheetsConfig
+    if section == 'database':
+        return_object = Database
 
     if not os.path.isfile(filename):
         raise Exception('No config.ini file found')
+
+    if not return_object:
+        raise Exception('Could not set config instance')
 
     params = parser.items(section)
 

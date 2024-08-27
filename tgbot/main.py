@@ -19,15 +19,12 @@ BACKEND_ENDPOINT = setup('backend')
 DATABASE = setup('database')
 
 
-def verify_user(func):
-    func()
-    return func()
-
-
 async def start(update, context):
     uid = update.message.chat.id
     uname = update.message.chat.first_name
     print(uid, uname)
+
+    ops.verify_user(uid)
 
     ops.add_user(uid, uname)
     # sheets.requests.add_user(uid, uname)
@@ -84,7 +81,7 @@ def main():
     try:
         app = Application.builder().token(TGCONFIG.token).build()
     except Exception as e:
-        print(e)
+        print(f'Could not startup the application: {e}')
         exit(1)
 
     app.add_handler(CommandHandler('start', start))

@@ -3,9 +3,6 @@ import sqlite3
 from contextlib import contextmanager
 
 
-db_filename = 'users.sqlite3'
-
-
 # https://blog.hubspot.com/website/decorators-in-python#:~:text=Decorators%20with%20arguments%20provide%20additional,the%20modified%20function%20or%20class.
 def authentication_decorator(func):
     def wrapper(*args, **kwargs):
@@ -22,8 +19,8 @@ def authentication_decorator(func):
 
 
 @contextmanager
-def connect(db_name):
-    conn = sqlite3.connect(db_name)
+def connect(db_filename):
+    conn = sqlite3.connect(db_filename)
     try:
         cur = conn.cursor()
         yield cur
@@ -40,19 +37,19 @@ def connect(db_name):
         conn.close()
 
 
-def verify_user(id):
-    with connect(db_filename) as cur:
+def verify_user(db, id):
+    with connect(db.filename) as cur:
         if cur.execute(f'SELECT EXISTS(SELECT 1 FROM Users WHERE id = {id});').fetchone() == (0,):
             return False
         return True
 
 
-def add_user(id, username):
-    with connect(db_filename) as cur:
+def add_user(db, id, username):
+    with connect(db.filename) as cur:
         cur.execute('INSERT INTO Users (id, username) VALUES (?, ?)', (id, username))
 
 
-def get_all_users():
-    with connect(db_filename) as cur:
+def get_all_users(db):
+    with connect(db.filename) as cur:
         res = cur.execute('SELECT id FROM Users').fetchall()
     return res

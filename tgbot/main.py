@@ -16,7 +16,7 @@ from config.setup import setup
 
 TGCONFIG = setup('telegram bot')
 BACKEND_ENDPOINT = setup('backend')
-DATABASE = setup('database')
+DB_CONF = setup('database')
 
 
 # @operations.authentication_decorator
@@ -24,16 +24,20 @@ async def start(update, context):
     uid = update.message.chat.id
     uname = update.message.chat.first_name
 
-    flag = operations.verify_user(uid)
-    if flag:
+    if operations.verify_user(DB_CONF, uid):
         await update.message.reply_text('You are already registered')
         return
 
-    operations.add_user(uid, uname)
+    operations.add_user(DB_CONF, uid, uname)
 
 
+# @operations.authentication_decorator
 async def get_conferences(update, context):
-    # add filter to argument /get <filter>
+    uid = update.message.chat.id
+    if not operations.verify_user(DB_CONF, uid):
+        await update.message.reply_text('You are not registered, run /start')
+        return
+
     args = context.args
     if len(args) > 1:
         await update.message.reply_text('You can\'t specify more than one filter')
@@ -61,12 +65,24 @@ async def add_conference(update, context):
     uid = update.message.chat.id
 
 
-async def get_conference_(update, context):
+async def get_conference(update, context):
+    uid = update.message.chat.id
+
+
+async def update_conference(update, context):
+    uid = update.message.chat.id
+
+
+async def download_conference_applications(update, context):
+    uid = update.message.chat.id
+
+
+async def download_conference_report(update, context):
     uid = update.message.chat.id
 
 
 async def notificate_users(context: CallbackContext):
-    print(operations.get_all_users())
+    print(operations.get_all_users(DB_CONF))
 
 
 async def help(update, context):
@@ -90,16 +106,16 @@ def main():
     app.add_handler(CommandHandler('add', add_conference))
     app.add_handler(CommandHandler('help', help))
 
-    # app.job_queue.run_daily(
-    #     callback=notificate_users,
-    #     time=datetime.time(
-    #         hour=10,
-    #         minute=2,
-    #         second=0,
-    #         tzinfo=pytz.timezone('Europe/Moscow')
-    #     ),
-    #     days=(0, 1, 2, 3, 4, 5, 6)
-    # )
+    app.job_queue.run_daily(
+        callback=notificate_users,
+        time=datetime.time(
+            hour=10,
+            minute=2,
+            second=0,
+            tzinfo=pytz.timezone('Europe/Moscow')
+        ),
+        days=(0, 1, 2, 3, 4, 5, 6)
+    )
     app.job_queue.run_repeating(
         callback=notificate_users,
         interval=2,

@@ -2,7 +2,7 @@ import sqlite3
 
 
 # DB_PATH = "users.db"
-connection = sqlite3.connect('users.db')
+connection = sqlite3.connect('users.sqlite3')
 
 
 def add_user(id, username):

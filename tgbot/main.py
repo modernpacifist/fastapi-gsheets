@@ -16,6 +16,7 @@ from config.setup import setup
 
 TGCONFIG = setup('telegram bot')
 BACKEND_ENDPOINT = setup('backend')
+DATABASE = setup('database')
 
 
 async def start(update, context):

@@ -1,7 +1,7 @@
 import sqlite3
 
 
-CON = sqlite3.connect("users.db")
+CON = sqlite3.connect('users.sqlite3')
 CURSOR = CON.cursor()
 
 CURSOR.execute('''
@@ -11,5 +11,5 @@ username TEXT NOT NULL
 )
 ''')
 
-CURSOR.commit()
-CURSOR.close()
+CON.commit()
+CON.close()

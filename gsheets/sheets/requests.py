@@ -1,7 +1,7 @@
 from itertools import zip_longest
 
-from . import models, utils, filters
 
+from . import models, utils, filters
 from config.setup import setup, setup_account
 
 

@@ -5,6 +5,8 @@ import sheets
 from fastapi import FastAPI, status, HTTPException, Request
 
 from config.setup import setup
+# from sheets import models, requests
+from . import sheets
 
 
 APP = FastAPI()
@@ -14,7 +16,7 @@ FASTAPI_CONF = setup('fastapi')
 # TODO: make it work with fastapi.Query
 @APP.get('/conferences', status_code=status.HTTP_200_OK)
 async def conferences(request: Request, filter: str = 'active'):
-    res = sheets.operations.get_all_conferences(filter)
+    res = sheets.requests.get_all_conferences(filter)
     if not res:
         raise HTTPException(status_code=404, detail='No conferences found')
 
@@ -35,7 +37,7 @@ async def conferences(conference_id: str = None):
     if not conference_id.isdigit():
         raise HTTPException(status_code=422, detail='Conference id of must be a integer')
 
-    res = sheets.operations.get_conference_by_id(conference_id)
+    res = sheets.requests.get_conference_by_id(conference_id)
     if not res:
         raise HTTPException(status_code=404, detail=f'Could not find conference with id {conference_id}')
 
@@ -44,7 +46,7 @@ async def conferences(conference_id: str = None):
 
 @APP.post('/conferences', status_code=status.HTTP_201_CREATED)
 async def conferences(conference: sheets.models.PostConference):
-    res = sheets.operations.add_conference(conference)
+    res = sheets.requests.add_conference(conference)
     if not res:
         raise HTTPException(status_code=500, detail='Could not add new conference')
 
@@ -56,7 +58,7 @@ async def conferences(conference: sheets.models.UpdateConference, conference_id:
     if not conference_id:
         raise HTTPException(status=400, detail='You must provide conference id to update it')
 
-    res = sheets.operations.update_conference(conference_id, conference)
+    res = sheets.requests.update_conference(conference_id, conference)
     if not res:
         raise HTTPException(status_code=500, detail=f'Could not update conference with id {conference_id}')
 

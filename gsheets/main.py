@@ -1,17 +1,13 @@
-import os
-import sys
 import uvicorn
 import asyncio
 
 from fastapi import FastAPI, status, HTTPException, Request
 from sheets import models, sheets_requests
 
-prev_path = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
-sys.path.append(os.path.join(os.path.dirname(__file__), prev_path))
 from config.setup import setup
 
 APP = FastAPI()
-CONFIG = setup('fastapi')
+FASTAPI_CONF = setup('fastapi')
 
 
 # TODO: make it work with fastapi.Query
@@ -77,7 +73,7 @@ async def main(conf):
 
 if __name__ == '__main__':
     try:
-        asyncio.run(main(CONFIG))
+        asyncio.run(main(FASTAPI_CONF))
     except KeyboardInterrupt as e:
         print(f'Exited by user {e}')
         exit(0)

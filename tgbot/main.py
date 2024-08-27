@@ -11,9 +11,6 @@ from telegram.ext import (
     CallbackContext
 )
 
-prev_path = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
-sys.path.append(os.path.join(os.path.dirname(__file__), prev_path))
-
 from config.setup import setup
 
 

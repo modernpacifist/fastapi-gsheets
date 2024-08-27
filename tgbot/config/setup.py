@@ -26,6 +26,7 @@ class BackendConfig:
 @dataclass
 class Database:
     filename: str
+    table: str
 
 
 def setup(section, filename='config.ini'):

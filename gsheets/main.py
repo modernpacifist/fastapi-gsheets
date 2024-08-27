@@ -4,14 +4,13 @@ import asyncio
 from fastapi import FastAPI, status, HTTPException, Request
 from config.setup import setup
 from sheets import conferences, models
-# from sheets import *
 
 
 APP = FastAPI()
 FASTAPI_CONF = setup('fastapi')
+SHEETS_CONF = setup('')
 
 
-# TODO: make it work with fastapi.Query
 @APP.get('/conferences', status_code=status.HTTP_200_OK)
 async def conferences_handler(request: Request, filter: str = 'active'):
     res = conferences.get_all(filter)

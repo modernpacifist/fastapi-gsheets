@@ -12,6 +12,7 @@ class GoogleSheetsConfig:
     id: str
     conferences_list: str
     users_list: str
+    sacc: None = None
 
 
 @dataclass

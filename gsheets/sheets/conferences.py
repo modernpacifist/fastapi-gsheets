@@ -3,14 +3,14 @@ from . import models, utils, filters
 from config.setup import setup, setup_account
 
 
-SACC = setup_account()
-SHEETS_CONF = setup('google sheets')
-SPREADSHEET_ID = SHEETS_CONF.id
-LIST = SHEETS_CONF.conferences_list
-FIELDS = utils.get_fields(SACC, SPREADSHEET_ID, LIST)
+# SACC = setup_account()
+# SHEETS_CONF = setup('google sheets')
+# SPREADSHEET_ID = SHEETS_CONF.id
+# LIST = SHEETS_CONF.conferences_list
+# FIELDS = utils.get_fields(SACC, SPREADSHEET_ID, LIST)
 
 
-def get_all(filter_type):
+def get_all(filter_type='active'):
     r = SACC.spreadsheets().values().get(
         spreadsheetId=SPREADSHEET_ID,
         range=f'{LIST}!A2:P'

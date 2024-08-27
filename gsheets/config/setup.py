@@ -13,6 +13,19 @@ class GoogleSheetsConfig:
     conferences_list: str
     users_list: str
     sacc: None = None
+    fields: None = None
+
+    def __post_init__(self):
+        creds_json  = os.path.dirname(__file__) + '/credentials.json'
+        scopes = ['https://www.googleapis.com/auth/spreadsheets']
+
+        try:
+            creds_service = ServiceAccountCredentials.from_json_keyfile_name(creds_json, scopes).authorize(httplib2.Http())
+            self.sacc = build('sheets', 'v4', http=creds_service)
+
+        except Exception as e:
+            print(f'config.setup: could not setup google service account: {e}')
+            exit(1)
 
 
 @dataclass
@@ -55,14 +68,14 @@ def setup(section, filename='config.ini'):
         exit(1)
 
 
-def setup_account():
-    creds_json  = os.path.dirname(__file__) + '/credentials.json'
-    scopes = ['https://www.googleapis.com/auth/spreadsheets']
+# def setup_account():
+#     creds_json  = os.path.dirname(__file__) + '/credentials.json'
+#     scopes = ['https://www.googleapis.com/auth/spreadsheets']
 
-    try:
-        creds_service = ServiceAccountCredentials.from_json_keyfile_name(creds_json, scopes).authorize(httplib2.Http())
-        return build('sheets', 'v4', http=creds_service)
+#     try:
+#         creds_service = ServiceAccountCredentials.from_json_keyfile_name(creds_json, scopes).authorize(httplib2.Http())
+#         return build('sheets', 'v4', http=creds_service)
 
-    except Exception as e:
-        print(f'Problem with setting up google service account: {e}')
-        exit(1)
+#     except Exception as e:
+#         print(f'Problem with setting up google service account: {e}')
+#         exit(1)

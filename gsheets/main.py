@@ -3,17 +3,19 @@ import asyncio
 
 from fastapi import FastAPI, status, HTTPException, Request
 from config.setup import setup
-from sheets import conferences, models
+from sheets import conferences, models, utils
 
 
 APP = FastAPI()
 FASTAPI_CONF = setup('fastapi')
-SHEETS_CONF = setup('')
+SHEETS_CONF = setup('google sheets')
+SHEETS_CONF.fields = utils.get_fields()
 
 
 @APP.get('/conferences', status_code=status.HTTP_200_OK)
 async def conferences_handler(request: Request, filter: str = 'active'):
-    res = conferences.get_all(filter)
+    res = conferences.get_all(SHEETS_CONF, filter)
+    # res = conferences.get_all(filter)
     if not res:
         raise HTTPException(status_code=404, detail='No conferences found')
 

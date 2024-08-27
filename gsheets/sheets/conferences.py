@@ -10,10 +10,15 @@ from config.setup import setup, setup_account
 # FIELDS = utils.get_fields(SACC, SPREADSHEET_ID, LIST)
 
 
-def get_all(filter_type='active'):
-    r = SACC.spreadsheets().values().get(
-        spreadsheetId=SPREADSHEET_ID,
-        range=f'{LIST}!A2:P'
+# def get_all(filter_type='active'):
+def get_all(conf, filter_type='active'):
+    # r = SACC.spreadsheets().values().get(
+    #     spreadsheetId=SPREADSHEET_ID,
+    #     range=f'{LIST}!A2:P'
+    # ).execute()
+    r = conf.sacc.spreadsheets().values().get(
+        spreadsheetId=conf.id,
+        range=f'{conf.conferences_list}!A2:P'
     ).execute()
     if not r:
         return None
@@ -25,7 +30,9 @@ def get_all(filter_type='active'):
     conferences = []
     for conference_data in values:
         try:
-            dict_data = dict(zip_longest(FIELDS, conference_data, fillvalue=''))
+            # fields = utils.get_fields()
+            # dict_data = dict(zip_longest(FIELDS, conference_data, fillvalue=''))
+            dict_data = dict(zip_longest(conf.fields, conference_data, fillvalue=''))
             utils.dict_string_to_datetime(dict_data, 'registration_start_date', 'registration_end_date')
             conferences.append(models.GetConferenceShort.model_validate(dict_data))
 

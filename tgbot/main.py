@@ -24,7 +24,8 @@ async def start(update, context):
     uid = update.message.chat.id
     uname = update.message.chat.first_name
 
-    if operations.verify_user(uid):
+    flag = operations.verify_user(uid)
+    if flag:
         await update.message.reply_text('You are already registered')
         return
 

@@ -1,0 +1,1 @@
+FROM sqlite3:latest

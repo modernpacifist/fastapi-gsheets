@@ -11,20 +11,6 @@ def dict_string_to_datetime(d, *keys):
         d.update({key: dtime})
 
 
-# def get_fields(sacc, spreadsheet_id, spreadsheet_list):
-#     try:
-#         r = sacc.spreadsheets().values().get(
-#             spreadsheetId=spreadsheet_id,
-#             range=f'{spreadsheet_list}!A1:P1'
-#         ).execute()
-#         values = r.get('values', [])
-#         return values[0]
-
-#     except Exception as e:
-#         print(e)
-#         exit(1)
-
-
 def get_last_empty_range(sacc, spreadsheet_id, spreadsheet_list):
     r = sacc.spreadsheets().values().get(
         spreadsheetId=spreadsheet_id,

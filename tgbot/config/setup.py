@@ -23,10 +23,11 @@ class BackendConfig:
         self.put_uri = f'http://{self.uri}/conferences/'
 
 
-# @dataclass
-# class GoogleSheetsConfig:
-#     id: str
-#     list: str
+@dataclass
+class Database:
+    uri: str
+    user: str
+    pwd: str
 
 
 def setup(section, filename='config.ini'):

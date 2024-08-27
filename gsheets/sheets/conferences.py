@@ -1,24 +1,11 @@
 from itertools import zip_longest
 from . import models, utils, filters
-from config.setup import setup, setup_account
 
 
-# SACC = setup_account()
-# SHEETS_CONF = setup('google sheets')
-# SPREADSHEET_ID = SHEETS_CONF.id
-# LIST = SHEETS_CONF.conferences_list
-# FIELDS = utils.get_fields(SACC, SPREADSHEET_ID, LIST)
-
-
-# def get_all(filter_type='active'):
 def get_all(conf, filter_type='active'):
-    # r = SACC.spreadsheets().values().get(
-    #     spreadsheetId=SPREADSHEET_ID,
-    #     range=f'{LIST}!A2:P'
-    # ).execute()
     r = conf.sacc.spreadsheets().values().get(
         spreadsheetId=conf.id,
-        range=f'{conf.conferences_list}!A2:P'
+        range=f'{conf.list}!A2:P'
     ).execute()
     if not r:
         return None
@@ -30,8 +17,6 @@ def get_all(conf, filter_type='active'):
     conferences = []
     for conference_data in values:
         try:
-            # fields = utils.get_fields()
-            # dict_data = dict(zip_longest(FIELDS, conference_data, fillvalue=''))
             dict_data = dict(zip_longest(conf.fields, conference_data, fillvalue=''))
             utils.dict_string_to_datetime(dict_data, 'registration_start_date', 'registration_end_date')
             conferences.append(models.GetConferenceShort.model_validate(dict_data))
@@ -43,10 +28,10 @@ def get_all(conf, filter_type='active'):
     return filters.ConferencesFilter(filter_type, conferences).exec()
 
 
-def get_by_id(conference_id):
-    r = SACC.spreadsheets().values().get(
-        spreadsheetId=SPREADSHEET_ID,
-        range=f'{LIST}!A2:P'
+def get_by_id(conf, conference_id):
+    r = conf.sacc.spreadsheets().values().get(
+        spreadsheetId=conf.id,
+        range=f'{conf.list}!A2:P'
     ).execute()
     if not r:
         print('sheets_ops.get_conference_by_id: Could not retrieve info from the spreadsheet')
@@ -67,7 +52,7 @@ def get_by_id(conference_id):
         return None
 
     try:
-        dict_data = dict(zip_longest(FIELDS, conference_data, fillvalue=''))
+        dict_data = dict(zip_longest(conf.fields, conference_data, fillvalue=''))
         return models.GetConference.model_validate(dict_data)
 
     except Exception as e:
@@ -75,8 +60,8 @@ def get_by_id(conference_id):
         return None
 
 
-def add(model):
-    lr = utils.get_last_empty_range(SACC, SPREADSHEET_ID, LIST)
+def add(conf, model):
+    lr = utils.get_last_empty_range(conf.sacc, conf.id, conf.list)
     if not lr:
         print('sheets_ops.add_conference: Could not retrieve last empty row from spreadsheet')
         return None
@@ -87,9 +72,9 @@ def add(model):
         ]
     }
 
-    r = SACC.spreadsheets().values().append(
-        spreadsheetId=SPREADSHEET_ID,
-        range=f'{LIST}!B{lr}:P',
+    r = conf.sacc.spreadsheets().values().append(
+        spreadsheetId=conf.id,
+        range=f'{conf.list}!B{lr}:P',
         valueInputOption='RAW',
         body=body
     ).execute()
@@ -105,8 +90,8 @@ def add(model):
     return model
 
 
-def update(conference_id, model):
-    cr = utils.get_conference_row(SACC, SPREADSHEET_ID, LIST, conference_id)
+def update(conf, conference_id, model):
+    cr = utils.get_conference_row(conf.sacc, conf.id, conf.list, conference_id)
     if not cr:
         return -1
 
@@ -116,9 +101,9 @@ def update(conference_id, model):
         ]
     }
 
-    r = SACC.spreadsheets().values().update(
-        spreadsheetId=SPREADSHEET_ID,
-        range=f'{LIST}!B{cr}:P{cr}',
+    r = conf.sacc.spreadsheets().values().update(
+        spreadsheetId=conf.id,
+        range=f'{conf.list}!B{cr}:P{cr}',
         valueInputOption='RAW',
         body=body
     ).execute()
@@ -128,9 +113,9 @@ def update(conference_id, model):
     if r.get('updatedRows', 0) < 1:
         return None
 
-    r = SACC.spreadsheets().values().get(
-        spreadsheetId=SPREADSHEET_ID,
-        range=f'{LIST}!A{cr}:P{cr}'
+    r = conf.sacc.spreadsheets().values().get(
+        spreadsheetId=conf.id,
+        range=f'{conf.list}!A{cr}:P{cr}'
     ).execute()
 
     conference_data = r.get('values', [])
@@ -138,7 +123,7 @@ def update(conference_id, model):
         return None
 
     try:
-        dict_data = dict(zip_longest(FIELDS, conference_data[0], fillvalue=''))
+        dict_data = dict(zip_longest(conf.fields, conference_data[0], fillvalue=''))
         return models.UpdateConference.model_validate(dict_data)
 
     except Exception as e:

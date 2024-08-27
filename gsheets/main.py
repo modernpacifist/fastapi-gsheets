@@ -8,13 +8,13 @@ from sheets import conferences, models, utils
 
 APP = FastAPI()
 FASTAPI_CONF = setup('fastapi')
-SHEETS_CONF = setup('google sheets')
-SHEETS_CONF.fields = utils.get_fields()
+CONFERENCES_SHEET_CONF = setup('conferences sheets')
+CONFERENCES_SHEET_CONF.fields = utils.get_fields(CONFERENCES_SHEET_CONF)
 
 
 @APP.get('/conferences', status_code=status.HTTP_200_OK)
 async def conferences_handler(request: Request, filter: str = 'active'):
-    res = conferences.get_all(SHEETS_CONF, filter)
+    res = conferences.get_all(CONFERENCES_SHEET_CONF, filter)
     # res = conferences.get_all(filter)
     if not res:
         raise HTTPException(status_code=404, detail='No conferences found')
@@ -36,7 +36,7 @@ async def conferences_handler(conference_id: str = None):
     if not conference_id.isdigit():
         raise HTTPException(status_code=422, detail='Conference id of must be a integer')
 
-    res = conferences.get_by_id(conference_id)
+    res = conferences.get_by_id(CONFERENCES_SHEET_CONF, conference_id)
     if not res:
         raise HTTPException(status_code=404, detail=f'Could not find conference with id {conference_id}')
 
@@ -45,7 +45,7 @@ async def conferences_handler(conference_id: str = None):
 
 @APP.post('/conferences', status_code=status.HTTP_201_CREATED)
 async def conferences_handler(conference: models.PostConference):
-    res = conferences.add(conference)
+    res = conferences.add(CONFERENCES_SHEET_CONF, conference)
     if not res:
         raise HTTPException(status_code=500, detail='Could not add new conference')
 

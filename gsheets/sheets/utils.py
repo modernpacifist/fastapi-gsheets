@@ -11,11 +11,12 @@ def dict_string_to_datetime(d, *keys):
         d.update({key: dtime})
 
 
-def get_fields(sacc, spreadsheet_id, spreadsheet_list):
+# def get_fields(sacc, spreadsheet_id, spreadsheet_list):
+def get_fields(conf):
     try:
-        r = sacc.spreadsheets().values().get(
-            spreadsheetId=spreadsheet_id,
-            range=f'{spreadsheet_list}!A1:P1'
+        r = conf.sacc.spreadsheets().values().get(
+            spreadsheetId=conf.id,
+            range=f'{conf.list}!A1:P1'
         ).execute()
         values = r.get('values', [])
         return values[0]

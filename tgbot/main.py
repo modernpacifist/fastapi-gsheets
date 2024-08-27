@@ -10,6 +10,7 @@ from telegram.ext import (
 )
 
 from config.setup import setup
+from sheets_utils import sheets_requests
 
 
 TGCONFIG = setup('telegram bot')
@@ -20,6 +21,8 @@ async def start(update, context):
     uid = update.message.chat.id
     uname = update.message.chat.first_name
     print(uid, uname)
+
+    sheets_requests.add_user(uid, uname)
 
 
 async def get_conferences(update, context):

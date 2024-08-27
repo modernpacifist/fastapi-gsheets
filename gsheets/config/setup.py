@@ -4,7 +4,7 @@ import httplib2
 from googleapiclient.discovery import build
 from oauth2client.service_account import ServiceAccountCredentials
 from configparser import ConfigParser
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 
 @dataclass

@@ -19,6 +19,11 @@ BACKEND_ENDPOINT = setup('backend')
 DATABASE = setup('database')
 
 
+def verify_user(func):
+    func()
+    return func()
+
+
 async def start(update, context):
     uid = update.message.chat.id
     uname = update.message.chat.first_name

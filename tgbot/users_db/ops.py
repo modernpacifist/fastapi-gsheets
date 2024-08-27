@@ -7,11 +7,7 @@ connection = sqlite3.connect('users.sqlite3')
 
 def add_user(id, username):
     cursor = connection.cursor()
-
-    # Добавляем нового пользователя
-    cursor.execute('INSERT INTO Users (id, username) VALUES (?, ?, ?)', ('newuser', 'newuser@example.com', 28))
-
-    # Сохраняем изменения и закрываем соединение
+    cursor.execute('INSERT INTO Users (id, username) VALUES (?, ?)', (id, username))
     connection.commit()
     connection.close()
-    return None
+

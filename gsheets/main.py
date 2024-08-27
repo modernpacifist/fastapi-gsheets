@@ -3,7 +3,8 @@ import asyncio
 
 from fastapi import FastAPI, status, HTTPException, Request
 from config.setup import setup
-from sheets import *
+from sheets import conferences, models
+# from sheets import *
 
 
 APP = FastAPI()
@@ -12,8 +13,8 @@ FASTAPI_CONF = setup('fastapi')
 
 # TODO: make it work with fastapi.Query
 @APP.get('/conferences', status_code=status.HTTP_200_OK)
-async def conferences(request: Request, filter: str = 'active'):
-    res = srequests.get_all_conferences(filter)
+async def conferences_handler(request: Request, filter: str = 'active'):
+    res = conferences.get_all(filter)
     if not res:
         raise HTTPException(status_code=404, detail='No conferences found')
 
@@ -27,14 +28,14 @@ async def conferences(request: Request, filter: str = 'active'):
 
 
 @APP.get('/conferences/{conference_id}')
-async def conferences(conference_id: str = None):
+async def conferences_handler(conference_id: str = None):
     if not conference_id:
         raise HTTPException(status_code=400, detail='You must provide conference id')
 
     if not conference_id.isdigit():
         raise HTTPException(status_code=422, detail='Conference id of must be a integer')
 
-    res = srequests.get_conference_by_id(conference_id)
+    res = conferences.get_by_id(conference_id)
     if not res:
         raise HTTPException(status_code=404, detail=f'Could not find conference with id {conference_id}')
 
@@ -42,9 +43,8 @@ async def conferences(conference_id: str = None):
 
 
 @APP.post('/conferences', status_code=status.HTTP_201_CREATED)
-# async def conferences(conference: models.PostConference):
-async def conferences(conference: models.PostConference):
-    res = srequests.add_conference(conference)
+async def conferences_handler(conference: models.PostConference):
+    res = conferences.add(conference)
     if not res:
         raise HTTPException(status_code=500, detail='Could not add new conference')
 
@@ -52,11 +52,11 @@ async def conferences(conference: models.PostConference):
 
 
 @APP.put('/conferences/{conference_id}')
-async def conferences(conference: models.UpdateConference, conference_id: str = None):
+async def conferences_handler(conference: models.UpdateConference, conference_id: str = None):
     if not conference_id:
         raise HTTPException(status=400, detail='You must provide conference id to update it')
 
-    res = srequests.update_conference(conference_id, conference)
+    res = conferences.update(conference_id, conference)
     if not res:
         raise HTTPException(status_code=500, detail=f'Could not update conference with id {conference_id}')
 

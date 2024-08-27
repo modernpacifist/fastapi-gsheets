@@ -2,7 +2,7 @@ import json
 import requests as rq
 import pytz
 import datetime
-import sheets
+# import sheets
 
 from telegram.ext import (
     Application,
@@ -22,7 +22,7 @@ async def start(update, context):
     uname = update.message.chat.first_name
     print(uid, uname)
 
-    sheets.requests.add_user(uid, uname)
+    # sheets.requests.add_user(uid, uname)
 
 
 async def get_conferences(update, context):

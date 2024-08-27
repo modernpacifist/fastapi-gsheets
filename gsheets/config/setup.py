@@ -10,7 +10,8 @@ from dataclasses import dataclass
 @dataclass
 class GoogleSheetsConfig:
     id: str
-    list: str
+    conferences_list: str
+    users_list: str
 
 
 @dataclass
@@ -49,7 +50,7 @@ def setup(section, filename='config.ini'):
         return return_object(**{i: k for i, k in params})
 
     except Exception as e:
-        print(e)
+        print(f'config.setup error: {e}')
         exit(1)
 
 

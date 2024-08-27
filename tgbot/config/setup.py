@@ -23,10 +23,10 @@ class BackendConfig:
         self.put_uri = f'http://{self.uri}/conferences/'
 
 
-@dataclass
-class GoogleSheetsConfig:
-    id: str
-    list: str
+# @dataclass
+# class GoogleSheetsConfig:
+#     id: str
+#     list: str
 
 
 def setup(section, filename='config.ini'):
@@ -46,8 +46,8 @@ def setup(section, filename='config.ini'):
     if section == 'backend':
         return_object = BackendConfig
 
-    if section == 'google sheets':
-        return_object = GoogleSheetsConfig
+    # if section == 'google sheets':
+    #     return_object = GoogleSheetsConfig
 
     if not os.path.isfile(filename):
         raise Exception('No config.ini file found')

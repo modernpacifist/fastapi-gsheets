@@ -4,7 +4,6 @@ import pytz
 import datetime
 
 from db import operations as db
-from models import backend
 
 from telegram.ext import (
     Application,
@@ -73,7 +72,7 @@ async def add_conference(update, context):
 
     await update.message.reply_text("""
 Adding new conference entry  
-Specify data in following format:  
+Specify data as following e g :  
 ```
 {
     "google_spreadsheet": "what's up",
@@ -92,31 +91,24 @@ Specify data in following format:
 }
 ```
 """, parse_mode='MarkdownV2')
-
     return 0
 
-    model = backend.PostConference()
 
-    try:
-        rq.post(BACKEND_ENDPOINT.post_uri, data=model, timeout=5)
-
-    except Exception as e:
-        print(e)
-
-
-async def getting_model(update, context):
+async def data_submission(update, _):
     user_input = update.message.text
     if not user_input:
         return ConversationHandler.END
 
     try:
-        j = json.loads(user_input)
-        model = backend.PostConference(**j)
-        rq.post(BACKEND_ENDPOINT.post_uri, data=model, timeout=5)
+        resp = rq.post(BACKEND_ENDPOINT.post_uri, data=user_input, timeout=5)
+        if resp.status_code != 201:
+            await update.message.reply_text('Invalid data submitted, check your input')
+            raise Exception(f'Error: status code {resp.status_code}')
+
+        await update.message.reply_text('Successfully added')
 
     except Exception as e:
         print(e)
-        return ConversationHandler.END
 
     finally:
         return ConversationHandler.END
@@ -181,17 +173,13 @@ def main():
             0: [
                 MessageHandler(
                     filters.ALL,
-                    getting_model,
+                    data_submission,
                 )
-            ],
-            1: [
-                # send backend request
             ],
         },
         fallbacks=[CommandHandler('cancel', cancel)],
     )
     app.add_handler(add_conference_conv_handler)
-
 
     # app.job_queue.run_daily(
     #     callback=notificate_users,

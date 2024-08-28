@@ -3,7 +3,7 @@ import requests as rq
 import pytz
 import datetime
 
-from db import operations
+from db import operations as db
 
 from telegram.ext import (
     Application,
@@ -24,18 +24,18 @@ async def start(update, context):
     uid = update.message.chat.id
     uname = update.message.chat.first_name
 
-    if operations.verify_user(DB_CONF, uid):
+    if db.verify_user(DB_CONF, uid):
         await update.message.reply_text('You are already registered')
         return
 
-    operations.add_user(DB_CONF, uid, uname)
+    db.add_user(DB_CONF, uid, uname)
 
 
-# @operations.authentication_decorator
+# @db.authentication_decorator
 async def get_conferences(update, context):
     uid = update.message.chat.id
-    if not operations.verify_user(DB_CONF, uid):
-        await update.message.reply_text('You are not registered, run /start')
+    if not db.verify_user(DB_CONF, uid):
+        await update.message.reply_text('Not registered, run /start')
         return
 
     args = context.args
@@ -63,6 +63,11 @@ async def get_conferences(update, context):
 
 async def add_conference(update, context):
     uid = update.message.chat.id
+    if not db.verify_user(DB_CONF, uid):
+        await update.message.reply_text('Not registered, run /start')
+        return
+
+    uid = update.message.chat.id
 
 
 async def get_conference(update, context):
@@ -86,7 +91,7 @@ async def download_conference_report(update, context):
 
 
 async def notificate_users(context: CallbackContext):
-    print(operations.get_all_users(DB_CONF))
+    print(db.get_all_users(DB_CONF))
 
 
 async def help(update, context):

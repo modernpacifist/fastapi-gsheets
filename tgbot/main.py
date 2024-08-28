@@ -75,19 +75,21 @@ async def add_conference(update, context):
 Adding new conference entry  
 Specify data in following format:  
 ```
-google_spreadsheet: what's up,
-google_drive_directory_id: google 5,
-name_rus: full rus name 5,
-name_rus_short: short rus name 5,
-registration_start_date: 01.02.2023,
-registration_end_date: 02.09.2025,
-submission_start_date: 03.09.2013,
-submission_end_date: 04.09.2013,
-conf_start_date: 05.09.2013,
-conf_end_date: 06.09.2013,
-organized_by: SUAI,
-url: https://google.com,
-email: hehexd@gmail.com
+{
+    "google_spreadsheet": "what's up",
+    "google_drive_directory_id": "google 5",
+    "name_rus": "full rus name 5",
+    "name_rus_short": "short rus name 5",
+    "registration_start_date": "01.02.2023",
+    "registration_end_date": "02.09.2025",
+    "submission_start_date": "03.09.2013",
+    "submission_end_date": "04.09.2013",
+    "conf_start_date": "05.09.2013",
+    "conf_end_date": "06.09.2013",
+    "organized_by": "SUAI",
+    "url": "https://google.com",
+    "email": "hehexd@gmail.com"
+}
 ```
 """, parse_mode='MarkdownV2')
 
@@ -103,14 +105,21 @@ email: hehexd@gmail.com
 
 
 async def getting_model(update, context):
-    print('getting_model')
-
     user_input = update.message.text
+    if not user_input:
+        return ConversationHandler.END
 
-    print(user_input)
+    try:
+        j = json.loads(user_input)
+        model = backend.PostConference(**j)
+        rq.post(BACKEND_ENDPOINT.post_uri, data=model, timeout=5)
 
+    except Exception as e:
+        print(e)
+        return ConversationHandler.END
 
-    return ConversationHandler.END
+    finally:
+        return ConversationHandler.END
 
 
 async def get_conference(update, context):
@@ -174,6 +183,9 @@ def main():
                     filters.ALL,
                     getting_model,
                 )
+            ],
+            1: [
+                # send backend request
             ],
         },
         fallbacks=[CommandHandler('cancel', cancel)],

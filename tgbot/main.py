@@ -78,19 +78,22 @@ async def update_conference(update, context):
     uid = update.message.chat.id
 
 
-async def download_conference_applications(update, context):
+async def send_applications_report_document(update, context):
     uid = update.message.chat.id
 
 
-async def download_conference_papers(update, context):
+async def send_conference_report_document(update, context):
     uid = update.message.chat.id
 
 
-async def download_conference_report(update, context):
+async def send_publications_report_document(update, context):
     uid = update.message.chat.id
 
 
 async def notificate_users(context: CallbackContext):
+    """
+    Check if any conferences are active today and notificate users
+    """
     print(db.get_all_users(DB_CONF))
 
 

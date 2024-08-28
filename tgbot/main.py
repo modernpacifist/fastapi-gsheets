@@ -4,6 +4,7 @@ import pytz
 import datetime
 
 from db import operations as db
+from models import backend
 
 from telegram.ext import (
     Application,
@@ -67,7 +68,13 @@ async def add_conference(update, context):
         await update.message.reply_text('Not registered, run /start')
         return
 
-    uid = update.message.chat.id
+    model = backend.PostConference()
+    
+    try:
+        rq.post(BACKEND_ENDPOINT.post_uri, data=model, timeout=5)
+
+    except Exception as e:
+        print(e)
 
 
 async def get_conference(update, context):

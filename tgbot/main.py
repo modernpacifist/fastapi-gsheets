@@ -71,6 +71,26 @@ async def add_conference(update, context):
         await update.message.reply_text('Not registered, run /start')
         return
 
+    await update.message.reply_text("""
+Adding new conference entry  
+Specify data in following format:  
+```
+google_spreadsheet: what's up,
+google_drive_directory_id: google 5,
+name_rus: full rus name 5,
+name_rus_short: short rus name 5,
+registration_start_date: 01.02.2023,
+registration_end_date: 02.09.2025,
+submission_start_date: 03.09.2013,
+submission_end_date: 04.09.2013,
+conf_start_date: 05.09.2013,
+conf_end_date: 06.09.2013,
+organized_by: SUAI,
+url: https://google.com,
+email: hehexd@gmail.com
+```
+""", parse_mode='MarkdownV2')
+
     return 0
 
     model = backend.PostConference()
@@ -82,8 +102,15 @@ async def add_conference(update, context):
         print(e)
 
 
-def getting_model():
-    return None
+async def getting_model(update, context):
+    print('getting_model')
+
+    user_input = update.message.text
+
+    print(user_input)
+
+
+    return ConversationHandler.END
 
 
 async def get_conference(update, context):
@@ -145,7 +172,7 @@ def main():
             0: [
                 MessageHandler(
                     filters.ALL,
-
+                    getting_model,
                 )
             ],
         },

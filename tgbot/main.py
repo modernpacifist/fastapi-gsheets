@@ -10,7 +10,9 @@ from telegram.ext import (
     Application,
     CommandHandler,
     ConversationHandler,
-    CallbackContext
+    MessageHandler,
+    CallbackContext,
+    filters
 )
 
 from config.setup import setup
@@ -69,15 +71,19 @@ async def add_conference(update, context):
         await update.message.reply_text('Not registered, run /start')
         return
 
-
+    return 0
 
     model = backend.PostConference()
-    
+
     try:
         rq.post(BACKEND_ENDPOINT.post_uri, data=model, timeout=5)
 
     except Exception as e:
         print(e)
+
+
+def getting_model():
+    return None
 
 
 async def get_conference(update, context):
@@ -108,7 +114,7 @@ async def notificate_users(context: CallbackContext):
 
 
 async def cancel(update, _):
-    await update.
+    await update.message.replly_text('cancelled')
     return ConversationHandler.END
 
 
@@ -130,28 +136,38 @@ def main():
 
     app.add_handler(CommandHandler('start', start))
     app.add_handler(CommandHandler('get', get_conferences))
-    # app.add_handler(CommandHandler('add', add_conference))
     app.add_handler(CommandHandler('help', help))
 
-    app.add_handler(
-        entry_points=[CommandHandler('add', add_conference)],
-        fallbacks=[CommandHandler('cancel', cancel)]
-    )
 
-    app.job_queue.run_daily(
-        callback=notificate_users,
-        time=datetime.time(
-            hour=10,
-            minute=2,
-            second=0,
-            tzinfo=pytz.timezone('Europe/Moscow')
-        ),
-        days=(0, 1, 2, 3, 4, 5, 6)
+    add_conference_conv_handler = ConversationHandler(
+        entry_points=[CommandHandler('add', add_conference)],
+        states={
+            0: [
+                MessageHandler(
+                    filters.ALL,
+
+                )
+            ],
+        },
+        fallbacks=[CommandHandler('cancel', cancel)],
     )
-    app.job_queue.run_repeating(
-        callback=notificate_users,
-        interval=2,
-    )
+    app.add_handler(add_conference_conv_handler)
+
+
+    # app.job_queue.run_daily(
+    #     callback=notificate_users,
+    #     time=datetime.time(
+    #         hour=10,
+    #         minute=2,
+    #         second=0,
+    #         tzinfo=pytz.timezone('Europe/Moscow')
+    #     ),
+    #     days=(0, 1, 2, 3, 4, 5, 6)
+    # )
+    # app.job_queue.run_repeating(
+    #     callback=notificate_users,
+    #     interval=2,
+    # )
 
     app.run_polling()
 

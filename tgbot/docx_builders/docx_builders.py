@@ -4,21 +4,24 @@ from abc import ABC, abstractmethod
 
 
 class DocxBuilder(ABC):
-    @abstractmethod
-    def define_steps(self):
-        pass
+    def __init__(self, filename, path, data):
+        self.filename = filename
+        self.path = path
+        self.data = data
+        self.document = docx.Document()
 
     @abstractmethod
-    def generate(self):
-        pass
+    def generate(self, info):
+        print(info)
 
-    @abstractmethod
-    def save(self):
+    def save(self, path):
         pass
 
 
 class ApplicationsReport(DocxBuilder):
-    pass
+    def __init__(self):
+        super().__init__()
+        pass
 
 
 class ConferenceReport(DocxBuilder):

@@ -9,6 +9,7 @@ from models import backend
 from telegram.ext import (
     Application,
     CommandHandler,
+    ConversationHandler,
     CallbackContext
 )
 
@@ -68,6 +69,8 @@ async def add_conference(update, context):
         await update.message.reply_text('Not registered, run /start')
         return
 
+
+
     model = backend.PostConference()
     
     try:
@@ -104,6 +107,11 @@ async def notificate_users(context: CallbackContext):
     print(db.get_all_users(DB_CONF))
 
 
+async def cancel(update, _):
+    await update.
+    return ConversationHandler.END
+
+
 async def help(update, context):
     help_message = """
 /get <filter> - 
@@ -122,8 +130,13 @@ def main():
 
     app.add_handler(CommandHandler('start', start))
     app.add_handler(CommandHandler('get', get_conferences))
-    app.add_handler(CommandHandler('add', add_conference))
+    # app.add_handler(CommandHandler('add', add_conference))
     app.add_handler(CommandHandler('help', help))
+
+    app.add_handler(
+        entry_points=[CommandHandler('add', add_conference)],
+        fallbacks=[CommandHandler('cancel', cancel)]
+    )
 
     app.job_queue.run_daily(
         callback=notificate_users,

@@ -4,18 +4,17 @@ from abc import ABC, abstractmethod
 
 
 class DocxBuilder(ABC):
-    def __init__(self, filename, path, data):
+    def __init__(self, filename, data):
         self.filename = filename
-        self.path = path
         self.data = data
         self.document = docx.Document()
 
     @abstractmethod
-    def generate(self, info):
-        print(info)
+    def generate(self):
+        raise NotImplemented(f'{__class__}.generate is not implemented')
 
     def save(self, path):
-        pass
+        self.document.save(f'{path}/{self.filename}')
 
 
 class ApplicationsReport(DocxBuilder):

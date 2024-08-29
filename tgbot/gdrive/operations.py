@@ -14,33 +14,25 @@
 
 def get_folder_files(conf, parent_folder_id, folder):
     try:
-        results = (
+        folder_id = (
             conf.sacc.files()
             .list(q=f"'{parent_folder_id}' in parents and name='{folder}'",
                   pageSize=10,
                   spaces='drive',
                   fields="files(id)")
             .execute()
-        )
+        ).get('files')[0].get('id')
 
-        parent_folder_id = results.get()
-        results = (
+        fetched_files = (
             conf.sacc.files()
-            .list(q=f"'{parent_folder_id}' in parents and name='{folder}'",
+            .list(q=f"'{folder_id}' in parents",
                   pageSize=10,
                   spaces='drive',
-                  fields="nextPageToken, files(id, name)")
+                  fields="nextPageToken, files(id,name,webViewLink)")
             .execute()
         )
 
-        # if folder:
-        #     for f in results.get('files', []):
-        #         if folder == f.get('name'):
-        #             return f.get('id')
-        #         # print()
-        #     return results
-
-        return results
+        return fetched_files.get('files')
 
     except Exception as e:
         print(e)

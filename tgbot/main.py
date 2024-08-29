@@ -193,6 +193,8 @@ async def get_conference_applications(update, context):
 
     conference_id = args[0]
 
+    await update.message.reply_text('Processing...')
+
     try:
         resp = rq.get(f'{BACKEND_ENDPOINT.get_single_uri}{conference_id}')
         if resp.status_code != 200:
@@ -215,13 +217,12 @@ async def get_conference_applications(update, context):
     msg_text = ''
     for i, f in enumerate(files):
         msg_text += f"File {i+1}:\nName: {f.get('name')}\nLink: {f.get('webViewLink')}\n\n"
-    
+
+    if not msg_text:
+        await update.message.reply_text('No files were found')
+        return
+
     await update.message.reply_text(msg_text)
-    # # print(gdrive.get_folder_files(DRIVE_CONF))
-    # # print(gdrive.get_folder_files(DRIVE_CONF, 'Submissions'))
-    # files = gdrive.get_folder_files(DRIVE_CONF, 'Applications')
-    # # print()
-    # await update.message.reply_text(files)
 
 
 async def send_conference_report_document(update, context):

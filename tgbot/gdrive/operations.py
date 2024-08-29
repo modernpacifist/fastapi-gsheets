@@ -26,10 +26,5 @@ def get_folder_files(conf, parent_folder_id, folder):
         return None
 
     files = fetched_files.get('files')
-    for f in files:
-        f['createdTime'] = datetime.strptime(f['createdTime'], '%Y-%m-%dT%H:%M:%S.%fZ')
-
-    # files.sort(key = lambda x: datetime.strptime(x['createdTime'], '%Y-%m-%dT%H:%M:%S.%fZ'))
-    files.sort(key = lambda x:x['createdTime'])
-
+    files.sort(key = lambda x: datetime.strptime(x['createdTime'], '%Y-%m-%dT%H:%M:%S.%fZ'))
     return files

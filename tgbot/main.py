@@ -212,11 +212,11 @@ async def get_conference_applications(update, context):
         await update.message.reply_text('Could not fetch files for ')
         return
 
-    print(files)
-    msg_text = ""
+    msg_text = ''
+    for i, f in enumerate(files):
+        msg_text += f"File {i+1}:\nName: {f.get('name')}\nLink: {f.get('webViewLink')}\n\n"
     
-    
-    await update.message.reply_text(files)
+    await update.message.reply_text(msg_text)
     # # print(gdrive.get_folder_files(DRIVE_CONF))
     # # print(gdrive.get_folder_files(DRIVE_CONF, 'Submissions'))
     # files = gdrive.get_folder_files(DRIVE_CONF, 'Applications')

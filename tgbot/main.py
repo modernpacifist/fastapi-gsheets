@@ -2,6 +2,7 @@ import json
 import requests as rq
 
 from db import operations as db
+from gdrive import operations as gdrive
 
 from telegram.ext import (
     Application,
@@ -214,6 +215,10 @@ async def help(update, context):
 
 
 def main():
+    print(gdrive.get_files(DRIVE_CONF))
+
+    exit(0)
+
     try:
         app = Application.builder().token(TGCONFIG.token).build()
     except Exception as e:

@@ -13,13 +13,14 @@ from telegram.ext import (
 )
 
 from config.setup import setup
+from utils.conversations import ValuePasser
 
 
 TGCONFIG = setup('telegram bot')
 BACKEND_ENDPOINT = setup('backend')
 DB_CONF = setup('database')
 
-# A = None
+UPDATE_ID = ValuePasser()
 
 
 async def start(update, context):
@@ -126,8 +127,14 @@ async def update_conference(update, context):
         await update.message.reply_text('You need to specify id of the conference you want to update')
         return ConversationHandler.END
 
-    A = args[0]
-    print(A)
+    update_id = args[0]
+    if not update_id.isdigit():
+
+    try:
+        UPDATE_ID.value = args[0]
+    except Exception as e:
+        await update.message.reply_text(f'Specified argument must be an int > 0\nFull error: {e}')
+        return ConversationHandler.END
 
     await update.message.reply_text("""
 Adding new conference entry  
@@ -159,11 +166,9 @@ async def backend_put(update, context):
         return ConversationHandler.END
 
     await update.message.reply_text('Processing...')
-    # print(A)
-    id = 3
 
     try:
-        resp = rq.put(f'{BACKEND_ENDPOINT.put_uri}{id}', data=user_input, timeout=5)
+        resp = rq.put(f'{BACKEND_ENDPOINT.put_uri}{UPDATE_ID.value}', data=user_input, timeout=5)
         if resp.status_code != 200:
             await update.message.reply_text('Invalid data submitted, check your input')
             raise Exception(f'Error: status code {resp.status_code}')

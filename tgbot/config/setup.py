@@ -1,8 +1,7 @@
 import os
-import httplib2
 
+from google.oauth2 import service_account
 from googleapiclient.discovery import build
-from oauth2client.service_account import ServiceAccountCredentials
 from configparser import ConfigParser
 from dataclasses import dataclass, field
 
@@ -31,6 +30,7 @@ class Database:
     filename: str
     table: str
 
+{"files": [{"id": "1jlM5nfYEPqEvDvYKhKWF1uQfIITZxT36", "name": "FastApiGsheetsApplications"}, {"id": "1n9nI_MvH5OEjm-2xV_ZTUMsotuUqlCAj", "name": "Submissions"}, {"id": "1ZcnI5bxDuXIDuJU3FrPt1PmNXKeZlXqb", "name": "Applications"}, {"id": "1ClXTt7C772Tnsi3SLrlv3to3LF8o02mNP59AgyxZFZA", "name": "fastapi-gsheets"}]}
 
 @dataclass
 class GoogleDrive:
@@ -38,12 +38,12 @@ class GoogleDrive:
     sacc: None = None
 
     def __post_init__(self):
+        scopes = ['https://www.googleapis.com/auth/drive.metadata.readonly']
         creds_json  = os.path.dirname(__file__) + '/credentials.json'
-        scopes = ['https://www.googleapis.com/auth/drive']
 
         try:
-            creds_service = ServiceAccountCredentials.from_json_keyfile_name(creds_json, scopes).authorize(httplib2.Http())
-            self.sacc = build('sheets', 'v4', http=creds_service)
+            creds = service_account.Credentials.from_service_account_file(creds_json, scopes=scopes)
+            self.sacc = build('drive', 'v3', credentials=creds)
 
         except Exception as e:
             print(f'config.setup: could not setup google service account: {e}')

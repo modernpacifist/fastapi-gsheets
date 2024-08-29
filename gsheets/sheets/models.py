@@ -56,7 +56,6 @@ class PostConference(Conference):
 class GetConference(Conference):
     id: str
     google_spreadsheet: str = Field(default='', exclude=True)
-    google_drive_directory_id: str = Field(default='', exclude=True)
 
 
 class GetConferenceShort(Conference):

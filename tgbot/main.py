@@ -181,8 +181,37 @@ async def backend_put(update, context):
         return ConversationHandler.END
 
 
-async def send_applications_report_document(update, context):
+async def get_conference_applications(update, context):
     uid = update.message.chat.id
+    if not db.verify_user(DB_CONF, uid):
+        await update.message.reply_text('Not registered, run /start')
+        return 
+
+    args = context.args
+    if len(args) != 1:
+        await update.message.reply_text('You need to specify id of the conference')
+        return 
+
+    conference_id = args[0]
+
+    try:
+        resp = rq.get(f'{BACKEND_ENDPOINT.get_single_uri}{conference_id}')
+        if resp.status_code != 200:
+            raise Exception('Could not fetch data')
+
+        pretty_json = json.dumps(resp.json(), ensure_ascii=False, indent=4)
+
+    except Exception as e:
+        print(e)
+        return
+
+    await update.message.reply_text(pretty_json)
+
+    # # print(gdrive.get_folder_files(DRIVE_CONF))
+    # # print(gdrive.get_folder_files(DRIVE_CONF, 'Submissions'))
+    # files = gdrive.get_folder_files(DRIVE_CONF, 'Applications')
+    # # print()
+    # await update.message.reply_text(files)
 
 
 async def send_conference_report_document(update, context):
@@ -207,19 +236,16 @@ async def cancel(update, _):
 
 async def help(update, context):
     help_message = """
-/get <filter> - 
+/start
+/get <filter> - get conferences with filter[active,future,past]
 /add
 /update
+/applications
     """
     await update.message.reply_text(help_message)
 
 
 def main():
-    # print(gdrive.get_folder_files(DRIVE_CONF))
-    # print(gdrive.get_folder_files(DRIVE_CONF, 'Submissions'))
-    # print(gdrive.get_folder_files(DRIVE_CONF, 'Applications'))
-    # exit(0)
-
     try:
         app = Application.builder().token(TGCONFIG.token).build()
     except Exception as e:
@@ -254,6 +280,7 @@ def main():
 
     app.add_handler(CommandHandler('start', start))
     app.add_handler(CommandHandler('get', get_conferences))
+    app.add_handler(CommandHandler('applications', get_conference_applications))
     app.add_handler(CommandHandler('help', help))
     app.add_handler(add_conference_conv_handler)
     app.add_handler(update_conference_conv_handler)

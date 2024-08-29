@@ -33,7 +33,6 @@ class Database:
 
 @dataclass
 class GoogleDrive:
-    id: str
     sacc: None = None
 
     def __post_init__(self):
@@ -57,7 +56,7 @@ def setup(section, filename='config.ini'):
     if not section:
         raise Exception('Section you specified is invalid')
 
-    if not parser.has_section(section):
+    if not parser.has_section(section) and section != 'google drive':
         raise Exception(f'File {filename} does not have section {section}')
 
     if section == 'telegram bot':
@@ -70,7 +69,8 @@ def setup(section, filename='config.ini'):
         return_object = Database
 
     if section == 'google drive':
-        return_object = GoogleDrive
+        # return_object = GoogleDrive
+        return GoogleDrive()
 
     if not os.path.isfile(filename):
         raise Exception('No config.ini file found')

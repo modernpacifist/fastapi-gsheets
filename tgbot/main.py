@@ -36,7 +36,6 @@ async def start(update, context):
     db.add_user(DB_CONF, uid, uname)
 
 
-# @db.authentication_decorator
 async def get_conferences(update, context):
     uid = update.message.chat.id
     if not db.verify_user(DB_CONF, uid):

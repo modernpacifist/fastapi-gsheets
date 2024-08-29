@@ -39,21 +39,11 @@ class GoogleDrive:
 
     def __post_init__(self):
         creds_json  = os.path.dirname(__file__) + '/credentials.json'
-        scopes = ['https://www.googleapis.com/auth/spreadsheets']
+        scopes = ['https://www.googleapis.com/auth/drive']
 
         try:
             creds_service = ServiceAccountCredentials.from_json_keyfile_name(creds_json, scopes).authorize(httplib2.Http())
             self.sacc = build('sheets', 'v4', http=creds_service)
-
-            r = self.sacc.spreadsheets().values().get(
-                spreadsheetId=self.id,
-                range=f'{self.list}!A1:P1'
-            ).execute()
-            values = r.get('values', [])
-            if not values:
-                raise Exception(f'{self.__class__.__name__} could not retrieve fields from the spreadsheet')
-
-            self.fields = values[0]
 
         except Exception as e:
             print(f'config.setup: could not setup google service account: {e}')

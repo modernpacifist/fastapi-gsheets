@@ -19,6 +19,7 @@ from utils.conversations import ValuePasser
 TGCONFIG = setup('telegram bot')
 BACKEND_ENDPOINT = setup('backend')
 DB_CONF = setup('database')
+DRIVE_CONF = setup('google drive')
 
 UPDATE_ID = ValuePasser()
 
@@ -261,10 +262,10 @@ def main():
     #     ),
     #     days=(0, 1, 2, 3, 4, 5, 6)
     # )
-    app.job_queue.run_repeating(
-        callback=notificate_users,
-        interval=2,
-    )
+    # app.job_queue.run_repeating(
+    #     callback=notificate_users,
+    #     interval=2,
+    # )
 
     app.run_polling()
 

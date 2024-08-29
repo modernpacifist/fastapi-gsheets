@@ -127,9 +127,6 @@ async def update_conference(update, context):
         await update.message.reply_text('You need to specify id of the conference you want to update')
         return ConversationHandler.END
 
-    update_id = args[0]
-    if not update_id.isdigit():
-
     try:
         UPDATE_ID.value = args[0]
     except Exception as e:
@@ -173,7 +170,7 @@ async def backend_put(update, context):
             await update.message.reply_text('Invalid data submitted, check your input')
             raise Exception(f'Error: status code {resp.status_code}')
 
-        await update.message.reply_text('Successfully added')
+        await update.message.reply_text(f'Successfully updated record with id {UPDATE_ID.value}')
 
     except Exception as e:
         print(e)
@@ -268,10 +265,10 @@ def main():
     #     ),
     #     days=(0, 1, 2, 3, 4, 5, 6)
     # )
-    # app.job_queue.run_repeating(
-    #     callback=notificate_users,
-    #     interval=2,
-    # )
+    app.job_queue.run_repeating(
+        callback=notificate_users,
+        interval=2,
+    )
 
     app.run_polling()
 

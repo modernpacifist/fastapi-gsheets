@@ -198,14 +198,17 @@ async def get_conference_applications(update, context):
         if resp.status_code != 200:
             raise Exception('Could not fetch data')
 
-        pretty_json = json.dumps(resp.json(), ensure_ascii=False, indent=4)
+        # js_resp = json.dump(resp.json(), ensure_ascii=False, indent=4)
+        js_resp = resp.json()
 
     except Exception as e:
         print(e)
         return
 
-    await update.message.reply_text(pretty_json)
-
+    drive_dir_id = js_resp.get('google_drive_directory_id')
+    print(gdrive.get_folder_files(DRIVE_CONF, drive_dir_id))
+    
+    # await update.message.reply_text(pretty_json)
     # # print(gdrive.get_folder_files(DRIVE_CONF))
     # # print(gdrive.get_folder_files(DRIVE_CONF, 'Submissions'))
     # files = gdrive.get_folder_files(DRIVE_CONF, 'Applications')

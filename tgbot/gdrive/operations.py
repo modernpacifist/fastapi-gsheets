@@ -12,12 +12,14 @@
 #         return None
 
 
-def get_folder_files(conf, folder=None):
+def get_folder_files(conf, parent_folder_id, folder=None):
     try:
         results = (
             conf.sacc.files()
             # .list(pageSize=10, fields="nextPageToken, files(id, name)")
-            .list(pageSize=10, fields="nextPageToken, files(id, name)")
+            .list(q=f'in {parent_folder_id}',
+                  pageSize=10,
+                  fields="nextPageToken, files(id, name)")
             .execute()
         )
 

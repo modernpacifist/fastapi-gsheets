@@ -1,5 +1,3 @@
-
-
-
-def get_model():
-    return None
+class UpdateId:
+    @property
+    value = 

@@ -1,7 +1,5 @@
 import json
 import requests as rq
-import pytz
-import datetime
 
 from db import operations as db
 
@@ -21,8 +19,9 @@ TGCONFIG = setup('telegram bot')
 BACKEND_ENDPOINT = setup('backend')
 DB_CONF = setup('database')
 
+# A = None
 
-# @operations.authentication_decorator
+
 async def start(update, context):
     uid = update.message.chat.id
     uname = update.message.chat.first_name
@@ -127,6 +126,9 @@ async def update_conference(update, context):
         await update.message.reply_text('You need to specify id of the conference you want to update')
         return ConversationHandler.END
 
+    A = args[0]
+    print(A)
+
     await update.message.reply_text("""
 Adding new conference entry  
 Specify data as following e g :  
@@ -151,16 +153,18 @@ Specify data as following e g :
     return 0
 
 
-async def backend_put(update, _):
+async def backend_put(update, context):
     user_input = update.message.text
     if not user_input:
         return ConversationHandler.END
 
     await update.message.reply_text('Processing...')
+    # print(A)
+    id = 3
 
     try:
-        resp = rq.put(BACKEND_ENDPOINT.put_uri, data=user_input, timeout=5)
-        if resp.status_code != 201:
+        resp = rq.put(f'{BACKEND_ENDPOINT.put_uri}{id}', data=user_input, timeout=5)
+        if resp.status_code != 200:
             await update.message.reply_text('Invalid data submitted, check your input')
             raise Exception(f'Error: status code {resp.status_code}')
 
@@ -174,10 +178,6 @@ async def backend_put(update, _):
 
 
 async def get_conference(update, context):
-    uid = update.message.chat.id
-
-
-async def update_conference(update, context):
     uid = update.message.chat.id
 
 
@@ -221,11 +221,6 @@ def main():
         print(f'Could not startup the application: {e}')
         exit(1)
 
-    app.add_handler(CommandHandler('start', start))
-    app.add_handler(CommandHandler('get', get_conferences))
-    app.add_handler(CommandHandler('help', help))
-
-
     add_conference_conv_handler = ConversationHandler(
         entry_points=[CommandHandler('add', add_conference)],
         states={
@@ -238,9 +233,8 @@ def main():
         },
         fallbacks=[CommandHandler('cancel', cancel)],
     )
-    app.add_handler(add_conference_conv_handler)
 
-    add_conference_conv_handler = ConversationHandler(
+    update_conference_conv_handler = ConversationHandler(
         entry_points=[CommandHandler('update', update_conference)],
         states={
             0: [
@@ -252,7 +246,12 @@ def main():
         },
         fallbacks=[CommandHandler('cancel', cancel)],
     )
+
+    app.add_handler(CommandHandler('start', start))
+    app.add_handler(CommandHandler('get', get_conferences))
+    app.add_handler(CommandHandler('help', help))
     app.add_handler(add_conference_conv_handler)
+    app.add_handler(update_conference_conv_handler)
 
     # app.job_queue.run_daily(
     #     callback=notificate_users,

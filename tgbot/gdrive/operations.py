@@ -16,9 +16,10 @@ def get_folder_files(conf, parent_folder_id, folder=None):
     try:
         results = (
             conf.sacc.files()
-            # .list(pageSize=10, fields="nextPageToken, files(id, name)")
-            .list(q=f'in {parent_folder_id}',
+            # .list(q=f"mimeType = 'application/vnd.google-apps.folder' and '{parent_folder_id}' in parents and name = '{folder}'",
+            .list(q=f"'{parent_folder_id}' in parents and name = '{folder}'",
                   pageSize=10,
+                  spaces='drive',
                   fields="nextPageToken, files(id, name)")
             .execute()
         )

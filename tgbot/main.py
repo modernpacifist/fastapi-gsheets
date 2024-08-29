@@ -68,7 +68,7 @@ async def add_conference(update, context):
     uid = update.message.chat.id
     if not db.verify_user(DB_CONF, uid):
         await update.message.reply_text('Not registered, run /start')
-        return
+        return ConversationHandler.END
 
     await update.message.reply_text("""
 Adding new conference entry  
@@ -94,13 +94,72 @@ Specify data as following e g :
     return 0
 
 
-async def data_submission(update, _):
+async def backend_post(update, _):
     user_input = update.message.text
     if not user_input:
         return ConversationHandler.END
 
+    await update.message.reply_text('Processing...')
+
     try:
         resp = rq.post(BACKEND_ENDPOINT.post_uri, data=user_input, timeout=5)
+        if resp.status_code != 201:
+            await update.message.reply_text('Invalid data submitted, check your input')
+            raise Exception(f'Error: status code {resp.status_code}')
+
+        await update.message.reply_text('Successfully added')
+
+    except Exception as e:
+        print(e)
+
+    finally:
+        return ConversationHandler.END
+
+
+async def update_conference(update, context):
+    uid = update.message.chat.id
+    if not db.verify_user(DB_CONF, uid):
+        await update.message.reply_text('Not registered, run /start')
+        return ConversationHandler.END
+
+    args = context.args
+    if len(args) != 1:
+        await update.message.reply_text('You need to specify id of the conference you want to update')
+        return ConversationHandler.END
+
+    await update.message.reply_text("""
+Adding new conference entry  
+Specify data as following e g :  
+```
+{
+    "google_spreadsheet": "example",
+    "google_drive_directory_id": "example",
+    "name_rus": "name",
+    "name_rus_short": "short name",
+    "registration_start_date": "01.08.2024",
+    "registration_end_date": "01.10.2024",
+    "submission_start_date": "01.08.2024",
+    "submission_end_date": "01.10.2024",
+    "conf_start_date": "01.10.2024",
+    "conf_end_date": "10.10.2024",
+    "organized_by": "SUAI",
+    "url": "https://suai.com",
+    "email": "suai@gmail.com"
+}
+```
+""", parse_mode='MarkdownV2')
+    return 0
+
+
+async def backend_put(update, _):
+    user_input = update.message.text
+    if not user_input:
+        return ConversationHandler.END
+
+    await update.message.reply_text('Processing...')
+
+    try:
+        resp = rq.put(BACKEND_ENDPOINT.put_uri, data=user_input, timeout=5)
         if resp.status_code != 201:
             await update.message.reply_text('Invalid data submitted, check your input')
             raise Exception(f'Error: status code {resp.status_code}')
@@ -173,7 +232,21 @@ def main():
             0: [
                 MessageHandler(
                     filters.ALL,
-                    data_submission,
+                    backend_post,
+                )
+            ],
+        },
+        fallbacks=[CommandHandler('cancel', cancel)],
+    )
+    app.add_handler(add_conference_conv_handler)
+
+    add_conference_conv_handler = ConversationHandler(
+        entry_points=[CommandHandler('update', update_conference)],
+        states={
+            0: [
+                MessageHandler(
+                    filters.ALL,
+                    backend_put,
                 )
             ],
         },

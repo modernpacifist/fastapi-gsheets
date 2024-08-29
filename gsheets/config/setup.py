@@ -68,6 +68,9 @@ def setup(section, filename='config.ini'):
     if not os.path.isfile(filename):
         raise Exception('No config.ini file found')
 
+    if not return_object:
+        raise Exception('Could not set config instance')
+
     params = parser.items(section)
 
     try: 

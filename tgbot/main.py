@@ -179,10 +179,6 @@ async def backend_put(update, context):
         return ConversationHandler.END
 
 
-async def get_conference(update, context):
-    uid = update.message.chat.id
-
-
 async def send_applications_report_document(update, context):
     uid = update.message.chat.id
 

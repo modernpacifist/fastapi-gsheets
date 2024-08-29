@@ -215,9 +215,10 @@ async def help(update, context):
 
 
 def main():
-    print(gdrive.get_files(DRIVE_CONF))
-
-    exit(0)
+    # print(gdrive.get_folder_files(DRIVE_CONF))
+    # print(gdrive.get_folder_files(DRIVE_CONF, 'Submissions'))
+    # print(gdrive.get_folder_files(DRIVE_CONF, 'Applications'))
+    # exit(0)
 
     try:
         app = Application.builder().token(TGCONFIG.token).build()

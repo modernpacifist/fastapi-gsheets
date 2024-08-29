@@ -30,7 +30,6 @@ class Database:
     filename: str
     table: str
 
-{"files": [{"id": "1jlM5nfYEPqEvDvYKhKWF1uQfIITZxT36", "name": "FastApiGsheetsApplications"}, {"id": "1n9nI_MvH5OEjm-2xV_ZTUMsotuUqlCAj", "name": "Submissions"}, {"id": "1ZcnI5bxDuXIDuJU3FrPt1PmNXKeZlXqb", "name": "Applications"}, {"id": "1ClXTt7C772Tnsi3SLrlv3to3LF8o02mNP59AgyxZFZA", "name": "fastapi-gsheets"}]}
 
 @dataclass
 class GoogleDrive:

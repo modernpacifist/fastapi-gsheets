@@ -75,19 +75,19 @@ Adding new conference entry
 Specify data as following e g :  
 ```
 {
-    "google_spreadsheet": "what's up",
-    "google_drive_directory_id": "google 5",
-    "name_rus": "full rus name 5",
-    "name_rus_short": "short rus name 5",
-    "registration_start_date": "01.02.2023",
-    "registration_end_date": "02.09.2025",
-    "submission_start_date": "03.09.2013",
-    "submission_end_date": "04.09.2013",
-    "conf_start_date": "05.09.2013",
-    "conf_end_date": "06.09.2013",
+    "google_spreadsheet": "example",
+    "google_drive_directory_id": "example",
+    "name_rus": "name",
+    "name_rus_short": "short name",
+    "registration_start_date": "01.08.2024",
+    "registration_end_date": "01.10.2024",
+    "submission_start_date": "01.08.2024",
+    "submission_end_date": "01.10.2024",
+    "conf_start_date": "01.10.2024",
+    "conf_end_date": "10.10.2024",
     "organized_by": "SUAI",
-    "url": "https://google.com",
-    "email": "hehexd@gmail.com"
+    "url": "https://suai.com",
+    "email": "suai@gmail.com"
 }
 ```
 """, parse_mode='MarkdownV2')

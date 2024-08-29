@@ -20,14 +20,16 @@ def get_folder_files(conf, parent_folder_id, folder):
                   fields="nextPageToken, files(id,name,createdTime,webViewLink)")
             .execute()
         )
-        files = fetched_files.get('files')
-        for f in files:
-            # print(f.get('createdTime'))
-            d = datetime.strptime(f.get('createdTime'), "%Y-%m-%dT%H:%M:%S.%fZ")
-            print(d)
-
-        return fetched_files.get('files')
 
     except Exception as e:
         print(e)
         return None
+
+    files = fetched_files.get('files')
+    for f in files:
+        f['createdTime'] = datetime.strptime(f['createdTime'], '%Y-%m-%dT%H:%M:%S.%fZ')
+
+    # files.sort(key = lambda x: datetime.strptime(x['createdTime'], '%Y-%m-%dT%H:%M:%S.%fZ'))
+    files.sort(key = lambda x:x['createdTime'])
+
+    return files

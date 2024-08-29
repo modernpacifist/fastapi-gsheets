@@ -209,7 +209,7 @@ async def get_conference_applications(update, context):
     drive_dir_id = js_resp.get('google_drive_directory_id')
     files = gdrive.get_folder_files(DRIVE_CONF, drive_dir_id, 'Applications')
     if not files:
-        await update.message.reply_text('Could not fetch files for ')
+        await update.message.reply_text('Could not fetch files for')
         return
 
     msg_text = ''

@@ -1,5 +1,7 @@
 import json
 import requests as rq
+import pytz
+import datetime
 
 from db import operations as db
 from gdrive import operations as gdrive
@@ -29,7 +31,6 @@ UPDATE_ID = ValuePasser()
 async def start(update, context):
     uid = update.message.chat.id
     uname = update.message.chat.first_name
-
     if db.verify_user(DB_CONF, uid):
         await update.message.reply_text('You are already registered')
         return
@@ -352,9 +353,33 @@ async def notificate_users(context: CallbackContext):
     user_ids = db.get_all_users(DB_CONF)
 
     # get today's conferences
+    try:
+        params = {'filter': 'active'}
+        resp = rq.get(BACKEND_ENDPOINT.get_uri, params=params, timeout=5)
+        if resp.status_code != 200:
+            raise Exception('Could not fetch data')
 
-    # for uid in user_ids:
-    #     await context.bot.send_message(chat_id=uid, text='hi!')
+        # pretty_json = json.dumps(resp.json(), ensure_ascii=False, indent=4)
+        # print(pretty_json)
+        # await update.message.reply_text(pretty_json)
+    except Exception as e:
+        print(e)
+        return 
+
+    conf_list = ""
+    for conf in resp.json():
+        conf_list += f'id: {conf.get("id")}\n'
+        conf_list += f'Short name: {conf.get("name_rus_short")}\n'
+        conf_list += f'Started at: {conf.get("conf_start_date")}\n'
+        conf_list += f'Ends at: {conf.get("conf_end_date")}\n\n'
+
+    msg = f"""
+Hello, today we have {len(resp.json())} active conferences:
+{conf_list}
+"""
+
+    for uid in user_ids:
+        await context.bot.send_message(chat_id=uid, text=msg)
 
 
 
@@ -418,20 +443,15 @@ def main():
     app.add_handler(add_conference_conv_handler)
     app.add_handler(update_conference_conv_handler)
 
-    # app.job_queue.run_daily(
-    #     callback=notificate_users,
-    #     time=datetime.time(
-    #         hour=10,
-    #         minute=2,
-    #         second=0,
-    #         tzinfo=pytz.timezone('Europe/Moscow')
-    #     ),
-    #     days=(0, 1, 2, 3, 4, 5, 6)
-    # )
-
-    app.job_queue.run_repeating(
+    app.job_queue.run_daily(
         callback=notificate_users,
-        interval=2,
+        time=datetime.time(
+            hour=8,
+            minute=00,
+            second=00,
+            tzinfo=pytz.timezone('Europe/Moscow')
+        ),
+        days=(0, 1, 2, 3, 4, 5, 6)
     )
 
     app.run_polling()

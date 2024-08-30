@@ -274,13 +274,73 @@ async def get_conference_submissions(update, context):
         await update.message.reply_text('Could not fetch files from Submissions folder')
         return
 
-    d = docx_builders.ConferenceReport().create(files, f'Conference{conference_id}SubmissionsReport.docx')
+    d = docx_builders.Report().create(files, f'Conference{conference_id}SubmissionsReport.docx')
 
     await update.message.reply_document(d)
 
 
 async def generate_report(update, context):
     uid = update.message.chat.id
+    if not db.verify_user(DB_CONF, uid):
+        await update.message.reply_text('Not registered, run /start')
+        return 
+
+    args = context.args
+    if len(args) < 2:
+        await update.message.reply_text('You need to specify id of the conference and type of report: submissions or applications')
+        return 
+
+    conference_id = args[0]
+    if not conference_id.isdigit():
+        await update.message.reply_text(f'Specified conference id must be an int > 0')
+        return
+
+    report_type = args[1]
+    if not report_type:
+        report_type = 'default'
+
+    report_builder_resolve = {
+        'default': [docx_builders.ConferenceReport, ''],
+        'submissions': [docx_builders.AboutReport, 'Submissions'],
+        'applications': [docx_builders.AboutReport, 'Applications'],
+    }
+
+    builder, filename = report_builder_resolve.get(report_type)
+    if not all([builder, filename]):
+        await update.message.reply_text('Third argument can only be one of: submissions, applications or None')
+        return
+    
+    print(builder, filename)
+    return
+
+    await update.message.reply_text('Processing...')
+
+    try:
+        resp = rq.get(f'{BACKEND_ENDPOINT.get_single_uri}{conference_id}')
+        if resp.status_code != 200:
+            raise Exception('Could not fetch data from backend')
+
+        js_resp = resp.json()
+        if not js_resp:
+            raise Exception('Got null response from backend')
+
+    except Exception as e:
+        await update.message.reply_text(f'{e}')
+        return
+
+    drive_dir_id = js_resp.get('google_drive_directory_id')
+    if not drive_dir_id:
+        await update.message.reply_text('Current conference does not have drive directory set')
+        return
+
+    folder_files = gdrive.get_folder_files(DRIVE_CONF, drive_dir_id, 'Submissions')
+    if not folder_files:
+        await update.message.reply_text('Could not fetch files from Submissions folder')
+        return
+
+    # d = docx_builders.Report().create(folder_files, f'Conference{conference_id}SubmissionsReport.docx')
+
+    await update.message.reply_document(d)
 
 
 async def notificate_users(context: CallbackContext):

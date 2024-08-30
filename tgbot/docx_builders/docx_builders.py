@@ -32,7 +32,7 @@ class ConferenceReport(DocxBuilder):
 
         doc.add_paragraph(f'Conference {data.get("id")} info:')
 
-        print(data)
+        # print(data)
 
         # table = doc.add_table(rows=1, cols=3)
         # hdr_cells = table.rows[0].cells

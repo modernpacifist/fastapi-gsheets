@@ -274,11 +274,9 @@ async def get_conference_submissions(update, context):
         await update.message.reply_text('Could not fetch files from Submissions folder')
         return
 
-    await update.message.reply_text(files)
+    d = docx_builders.ConferenceReport().create(files, f'Conference{conference_id}SubmissionsReport.docx')
 
-    docx_builders.ConferenceReport().create(files)
-
-    # await update.message.reply_doc(docxshit)
+    await update.message.reply_document(d)
 
 
 async def send_publications_report_document(update, context):

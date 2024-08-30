@@ -167,3 +167,4 @@ cython_debug/
 *.env*
 *.ini
 docx_files_storage/
+*.docx

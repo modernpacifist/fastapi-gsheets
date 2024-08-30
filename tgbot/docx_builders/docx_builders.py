@@ -8,14 +8,17 @@ class DocxBuilder(ABC):
     def __init__(self):
         self.path = './docx_files_storage'
 
-    def create_path(self):
+    def save_doc(self, doc, name):
         try:
-            os.makedirs(self.path)
+            if not os.path.exists(self.path):
+                os.makedirs(self.path)
+
+            path = f'{self.path}/{name}'
+            doc.save(path)
+            return path
+
         except Exception as e:
             print(f'Warning: could not create directory for docx files {e}')
-
-    def save_doc(self, doc):
-        return None
 
     @abstractmethod
     def create(self):
@@ -35,13 +38,13 @@ class ApplicationsReport(DocxBuilder):
 
 
 class ConferenceReport(DocxBuilder):
-    def create(self, data):
+    def create(self, data, name):
         doc = docx.Document()
 
+        for d in data:
+            doc.
 
-        if not os.path.exists(self.path):
-            self.create_path()
-        doc.save(f'{self.path}/conf1.docx')
+        return self.save_doc(doc, name)
 
 
 class PublicationsReport(DocxBuilder):

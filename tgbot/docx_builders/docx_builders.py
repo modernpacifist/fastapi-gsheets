@@ -4,16 +4,14 @@ from abc import ABC, abstractmethod
 
 class DocxBuilder(ABC):
     def __init__(self, filename, data):
-        self.filename = filename
-        self.data = data
-        self.doc = None
+        self.path = './docx_files_storage'
 
-    @abstractmethod
-    def create(self):
-        raise NotImplementedError('Method not implemented')
+    # @abstractmethod
+    # def create(self):
+    #     raise NotImplementedError('Method not implemented')
 
-    def save(self, path='./'):
-        self.doc.save(f'{path}/{self.filename}')
+    def save(self, doc):
+        doc.save(f'{self.path}/{self.filename}')
 
 
 class ApplicationsReport(DocxBuilder):
@@ -36,6 +34,7 @@ class ApplicationsReport(DocxBuilder):
 
 
 class ConferenceReport(DocxBuilder):
+    @staticmethod
     def create(self, data):
 
 

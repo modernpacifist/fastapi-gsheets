@@ -131,7 +131,7 @@ async def update_conference(update, context):
     try:
         UPDATE_ID.value = args[0]
     except Exception as e:
-        await update.message.reply_text(f'Specified argument must be an int > 0\nFull error: {e}')
+        await update.message.reply_text(f'Specified conference id must be an int > 0\nFull error: {e}')
         return ConversationHandler.END
 
     await update.message.reply_text("""
@@ -192,6 +192,9 @@ async def get_conference_applications(update, context):
         return 
 
     conference_id = args[0]
+    if not conference_id.isdigit():
+        await update.message.reply_text(f'Specified conference id must be an int > 0')
+        return
 
     await update.message.reply_text('Processing...')
 
@@ -205,10 +208,13 @@ async def get_conference_applications(update, context):
             raise Exception('Could not fetch data')
 
     except Exception as e:
-        print(e)
         return
 
     drive_dir_id = js_resp.get('google_drive_directory_id')
+    if not drive_dir_id:
+        await update.message.reply_text('Current conference does not have drive directory set')
+        return
+
     files = gdrive.get_folder_files(DRIVE_CONF, drive_dir_id, 'Applications')
     if not files:
         await update.message.reply_text('Could not fetch files for')
@@ -225,8 +231,25 @@ async def get_conference_applications(update, context):
     await update.message.reply_text(msg_text)
 
 
-async def send_conference_report_document(update, context):
+async def get_conference_submissions(update, context):
     uid = update.message.chat.id
+    if not db.verify_user(DB_CONF, uid):
+        await update.message.reply_text('Not registered, run /start')
+        return 
+
+    args = context.args
+    if len(args) != 1:
+        await update.message.reply_text('You need to specify id of the conference')
+        return 
+
+    conference_id = args[0]
+    if not conference_id.isdigit():
+        await update.message.reply_text(f'Specified conference id must be an int > 0')
+        return
+
+    await update.message.reply_text('Processing...')
+
+    await update.message.reply_text(conference_id)
 
 
 async def send_publications_report_document(update, context):
@@ -292,6 +315,8 @@ def main():
     app.add_handler(CommandHandler('start', start))
     app.add_handler(CommandHandler('get', get_conferences))
     app.add_handler(CommandHandler('applications', get_conference_applications))
+    app.add_handler(CommandHandler('submissions', get_conference_submissions))
+    # app.add_handler(CommandHandler('report', get_conference_applications))
     app.add_handler(CommandHandler('help', help))
     app.add_handler(add_conference_conv_handler)
     app.add_handler(update_conference_conv_handler)

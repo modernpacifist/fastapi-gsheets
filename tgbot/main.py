@@ -15,6 +15,7 @@ from telegram.ext import (
 
 from config.setup import setup
 from utils.conversations import ValuePasser
+from docx_builders import docx_builders
 
 
 TGCONFIG = setup('telegram bot')
@@ -274,6 +275,8 @@ async def get_conference_submissions(update, context):
         return
 
     await update.message.reply_text(files)
+
+    docx_builders.ConferenceReport().create(files)
 
     # await update.message.reply_doc(docxshit)
 

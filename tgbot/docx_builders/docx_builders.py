@@ -1,17 +1,25 @@
+import os
 import docx
+
 from abc import ABC, abstractmethod
 
 
 class DocxBuilder(ABC):
-    def __init__(self, filename, data):
+    def __init__(self):
         self.path = './docx_files_storage'
 
-    # @abstractmethod
-    # def create(self):
-    #     raise NotImplementedError('Method not implemented')
+    def create_path(self):
+        try:
+            os.makedirs(self.path)
+        except Exception as e:
+            print(f'Warning: could not create directory for docx files {e}')
 
-    def save(self, doc):
-        doc.save(f'{self.path}/{self.filename}')
+    def save_doc(self, doc):
+        return None
+
+    @abstractmethod
+    def create(self):
+        raise NotImplementedError('Method not implemented')
 
 
 class ApplicationsReport(DocxBuilder):
@@ -25,18 +33,15 @@ class ApplicationsReport(DocxBuilder):
         self.doc.add_heading(data, 0)
         self.doc.save(data)
 
-    def save(self, path='.'):
-        try:
-            self.doc.save(f'{path}/{self.filename}')
-
-        except Exception as e:
-            print(e)
-
 
 class ConferenceReport(DocxBuilder):
-    @staticmethod
     def create(self, data):
+        doc = docx.Document()
 
+
+        if not os.path.exists(self.path):
+            self.create_path()
+        doc.save(f'{self.path}/conf1.docx')
 
 
 class PublicationsReport(DocxBuilder):

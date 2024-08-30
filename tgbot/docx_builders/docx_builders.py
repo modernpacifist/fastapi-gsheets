@@ -2,6 +2,7 @@ import os
 import docx
 
 from abc import ABC, abstractmethod
+from datetime import datetime
 
 
 class DocxBuilder(ABC):
@@ -29,7 +30,10 @@ class ConferenceReport(DocxBuilder):
     def create(self, data, name):
         doc = docx.Document()
 
-        # doc.add_paragraph('List:')
+        doc.add_paragraph(f'Conference {data.get("id")} info:')
+
+        print(data)
+
         # table = doc.add_table(rows=1, cols=3)
         # hdr_cells = table.rows[0].cells
         # hdr_cells[0].text = 'name'
@@ -55,13 +59,14 @@ class AboutReport(DocxBuilder):
         table = doc.add_table(rows=1, cols=3)
         hdr_cells = table.rows[0].cells
         hdr_cells[0].text = 'name'
-        hdr_cells[1].text = 'submitted time'
+        hdr_cells[1].text = 'submission time'
         hdr_cells[2].text = 'link'
 
         for d in data:
             row_cells = table.add_row().cells
             row_cells[0].text = d.get('name')
-            row_cells[1].text = d.get('createdTime')
+            dt = datetime.strptime(d.get('createdTime'), '%Y-%m-%dT%H:%M:%S.%fZ')
+            row_cells[1].text = f'{dt.hour}:{dt.minute} {dt.day}.{dt.month}.{dt.year}'
             row_cells[2].text = d.get('webViewLink')
 
         doc.add_page_break()

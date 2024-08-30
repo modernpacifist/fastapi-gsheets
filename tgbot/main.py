@@ -331,14 +331,19 @@ async def generate_report(update, context):
         return
 
     # folder_files = gdrive.get_folder_files(DRIVE_CONF, drive_dir_id, 'Submissions')
-    folder_files = gdrive.get_folder_files(DRIVE_CONF, drive_dir_id, files_folder)
-    if not folder_files:
-        await update.message.reply_text(f'Could not fetch files from {files_folder} folder')
-        return
+    if files_folder in ['Submissions', 'Applications']:
+        folder_files = gdrive.get_folder_files(DRIVE_CONF, drive_dir_id, files_folder)
+        if not folder_files:
+            await update.message.reply_text(f'Could not fetch files from {files_folder} folder')
+            return
 
-    d = doc_builder.create(folder_files, f'Conference{conference_id}{files_folder}.docx')
+        d = doc_builder.create(folder_files, f'Conference{conference_id}{files_folder}.docx')
 
-    await update.message.reply_document(d)
+        await update.message.reply_document(d)
+    else:
+        d = doc_builder.create(js_resp, f'Conference{conference_id}Report.docx')
+
+        await update.message.reply_document(d)
 
 
 async def notificate_users(context: CallbackContext):

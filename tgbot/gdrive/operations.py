@@ -2,7 +2,6 @@ from datetime import datetime
 
 
 def get_folder_files(conf, parent_folder_id, folder):
-    # f = cl.OrderedDict()
     try:
         folder_id = (
             conf.sacc.files()

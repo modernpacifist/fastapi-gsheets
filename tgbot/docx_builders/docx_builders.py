@@ -36,7 +36,8 @@ class ApplicationsReport(DocxBuilder):
 
 
 class ConferenceReport(DocxBuilder):
-    pass
+    def create(self, data):
+
 
 
 class PublicationsReport(DocxBuilder):

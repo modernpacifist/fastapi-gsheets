@@ -201,13 +201,14 @@ async def get_conference_applications(update, context):
     try:
         resp = rq.get(f'{BACKEND_ENDPOINT.get_single_uri}{conference_id}')
         if resp.status_code != 200:
-            raise Exception('Could not fetch data')
+            raise Exception('Could not fetch data from backend')
 
         js_resp = resp.json()
         if not js_resp:
-            raise Exception('Could not fetch data')
+            raise Exception('Got null response from backend')
 
     except Exception as e:
+        await update.message.reply_text(f'{e}')
         return
 
     drive_dir_id = js_resp.get('google_drive_directory_id')
@@ -217,7 +218,7 @@ async def get_conference_applications(update, context):
 
     files = gdrive.get_folder_files(DRIVE_CONF, drive_dir_id, 'Applications')
     if not files:
-        await update.message.reply_text('Could not fetch files for')
+        await update.message.reply_text('Could not fetch files from Applications folder')
         return
 
     msg_text = ''
@@ -249,7 +250,32 @@ async def get_conference_submissions(update, context):
 
     await update.message.reply_text('Processing...')
 
-    await update.message.reply_text(conference_id)
+    try:
+        resp = rq.get(f'{BACKEND_ENDPOINT.get_single_uri}{conference_id}')
+        if resp.status_code != 200:
+            raise Exception('Could not fetch data from backend')
+
+        js_resp = resp.json()
+        if not js_resp:
+            raise Exception('Got null response from backend')
+
+    except Exception as e:
+        await update.message.reply_text(f'{e}')
+        return
+
+    drive_dir_id = js_resp.get('google_drive_directory_id')
+    if not drive_dir_id:
+        await update.message.reply_text('Current conference does not have drive directory set')
+        return
+
+    files = gdrive.get_folder_files(DRIVE_CONF, drive_dir_id, 'Submissions')
+    if not files:
+        await update.message.reply_text('Could not fetch files from Submissions folder')
+        return
+
+    await update.message.reply_text(files)
+
+    # await update.message.reply_doc(docxshit)
 
 
 async def send_publications_report_document(update, context):

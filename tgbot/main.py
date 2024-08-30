@@ -279,7 +279,7 @@ async def get_conference_submissions(update, context):
     await update.message.reply_document(d)
 
 
-async def send_publications_report_document(update, context):
+async def generate_report(update, context):
     uid = update.message.chat.id
 
 
@@ -343,7 +343,9 @@ def main():
     app.add_handler(CommandHandler('get', get_conferences))
     app.add_handler(CommandHandler('applications', get_conference_applications))
     app.add_handler(CommandHandler('submissions', get_conference_submissions))
-    # app.add_handler(CommandHandler('report', get_conference_applications))
+
+    app.add_handler(CommandHandler('report', generate_report))
+
     app.add_handler(CommandHandler('help', help))
     app.add_handler(add_conference_conv_handler)
     app.add_handler(update_conference_conv_handler)

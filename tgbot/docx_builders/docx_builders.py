@@ -26,22 +26,10 @@ class DocxBuilder(ABC):
 
 
 class ApplicationsReport(DocxBuilder):
-    def create(self, data):
-        def distribute_data(data):
-            return data[0]
-
-        data = distribute_data(data)
-
-        self.doc = docx.Document()
-        self.doc.add_heading(data, 0)
-        self.doc.save(data)
-
-
-class ConferenceReport(DocxBuilder):
     def create(self, data, name):
         doc = docx.Document()
 
-        doc.add_heading('Submissions:', 0)
+        doc.add_paragraph('List:')
         table = doc.add_table(rows=1, cols=3)
         hdr_cells = table.rows[0].cells
         hdr_cells[0].text = 'name'
@@ -53,8 +41,30 @@ class ConferenceReport(DocxBuilder):
             row_cells[0].text = d.get('name')
             row_cells[1].text = d.get('createdTime')
             row_cells[2].text = d.get('webViewLink')
-            print(d)
-            # doc.
+
+        doc.add_page_break()
+
+        return self.save_doc(doc, name)
+
+
+class ConferenceReport(DocxBuilder):
+    def create(self, data, name):
+        doc = docx.Document()
+
+        doc.add_paragraph('List:')
+        table = doc.add_table(rows=1, cols=3)
+        hdr_cells = table.rows[0].cells
+        hdr_cells[0].text = 'name'
+        hdr_cells[1].text = 'submitted time'
+        hdr_cells[2].text = 'link'
+
+        for d in data:
+            row_cells = table.add_row().cells
+            row_cells[0].text = d.get('name')
+            row_cells[1].text = d.get('createdTime')
+            row_cells[2].text = d.get('webViewLink')
+
+        doc.add_page_break()
 
         return self.save_doc(doc, name)
 

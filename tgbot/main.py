@@ -286,7 +286,7 @@ async def generate_report(update, context):
         return 
 
     args = context.args
-    if len(args) < 2:
+    if len(args) < 1:
         await update.message.reply_text('You need to specify id of the conference and type of report: submissions or applications')
         return 
 
@@ -295,24 +295,21 @@ async def generate_report(update, context):
         await update.message.reply_text(f'Specified conference id must be an int > 0')
         return
 
-    report_type = args[1]
-    if not report_type:
-        report_type = 'default'
+    report_type = 'default'
+    if len(args) == 2:
+        report_type = args[1]
 
     report_builder_resolve = {
-        'default': [docx_builders.ConferenceReport, ''],
-        'submissions': [docx_builders.AboutReport, 'Submissions'],
-        'applications': [docx_builders.AboutReport, 'Applications'],
+        'default': (docx_builders.ConferenceReport(), 'Report'),
+        'submissions': (docx_builders.AboutReport(), 'Submissions'),
+        'applications': (docx_builders.AboutReport(), 'Applications'),
     }
 
-    builder, filename = report_builder_resolve.get(report_type)
-    if not all([builder, filename]):
+    doc_builder, files_folder = report_builder_resolve.get(report_type)
+    if not all([doc_builder, files_folder]):
         await update.message.reply_text('Third argument can only be one of: submissions, applications or None')
         return
     
-    print(builder, filename)
-    return
-
     await update.message.reply_text('Processing...')
 
     try:
@@ -333,12 +330,13 @@ async def generate_report(update, context):
         await update.message.reply_text('Current conference does not have drive directory set')
         return
 
-    folder_files = gdrive.get_folder_files(DRIVE_CONF, drive_dir_id, 'Submissions')
+    # folder_files = gdrive.get_folder_files(DRIVE_CONF, drive_dir_id, 'Submissions')
+    folder_files = gdrive.get_folder_files(DRIVE_CONF, drive_dir_id, files_folder)
     if not folder_files:
-        await update.message.reply_text('Could not fetch files from Submissions folder')
+        await update.message.reply_text(f'Could not fetch files from {files_folder} folder')
         return
 
-    # d = docx_builders.Report().create(folder_files, f'Conference{conference_id}SubmissionsReport.docx')
+    d = doc_builder.create(folder_files, f'Conference{conference_id}{files_folder}.docx')
 
     await update.message.reply_document(d)
 

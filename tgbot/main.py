@@ -279,7 +279,7 @@ async def get_conference_submissions(update, context):
     await update.message.reply_document(d)
 
 
-async def generate_report(update, context):
+async def get_conference_report(update, context):
     uid = update.message.chat.id
     if not db.verify_user(DB_CONF, uid):
         await update.message.reply_text('Not registered, run /start')
@@ -349,7 +349,13 @@ async def notificate_users(context: CallbackContext):
     """
     Check if any conferences are active today and notificate users
     """
-    print(db.get_all_users(DB_CONF))
+    user_ids = db.get_all_users(DB_CONF)
+
+    # get today's conferences
+
+    # for uid in user_ids:
+    #     await context.bot.send_message(chat_id=uid, text='hi!')
+
 
 
 async def cancel(update, _):
@@ -357,13 +363,15 @@ async def cancel(update, _):
     return ConversationHandler.END
 
 
-async def help(update, context):
+async def help(update, _):
     help_message = """
 /start
-/get <filter> - get conferences with filter[active,future,past]
+/get [<filter>] - get conferences with filter[active,future,past]
 /add
 /update
 /applications
+/submissions
+/report <id>, [<type>]
     """
     await update.message.reply_text(help_message)
 
@@ -405,7 +413,7 @@ def main():
     app.add_handler(CommandHandler('get', get_conferences))
     app.add_handler(CommandHandler('applications', get_conference_applications))
     app.add_handler(CommandHandler('submissions', get_conference_submissions))
-    app.add_handler(CommandHandler('report', generate_report))
+    app.add_handler(CommandHandler('report', get_conference_report))
     app.add_handler(CommandHandler('help', help))
     app.add_handler(add_conference_conv_handler)
     app.add_handler(update_conference_conv_handler)
@@ -420,10 +428,11 @@ def main():
     #     ),
     #     days=(0, 1, 2, 3, 4, 5, 6)
     # )
-    # app.job_queue.run_repeating(
-    #     callback=notificate_users,
-    #     interval=2,
-    # )
+
+    app.job_queue.run_repeating(
+        callback=notificate_users,
+        interval=2,
+    )
 
     app.run_polling()
 

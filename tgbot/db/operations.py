@@ -51,5 +51,11 @@ def add_user(db, id, username):
 
 def get_all_users(db):
     with connect(db.filename) as cur:
-        res = cur.execute('SELECT id FROM Users').fetchall()
+        res = []
+        for user_record in cur.execute('SELECT id FROM Users').fetchall():
+            try:
+                res.append(user_record[0])
+            except Exception as e:
+                print(f'Warning {e}')
+                continue
     return res

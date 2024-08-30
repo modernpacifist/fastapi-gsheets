@@ -274,7 +274,7 @@ async def get_conference_submissions(update, context):
         await update.message.reply_text('Could not fetch files from Submissions folder')
         return
 
-    d = docx_builders.Report().create(files, f'Conference{conference_id}SubmissionsReport.docx')
+    d = docx_builders.SingularReport().create(files, f'Conference{conference_id}SubmissionsReport.docx')
 
     await update.message.reply_document(d)
 
@@ -301,8 +301,8 @@ async def generate_report(update, context):
 
     report_builder_resolve = {
         'default': (docx_builders.ConferenceReport(), 'Report'),
-        'submissions': (docx_builders.AboutReport(), 'Submissions'),
-        'applications': (docx_builders.AboutReport(), 'Applications'),
+        'submissions': (docx_builders.SingularReport(), 'Submissions'),
+        'applications': (docx_builders.SingularReport(), 'Applications'),
     }
 
     doc_builder, files_folder = report_builder_resolve.get(report_type)
@@ -330,7 +330,6 @@ async def generate_report(update, context):
         await update.message.reply_text('Current conference does not have drive directory set')
         return
 
-    # folder_files = gdrive.get_folder_files(DRIVE_CONF, drive_dir_id, 'Submissions')
     if files_folder in ['Submissions', 'Applications']:
         folder_files = gdrive.get_folder_files(DRIVE_CONF, drive_dir_id, files_folder)
         if not folder_files:
@@ -406,9 +405,7 @@ def main():
     app.add_handler(CommandHandler('get', get_conferences))
     app.add_handler(CommandHandler('applications', get_conference_applications))
     app.add_handler(CommandHandler('submissions', get_conference_submissions))
-
     app.add_handler(CommandHandler('report', generate_report))
-
     app.add_handler(CommandHandler('help', help))
     app.add_handler(add_conference_conv_handler)
     app.add_handler(update_conference_conv_handler)

@@ -23,7 +23,6 @@ def get_folder_files(conf, parent_folder_id, folder):
 
     except Exception as e:
         print(e)
-        print('hehe')
         return None
 
     files = fetched_files.get('files')

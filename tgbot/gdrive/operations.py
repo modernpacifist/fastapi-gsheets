@@ -11,6 +11,15 @@ def get_folder_files(conf, parent_folder_id, folder):
                   fields="files(id)")
             .execute()
         ).get('files')[0].get('id')
+        # folder_id = (
+        #     conf.sacc.files()
+        #     .list(q=f"'{parent_folder_id}' in parents and name='{folder}'",
+        #           pageSize=10,
+        #           spaces='drive',
+        #           fields="files(id)")
+        #     .execute()
+        # ).get('files')
+        # print(folder_id)
 
         fetched_files = (
             conf.sacc.files()
@@ -23,6 +32,7 @@ def get_folder_files(conf, parent_folder_id, folder):
 
     except Exception as e:
         print(e)
+        print('hehe')
         return None
 
     files = fetched_files.get('files')

@@ -191,7 +191,7 @@ async def get_conference_applications(update, context):
     args = context.args
     if len(args) != 1:
         await update.message.reply_text('You need to specify id of the conference')
-        return 
+        return
 
     conference_id = args[0]
     if not conference_id.isdigit():
@@ -359,9 +359,6 @@ async def notificate_users(context: CallbackContext):
         if resp.status_code != 200:
             raise Exception('Could not fetch data')
 
-        # pretty_json = json.dumps(resp.json(), ensure_ascii=False, indent=4)
-        # print(pretty_json)
-        # await update.message.reply_text(pretty_json)
     except Exception as e:
         print(e)
         return 
@@ -380,7 +377,6 @@ Hello, today we have {len(resp.json())} active conferences:
 
     for uid in user_ids:
         await context.bot.send_message(chat_id=uid, text=msg)
-
 
 
 async def cancel(update, _):

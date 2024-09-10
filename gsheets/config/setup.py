@@ -5,7 +5,6 @@ from googleapiclient.discovery import build
 from oauth2client.service_account import ServiceAccountCredentials
 from configparser import ConfigParser
 from dataclasses import dataclass
-# from sheets.utils import get_fields
 
 
 @dataclass
@@ -79,4 +78,3 @@ def setup(section, filename='config.ini'):
     except Exception as e:
         print(f'config.setup error: {e}')
         exit(1)
-

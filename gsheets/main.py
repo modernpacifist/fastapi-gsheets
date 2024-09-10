@@ -13,12 +13,12 @@ CONFERENCES_SHEET_CONF = setup('conferences sheets')
 
 @APP.get('/conferences', status_code=status.HTTP_200_OK)
 async def conferences_handler(request: Request, filter: str = 'active'):
+    if len(request.query_params.getlist('filter')) > 1:
+        raise HTTPException(status_code=400, detail='Filter can be specified only once')
+
     res = conferences.get_all(CONFERENCES_SHEET_CONF, filter)
     if not res:
         raise HTTPException(status_code=404, detail='No conferences found')
-
-    if len(request.query_params.getlist('filter')) > 1:
-        raise HTTPException(status_code=400, detail='Filter can be specified only once')
 
     if not filter in ['all', 'active', 'past', 'future']:
         raise HTTPException(status_code=400, detail='Wrong filter specified')

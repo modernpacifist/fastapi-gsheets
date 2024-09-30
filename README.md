@@ -14,3 +14,8 @@ Pet project developed during bachelor computer science course at [SUAI](https://
 - google sheets
 - google drive
 - sqlite
+
+### Run via docker
+```sh
+docker-compose up
+```

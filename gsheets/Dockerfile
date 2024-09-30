@@ -4,9 +4,9 @@ RUN mkdir -m 777 /app
 
 RUN pip install poetry==1.8
 
-COPY . .
-
 WORKDIR /app/
+
+COPY . .
 
 RUN poetry --no-root install
 

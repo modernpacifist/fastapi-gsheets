@@ -15,6 +15,9 @@ Pet project developed during bachelor computer science course at [SUAI](https://
 - google drive
 - sqlite
 
+### Set up:
+Before running, you need to get `credentials.json` file from google, [e.g.](https://developers.google.com/workspace/guides/create-credentials), and put it in `./gsheets/config` and `./tgbot/config` directories.
+
 ### Run via docker
 ```sh
 docker-compose up

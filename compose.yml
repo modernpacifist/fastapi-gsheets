@@ -1,0 +1,14 @@
+services:
+  gsheets:
+    restart: unless-stopped
+    build:
+      context: gsheets
+      dockerfile: Dockerfile
+    ports:
+      - 5000:5000
+
+  tgbot:
+    restart: unless-stopped
+    build:
+      context: tgbot
+      dockerfile: Dockerfile
